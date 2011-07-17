@@ -3,14 +3,17 @@
 class Front extends Page { 
 	
 	protected function render ( ) {
-		$list = '<ul>';
+		$list = '<table>';
 		foreach ( $this->database->getMeetings() as $date => $meeting ) {
-			$list .= '<li><a href="?meeting='.$date.'">'.$date.': '.$meeting->{'title'}."</a></li>\n";
+			$list .= '<tr><td><a href="?meeting='.$date.'">'.$this->weekDay($date, true).'</a></td>
+				<td><a href="?meeting='.$date.'">'.$this->readableDate($date).'</a></td>
+				<td><a href="?meeting='.$date.'">'.$meeting->{'title'}."</a></td></tr>\n";
 		}
-		$list .= '</ul>';
-		$this->content = $list;
+		$list .= '</table>';
+		$this->content = '<h1>DIKUrevy møder</h1>';
+		$this->content .= $list;
 	}
 	
 }
 
-$page = new Front($database);
+$page = new Front($database, $auth);

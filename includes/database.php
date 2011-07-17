@@ -47,7 +47,8 @@ class Database {
 			'haseating'	=> $eating,
 			'meettime'	=> $meettime,
 			'eattime'	=> $eattime,
-			'comment'	=> $comment
+			'comment'	=> $comment,
+			'users'		=> array()
 		);
 		$this->writeData ( 'meetings' );
 		return $this->meetings;

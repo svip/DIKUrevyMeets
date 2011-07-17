@@ -2,6 +2,49 @@
 <html>
 <head>
 <title>DIKUrevy møder</title>
+<style>
+body {
+	font-family: tahoma, sans;
+}
+h1, h2, h4, p { text-align: center; }
+h2 { margin-top: 0; }
+h1 { margin-bottom: 0; }
+table, form {
+	margin: 0 auto;
+}
+form { width: 70%; background: #f0f0f0; padding: 15px 10px; }
+form > fieldset { display: none; }
+fieldset { border: 1px solid #999; }
+fieldset, form {
+	border-radius: 15px; -moz-border-radius: 15px; -webkit-border-radius: 15px;
+}
+input, label { width: 100%; }
+input[type=submit] { width: auto; }
+.clear { clear: both; }
+#login-select { list-style: none; padding-bottom: 20px; }
+#login-select li { 
+	cursor: pointer; display: block; 
+	width: 100px; height: 0; padding-top: 25px;
+	overflow: hidden; background-repeat: no-repeat;
+	float: left; margin-right: 25px;
+}
+#login-select-openid { background-image: url(media/openid.png); }
+#login-select-google { background-image: url(media/google.png); }
+#login-select-facebook { background-image: url(media/facebook.png); }
+#login-select-twitter { background-image: url(media/twitter.png); }
+</style>
+<script>
+function loginSelect ( which ) {
+	var form = document.getElementsByTagName('form')[0];
+	var kids = form.childNodes;
+	for ( var i = 0; i < kids.length; i++ ) {
+		if ( kids[i].nodeName.toLowerCase() == 'fieldset' ) {
+			kids[i].style.display = 'none';
+		}
+	}
+	document.getElementById('login-'+which).style.display = 'block';
+}
+</script>
 </head>
 <body>
 {{CONTENT}}
