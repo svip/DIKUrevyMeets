@@ -14,7 +14,7 @@ class Database {
 		switch ( $file ) {
 			case 'meetings':
 				$hl = fopen ( "data/$file.json", 'w' );
-				fwrite ( $hl, json_encode ( $this->meetings ) );
+				fwrite ( $hl, json_encode ( $this->meetings, JSON_FORCE_OBJECT ) );
 				fclose ( $hl );
 				break;
 			case 'users':
@@ -48,6 +48,7 @@ class Database {
 			'meettime'	=> $meettime,
 			'eattime'	=> $eattime,
 			'comment'	=> $comment,
+			'eatingopen'	=> true,
 			'users'		=> array()
 		);
 		$this->writeData ( 'meetings' );
