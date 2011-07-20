@@ -54,8 +54,34 @@ class Database {
 		return $this->meetings;
 	}
 	
-	function insertUser ( $user ) {
-		;
+	function insertUser ( $user, $service, $identity, $signature ) {
+		if ( !empty ( $this->users->{$user} ) )
+			return false;
+		$this->users->{$user} = array (
+			'name'		=> $user,
+			'register'	=> time(),
+			'admin'		=> false,
+			'service'	=> $service,
+			'identity'	=> $identity,
+			'signature'	=> $signature
+		);
+		$this->writeData ( 'users' );
+		return true;
+	}
+	
+	function addUserToDate ( $date, $name, $attending, $eating, $cooking, $comment ) {
+		if ( empty ( $this->meetings->{$date} ) )
+			return false;
+		$this->meetings->{$date}->{'users'}->{$name} = array (
+			'name'		=> $name,
+			'attending'	=> $attending,
+			'eating'	=> $eating,
+			'cooking'	=> $cooking,
+			'comment'	=> $comment,
+			'modified'	=> time()
+		);
+		$this->writeData ( 'meetings' );
+		return true;
 	}
 }
 

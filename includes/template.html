@@ -4,23 +4,25 @@
 <title>DIKUrevy møder</title>
 <style>
 body {
-	font-family: tahoma, sans;
+	font-family: tahoma, sans, sans-serif;
 }
-h1, h2, h4, p { text-align: center; }
+h1, h2, h3, h4, h5, h6, p { text-align: center; }
 h2 { margin-top: 0; }
 h1 { margin-bottom: 0; }
 table, form {
 	margin: 0 auto;
 }
 form { width: 70%; background: #f0f0f0; padding: 15px 10px; }
-form > fieldset { display: none; }
+form#login > fieldset { display: none; }
 fieldset { border: 1px solid #999; }
 fieldset, form {
 	border-radius: 15px; -moz-border-radius: 15px; -webkit-border-radius: 15px;
 }
+legend b { font-size: 125%; }
 input, label { width: 100%; }
-input[type=submit] { width: auto; }
+input[type=submit], input[type=checkbox] { width: auto; }
 .clear { clear: both; }
+#topmenu { position: absolute; top: 0; right: 0; padding: 5px; font-size: 90%; }
 #login-select { list-style: none; padding-bottom: 20px; }
 #login-select li { 
 	cursor: pointer; display: block; 
@@ -47,6 +49,7 @@ function loginSelect ( which ) {
 </script>
 </head>
 <body>
+{{TOPMENU}}
 {{CONTENT}}
 </body>
 </html>

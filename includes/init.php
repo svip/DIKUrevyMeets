@@ -41,10 +41,11 @@ class Page {
 	}
 }
 
-$meeting = $_GET['meeting'];
-
-if ( preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $meeting ) ) {
+if ( isset ( $_GET['meeting'] ) 
+	&& preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $_GET['meeting'] ) ) {
 	require ( 'includes/pages/Meeting.php' );
+} elseif ( isset ( $_GET['do'] ) ) {
+	require ( 'includes/pages/Actions.php' );
 } else {
 	require ( 'includes/pages/Front.php' );
 }
