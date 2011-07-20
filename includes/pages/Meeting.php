@@ -55,7 +55,12 @@ class Meeting extends Page {
 				$this->database->addUserToDate ( $date, $this->auth->userinfo->{'name'}, $attending, $eating, $cooking, $comment );
 				header ( 'Location: ./?meeting='.$date );
 			}
-			$content .= $this->meetingForm($meeting->{'haseating'}, $currentInfo);
+			if ( isset ( $_POST['closeeating-submit'] )
+				&& $meeting->users->{$this->auth->userinfo->name}->cooking ) {
+				$this->database->closeForEating($date);
+				header ( 'Location: ./?meeting='.$date );
+			}
+			$content .= $this->meetingForm($meeting, $currentInfo);
 		} else {
 			$content .= $this->logInFunction();
 		}
@@ -74,9 +79,10 @@ class Meeting extends Page {
 			$str );
 	}
 	
-	private function meetingForm ( $hasEating, $currentInfo ) {
+	private function meetingForm ( $meeting, $currentInfo ) {
+		$hasEating = $meeting->haseating;
 		$attending = true;
-		$eating = true;
+		$eating = $meeting->eatingopen;
 		$cooking = false;
 		$comment = '';
 		if ( $currentInfo != null ) {
@@ -86,14 +92,19 @@ class Meeting extends Page {
 			$comment = $this->safeString($currentInfo->comment);
 		}
 		return '<form method="post">
+'.( ($cooking && $meeting->{'eatingopen'} )?'
+<fieldset>
+<legend>Luk for flere spisetilmeldinger</legend>
+<input type="submit" name="closeeating-submit" value="Luk nu" />
+</fieldset>' :'').'
 <fieldset>
 <legend>Tilmeld <b>'.$this->auth->userinfo->{'name'}.'</b> møde</legend>
 <input type="checkbox" name="meeting-attending" id="meeting-attending" '.($attending?'checked="true"':'').' />
 <label for="meeting-attending">Kommer</label>
 '.($hasEating?'
-<input type="checkbox" name="meeting-eating" id="meeting-eating" '.($eating?'checked="true"':'').' />
+<input type="checkbox" name="meeting-eating" id="meeting-eating" '.($eating?'checked="true"':'').' '.(!$meeting->eatingopen?'disabled="true"':'').' />
 <label for="meeting-eating">Spiser med</label>
-<input type="checkbox" name="meeting-cooking" id="meeting-cooking" '.($cooking?'checked="true"':'').' />
+<input type="checkbox" name="meeting-cooking" id="meeting-cooking" '.($cooking?'checked="true"':'').' '.(!$meeting->eatingopen?'disabled="true"':'').' />
 <label for="meeting-cooking">Laver mad</label>':'').'
 <br />
 <label for="meeting-comment">Eventuelle kommentarer:</label>

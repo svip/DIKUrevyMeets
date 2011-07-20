@@ -52,8 +52,8 @@ class Authentication {
 	}
 	
 	private function openIdInit ( ) {
-		if ( isset ( $_GET['openid_op_endpoint'] )
-			&& strpos ( $_GET['openid_op_endpoint'], 'google.com' ) !== false )
+		if ( isset ( $_GET['openid_identity'] )
+			&& strpos ( $_GET['openid_identity'], 'google.com' ) !== false )
 			return;
 		$this->openid = new LightOpenID('dikurevy.dk');
 		if ( $this->openid->validate() ) {
@@ -66,8 +66,7 @@ class Authentication {
 					header ( 'Location: ./?meeting='.$_GET['meeting'] );
 				} else {
 					header ( 'Location: ./' );
-				}
-				
+				}				
 			} else {
 				$this->setCookie('rym-openid-sig', $_GET['openid_sig']);
 			}
@@ -138,7 +137,7 @@ class Authentication {
 	
 	public function loggedIn ( ) {
 		if ( !empty ( $_COOKIE['rym-openid-identity'] )
-			&& !empty ( $COOKIE['rym-openid-sig'] ) ) {
+			&& !empty ( $_COOKIE['rym-openid-sig'] ) ) {
 			$identity = $_COOKIE['rym-openid-identity'];
 			$signature = $_COOKIE['rym-openid-sig'];
 			foreach ( $this->database->getUsers() as $user ) {
@@ -164,6 +163,10 @@ class Authentication {
 			}			
 		}
 		return false;
+	}
+	
+	public function isAdmin ( ) {
+		return $this->userinfo->{'admin'};
 	}
 	
 	public function logInFunction ( ) {

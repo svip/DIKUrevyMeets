@@ -72,6 +72,15 @@ class Database {
 	function addUserToDate ( $date, $name, $attending, $eating, $cooking, $comment ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
+		if ( !$this->meetings->{$date}->eatingopen ) {
+			if ( !empty($this->meetings->{$date}->{'users'}->{$name}) ) {
+				$eating = $this->meetings->{$date}->{'users'}->{$name}->eating;
+				$cooking = $this->meetings->{$date}->{'users'}->{$name}->cooking;
+			} else {
+				$eating = false;
+				$cooking = false;
+			}
+		}
 		$this->meetings->{$date}->{'users'}->{$name} = array (
 			'name'		=> $name,
 			'attending'	=> $attending,
@@ -80,6 +89,14 @@ class Database {
 			'comment'	=> $comment,
 			'modified'	=> time()
 		);
+		$this->writeData ( 'meetings' );
+		return true;
+	}
+	
+	function closeForEating ( $date ) {
+		if ( empty ( $this->meetings->{$date} ) )
+			return false;
+		$this->meetings->{$date}->eatingopen = false;
 		$this->writeData ( 'meetings' );
 		return true;
 	}

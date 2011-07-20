@@ -20,10 +20,21 @@ class Output {
 	}
 	
 	private function topMenu ( ) {
+		$menu = array();
 		if ( $this->auth->loggedIn() ) {
-			return '<div id="topmenu"><a href="./?do=logout">Log ud</a> &middot; <a href="./">Front page</a></div>';
+			if ( $this->auth->isAdmin () ) {
+				$menu[] = array ( './?admin=front', 'Admin' );
+			}
+			$menu[] = array ( './?do=logout', 'Log ud' );
 		}
-		return '';
+		$menu[] = array ( './', 'Forside' );
+		$str = '';
+		foreach ( $menu as $item ) {
+			if ( $str != '' )
+				$str .= ' &middot; ';
+			$str .= '<a href="'.$item[0].'">'.$item[1].'</a>';
+		}
+		return $str;
 	}	
 }
 
