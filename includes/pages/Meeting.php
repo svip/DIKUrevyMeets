@@ -4,36 +4,53 @@ class Meeting extends Page {
 
 	protected function render() {
 		$m = $_GET['meeting'];
-		$meeting = $this->database->getMeetings()->{$m};
-		if ( empty ( $meeting ) ) {
+		if ( empty ( $this->database->getMeetings()->{$m} ) ) {
 			$this->content = '<p>Intet møde på '.$this->weekDay($m).' den '.$this->readableDate($m).'</p>';
 			$this->content .= '<p><a href="./">Til forsiden</a>.</p>';
 			return;
 		}
+		$meeting = $this->database->getMeetings()->{$m};
 		$this->makePage ( $m, $meeting );
 	}
 	
 	private function makePage ( $date, $meeting ) {
 		$content = '<h1>'.$meeting->{'title'}.'</h1><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
-		$content .= '<p>Møde: <b>'.$meeting->{'meettime'}.'</b>';
-		if ( $meeting->{'haseating'} ) {
-			$content .= ', spisetid: <b>'.$meeting->{'eattime'}.'</b>';
+		$eats = array();
+		$meets = array();
+		foreach ( $meeting->schedule as $i => $item ) {
+			if ( $item->type == 'eat' ) {
+				$eats[] = $item;
+			}
+			if ( $item->type == 'meet' ) {
+				$meets[] = $item;
+			}
+		}
+		if ( count ( $meets ) == 1 ) {
+			$content .= '<p>Møde: <b>'.$meets[0]->start.'</b>';
+		}
+		if ( count ( $eats ) == 1 ) {
+			$content .= ', spisetid: <b>'.$eats[0]->start.'</b>';
 		}
 		$content .= '.</p>';
 		$currentInfo = null;
 		$table = '<table>
-		<tr><th>Bruger</th><th>Kommer</th>'.($meeting->{'haseating'}?'<th>Spiser med</th><th>Laver mad</th>':'').'<th>Kommentar</th></tr>';
+		<tr><th>Bruger</th><th>Kommer</th>'.(count($eats)==1?'<th>Spiser med</th><th>Laver mad</th>':'').'<th>Kommentar</th></tr>';
 		$stats = array (
 			'users'		=> 0,
 			'attending'	=> 0,
 			'eating'	=> 0,
 			'cooking'	=> 0,
 		);
-		foreach ( $meeting->{'users'} as $user ) {
+		$tmp = array();
+		foreach ( $meeting->users as $name => $user )
+			$tmp[$name] = $user;
+		ksort($tmp);
+		$users = $tmp;
+		foreach ( $users as $user ) {
 			if ( $this->auth->loggedIn()
 				&& $user->{'name'} == $this->auth->userinfo->{'name'} )
 				$currentInfo = $user;
-			$table .= '<tr><td>'.$user->{'name'}.'</td><td>'.$this->tick($user->attending).'</td>'.($meeting->haseating?'<td>'.$this->tick($user->eating).'</td><td>'.$this->tick($user->cooking).'</td>':'').'<td>'.$user->comment.'</td></tr>';
+			$table .= '<tr><td>'.$user->{'name'}.'</td><td>'.$this->tick($user->attending).'</td>'.(count($eats)==1?'<td>'.$this->tick($user->eating).'</td><td>'.$this->tick($user->cooking).'</td>':'').'<td>'.$user->comment.'</td></tr>';
 			$stats['users']++;
 			if ( $user->attending ) $stats['attending']++;
 			if ( $user->eating ) $stats['eating']++;
@@ -41,17 +58,13 @@ class Meeting extends Page {
 		}
 		$table .= '</table>';
 		$content .= $table;
-		$content .= '<p>'.$stats['users'].' person(er), '.$stats['attending'].' deltager'.($meeting->haseating?', '.$stats['eating'].' spiser med og '.$stats['cooking'].' kokke':'').'.</p>';
+		$content .= '<p>'.$stats['users'].' person(er)'.(count($eats)==0?' og ':', ').$stats['attending'].' deltager'.(count($eats)==1?', '.$stats['eating'].' spiser med og '.$stats['cooking'].' kok(ke)':'').'.</p>';
 		if ( $this->auth->loggedIn() ) {
 			if ( isset ( $_POST['meeting-submit'] ) ) {
 				$attending = (isset($_POST['meeting-attending'])?true:false);
 				$comment = $_POST['meeting-comment'];
-				$eating = null;
-				$cooking = null;
-				if ( $meeting->{'haseating'} ) {
-					$eating = (isset($_POST['meeting-eating'])?true:false);
-					$cooking = (isset($_POST['meeting-cooking'])?true:false);
-				}
+				$eating = (isset($_POST['meeting-eating'])?true:false);
+				$cooking = (isset($_POST['meeting-cooking'])?true:false);
 				$this->database->addUserToDate ( $date, $this->auth->userinfo->{'name'}, $attending, $eating, $cooking, $comment );
 				header ( 'Location: ./?meeting='.$date );
 			}
@@ -80,9 +93,17 @@ class Meeting extends Page {
 	}
 	
 	private function meetingForm ( $meeting, $currentInfo ) {
-		$hasEating = $meeting->haseating;
+		$hasEating = false;
+		$eating = false;
+		$open = false;
+		foreach ( $meeting->schedule as $item ) {
+			if ( $item->type == 'eat' ) {
+				$hasEating = true;
+				$eating = $item->open;
+				$open = $item->open;
+			}
+		}
 		$attending = true;
-		$eating = $meeting->eatingopen;
 		$cooking = false;
 		$comment = '';
 		if ( $currentInfo != null ) {
@@ -98,18 +119,19 @@ class Meeting extends Page {
 <input type="submit" name="closeeating-submit" value="Luk nu" />
 </fieldset>' :'').'
 <fieldset>
-<legend>Tilmeld <b>'.$this->auth->userinfo->{'name'}.'</b> møde</legend>
+<legend>'.($currentInfo!=null?'Ændre <b>'.$this->auth->userinfo->{'name'}.'</b>s tilmelding':'Tilmeld <b>'.$this->auth->userinfo->{'name'}.'</b> møde').'</legend>
 <input type="checkbox" name="meeting-attending" id="meeting-attending" '.($attending?'checked="true"':'').' />
 <label for="meeting-attending">Kommer</label>
 '.($hasEating?'
-<input type="checkbox" name="meeting-eating" id="meeting-eating" '.($eating?'checked="true"':'').' '.(!$meeting->eatingopen?'disabled="true"':'').' />
+<input type="checkbox" name="meeting-eating" id="meeting-eating" '.($eating?'checked="true"':'').' '.(!$open?'disabled="true"':'').' />
 <label for="meeting-eating">Spiser med</label>
-<input type="checkbox" name="meeting-cooking" id="meeting-cooking" '.($cooking?'checked="true"':'').' '.(!$meeting->eatingopen?'disabled="true"':'').' />
+<input type="checkbox" name="meeting-cooking" id="meeting-cooking" '.($cooking?'checked="true"':'').' '.(!$open?'disabled="true"':'').' />
 <label for="meeting-cooking">Laver mad</label>':'').'
+'.(!$open?'<span>(Kokkene har lukket for madtilmeldingen)</span>':'').'
 <br />
 <label for="meeting-comment">Eventuelle kommentarer:</label>
 <input type="text" name="meeting-comment" id="meeting-comment" value="'.$comment.'" />
-<input type="submit" name="meeting-submit" value="Tilmeld" />
+<input type="submit" name="meeting-submit" value="'.($currentInfo!=null?'Ændre':'Tilmeld').'" />
 </fieldset>
 </form>';
 	}

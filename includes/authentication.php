@@ -6,6 +6,8 @@ class Authentication {
 	
 	public $userinfo = array();
 	private $database = null;
+	private $loginChecked = false;
+	private $login = false;
 	private $openid = null;
 	private $openidLogin = false;
 	private $google = null;
@@ -136,15 +138,20 @@ class Authentication {
 	}
 	
 	public function loggedIn ( ) {
+		if ( $this->loginChecked ) 
+			return $this->login;
 		if ( !empty ( $_COOKIE['rym-openid-identity'] )
 			&& !empty ( $_COOKIE['rym-openid-sig'] ) ) {
 			$identity = $_COOKIE['rym-openid-identity'];
 			$signature = $_COOKIE['rym-openid-sig'];
 			foreach ( $this->database->getUsers() as $user ) {
-				if ( $user->{'identity'} == $identity
+				if ( is_object($user)
+					&& $user->{'identity'} == $identity
 					&& $user->{'service'} == 'openid'
 					&& $user->{'signature'} == $signature ) {
 					$this->userinfo = $user;
+					$this->loginChecked = true;
+					$this->login = true;
 					return true;
 				}
 			}
@@ -154,18 +161,27 @@ class Authentication {
 			$identity = $_COOKIE['rym-google-identity'];
 			$signature = $_COOKIE['rym-google-sig'];
 			foreach ( $this->database->getUsers() as $user ) {
-				if ( $user->{'identity'} == $identity
+				if ( is_object($user)
+					&& $user->{'identity'} == $identity
 					&& $user->{'service'} == 'google'
 					&& $user->{'signature'} == $signature ) {
 					$this->userinfo = $user;
+					$this->loginChecked = true;
+					$this->login = true;
 					return true;
 				}
 			}			
 		}
+		$this->loginChecked = true;
+		$this->login = false;
 		return false;
 	}
 	
 	public function isAdmin ( ) {
+		if ( !$this->loginChecked )
+			$this->loggedIn();
+		if ( !isset ( $this->userinfo->admin ) )
+			return false;
 		return $this->userinfo->{'admin'};
 	}
 	
@@ -182,6 +198,7 @@ class Authentication {
 <ul id="login-select">
 <li id="login-select-openid" onclick="loginSelect(\'openid\');">OpenID</li>
 <li id="login-select-google" onclick="loginSelect(\'google\');">Google Konto</li>
+<li id="login-select-browserid" onclick="loginSelect(\'browserid\');">BrowserID</li>
 <li id="login-select-facebook" onclick="loginSelect(\'facebook\');">Facebook</li>
 <li id="login-select-twitter" onclick="loginSelect(\'twitter\');">Twitter</li>
 </ul>
@@ -218,6 +235,16 @@ class Authentication {
 <input type="submit" name="register-google-submit" value="Opret ny bruger" />
 </fieldset>' : '' ).'
 </fieldset>
+<fieldset id="login-browserid">
+<legend>BrowserID</legend>
+<fieldset>
+<legend>Log ind</legend>
+<button id="login-browserid-button">Klik her for at logge ind</button>
+</fieldset>
+<fieldset>
+<legend>Opret ny bruger</legend>
+</fieldset>
+</fieldset>
 <fieldset id="login-facebook">
 <legend>Facebook</legend>
 <fieldset>
@@ -236,6 +263,8 @@ class Authentication {
 <legend>Opret ny bruger</legend>
 </fieldset>
 </fieldset>
+<h5>Hvad hvis jeg ikke har solgt min sjæl til nogle af disse multinationale virksomheder som kun har tænkt sig at trække al personlig data om folk til sig for deres egne vindings skyld?</h5>
+<h5>Så har du tabt!  Dette er kun for sjæleløse individer.  Eller vent på Mozillas BrowserID bliver færdig.</h5>
 </form>';
 		if ( $script != '' )
 			$script = '<script>'.$script.'</script>';

@@ -26,6 +26,12 @@ class Database {
 		}
 	}
 	
+	function getMeeting ( $date ) {
+		if ( !isset ( $this->meetings->{$date} ) )
+			return null;
+		return $this->meetings->{$date};
+	}
+	
 	function getUsers ( ) {
 		return $this->users;
 	}
@@ -34,22 +40,33 @@ class Database {
 		return $this->meetings;
 	}
 	
-	function insertMeeting ( $date, $title, $eating=true, 
-			$comment='', $meettime='19:00', $eattime='18:00' ) {
-		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date )
-			|| !preg_match ( '@[0-9]{2}:[0-9]{2}@', $meettime )
-			|| !preg_match ( '@[0-9]{2}:[0-9]{2}@', $eattime ) )
+	function getSortedMeetings ( ) {
+		$tmp = array();
+		foreach ( $this->meetings as $date => $meeting )
+			$tmp[$date] = $meeting;
+		ksort($tmp);
+		return $tmp;
+	}
+	
+	function insertMeeting ( $date, $title, $schedule=array(array('title'=>'Aftensmad','type'=>'eat','start'=>'18:00','end'=>'19:00','open'=>true),array('title'=>'Møde','type'=>'meet','start'=>'19:00','end'=>'23:00')), 
+			$comment='', $spend=0.0 ) {
+		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 				return $this->meetings;
 		if ( !empty( $this->meetings->{$date} ) )
 			return $this->meetings;
+		foreach ( $schedule as $item ) {
+			if ( !in_array ( $item['type'], array('eat', 'meet') )
+				|| !preg_match ( '@[0-9]{2}:[0-9]{2}@', $item['start'] )
+				|| !preg_match ( '@[0-9]{2}:[0-9]{2}@', $item['end'] ) )
+					return $this->meetings;
+		}
 		$this->meetings->{$date} = array (
-			'title'		=> $title,
-			'haseating'	=> $eating,
-			'meettime'	=> $meettime,
-			'eattime'	=> $eattime,
-			'comment'	=> $comment,
-			'eatingopen'	=> true,
-			'users'		=> array()
+			'title'			=> $title,
+			'schedule'		=> $schedule,
+			'comment'		=> $comment,
+			'spend'			=> $spend,
+			'costperperson'	=> $spend,
+			'users'			=> array()
 		);
 		$this->writeData ( 'meetings' );
 		return $this->meetings;
@@ -73,7 +90,7 @@ class Database {
 	function addUserToDate ( $date, $name, $attending, $eating, $cooking, $comment ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
-		if ( !$this->meetings->{$date}->eatingopen ) {
+		if ( !$this->meetings->{$date}->schedule->{0}->open ) {
 			if ( !empty($this->meetings->{$date}->{'users'}->{$name}) ) {
 				$eating = $this->meetings->{$date}->{'users'}->{$name}->eating;
 				$cooking = $this->meetings->{$date}->{'users'}->{$name}->cooking;
@@ -88,8 +105,14 @@ class Database {
 			'eating'	=> $eating,
 			'cooking'	=> $cooking,
 			'comment'	=> $comment,
+			'paid'		=> 0.0,
 			'modified'	=> time()
 		);
+		$i = 0;
+		foreach ( $this->meetings->{$date}->users as $user )
+			if ( $user->eating )
+				$i++;
+		$this->meetings->{$date}->{'costperperson'} = $this->meetings->{$date}->{'spend'}/$i;
 		$this->writeData ( 'meetings' );
 		return true;
 	}
