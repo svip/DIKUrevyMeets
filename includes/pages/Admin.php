@@ -34,7 +34,9 @@ class Admin extends Page {
 						'type'=>'eat',
 						'start'=>trim($eattime[0]),
 						'end'=>trim($eattime[1]),
-						'open'=>true
+						'open'=>true,
+						'spend'=>intval($spend),
+						'costperperson'=>intval($spend)
 					),
 					array(
 						'title'=>'Møde',
@@ -77,7 +79,7 @@ class Admin extends Page {
 <input type="checkbox" id="newmeeting-haseating" name="newmeeting-haseating" checked="true" /><br />
 <label for="newmeeting-eattime">Spisetid:</label>
 <input type="text" id="newmeeting-eattime" name="newmeeting-eattime" value="18:00 - 19:00" />
-<label for="newmeeting-spend">Indkøbspris:</label>
+<label for="newmeeting-spend">Indkøbspris (i hele kroner):</label>
 <input type="text" id="newmeeting-spend" name="newmeeting-spend" />
 <input type="submit" name="newmeeting-submit" value="Nyt møde!" />
 </fieldset>

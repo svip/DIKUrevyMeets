@@ -48,8 +48,9 @@ class Database {
 		return $tmp;
 	}
 	
-	function insertMeeting ( $date, $title, $schedule=array(array('title'=>'Aftensmad','type'=>'eat','start'=>'18:00','end'=>'19:00','open'=>true),array('title'=>'Møde','type'=>'meet','start'=>'19:00','end'=>'23:00')), 
-			$comment='', $spend=0.0 ) {
+	function insertMeeting ( $date, $title, $schedule=array(array('title'=>'Aftensmad','type'=>'eat','start'=>'18:00','end'=>'19:00','open'=>true,
+	'spend'=>0.0,'costperperson'=>0.0),array('title'=>'Møde','type'=>'meet','start'=>'19:00','end'=>'23:00')), 
+			$comment='' ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 				return $this->meetings;
 		if ( !empty( $this->meetings->{$date} ) )
@@ -64,8 +65,6 @@ class Database {
 			'title'			=> $title,
 			'schedule'		=> $schedule,
 			'comment'		=> $comment,
-			'spend'			=> $spend,
-			'costperperson'	=> $spend,
 			'users'			=> array()
 		);
 		$this->writeData ( 'meetings' );
@@ -87,40 +86,42 @@ class Database {
 		return true;
 	}
 	
-	function addUserToDate ( $date, $name, $attending, $eating, $cooking, $comment ) {
+	function addUserToDate ( $date, $name, $userSchedule, $comment ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
-		if ( !$this->meetings->{$date}->schedule->{0}->open ) {
-			if ( !empty($this->meetings->{$date}->{'users'}->{$name}) ) {
-				$eating = $this->meetings->{$date}->{'users'}->{$name}->eating;
-				$cooking = $this->meetings->{$date}->{'users'}->{$name}->cooking;
-			} else {
-				$eating = false;
-				$cooking = false;
+		foreach ( $this->meetings->{$date}->schedule as $id => $item ) {
+			if ( $item->type == 'eat'
+				&& !$item->open ) {
+				if ( !empty($this->meetings->{$date}->{'users'}->{$name}) ) {
+					$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$id}->eating;
+					$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$id}->cooking;
+				} else {
+					$userSchedule[$id]['eating'] = false;
+					$userSchedule[$id]['cooking'] = false;
+				}
 			}
 		}
 		$this->meetings->{$date}->{'users'}->{$name} = array (
 			'name'		=> $name,
-			'attending'	=> $attending,
-			'eating'	=> $eating,
-			'cooking'	=> $cooking,
+			'schedule'	=> $userSchedule,
 			'comment'	=> $comment,
 			'paid'		=> 0.0,
 			'modified'	=> time()
 		);
 		$i = 0;
 		foreach ( $this->meetings->{$date}->users as $user )
-			if ( $user->eating )
+			if ( (is_object($user) && $user->eating)
+				|| ( is_array($user) && $user['eating'] ) )
 				$i++;
-		$this->meetings->{$date}->{'costperperson'} = $this->meetings->{$date}->{'spend'}/$i;
+		$this->meetings->{$date}->schedule->{0}->{'costperperson'} = $this->meetings->{$date}->schedule->{0}->{'spend'}/$i;
 		$this->writeData ( 'meetings' );
 		return true;
 	}
 	
-	function closeForEating ( $date ) {
+	function closeForEating ( $date, $id ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
-		$this->meetings->{$date}->eatingopen = false;
+		$this->meetings->{$date}->schedule->{$id}->open = false;
 		$this->writeData ( 'meetings' );
 		return true;
 	}
