@@ -19,7 +19,7 @@ class Database {
 				break;
 			case 'users':
 				$hl = fopen ( "data/$file.json", 'w' );
-				fwrite ( $hl, json_encode ( $this->users ) );
+				fwrite ( $hl, json_encode ( $this->users, JSON_FORCE_OBJECT ) );
 				fclose ( $hl );
 				break;
 			default: break;
@@ -34,6 +34,20 @@ class Database {
 	
 	function getUsers ( ) {
 		return $this->users;
+	}
+	
+	function getUser ( $name ) {
+		foreach ( $this->users as $user )
+			if ( $user->name == $name )
+				return $user;
+		return null;
+	}
+	
+	function getUserId ( $name ) {
+		foreach ( $this->users as $id => $user )
+			if ( $user->name == $name )
+				return $id;
+		return null;
 	}
 	
 	function getMeetings ( ) {
@@ -74,9 +88,14 @@ class Database {
 	}
 	
 	function insertUser ( $user, $service, $identity, $signature ) {
-		if ( !empty ( $this->users->{$user} ) )
-			return false;
-		$this->users->{$user} = array (
+		foreach ( $this->users as $user )
+			if ( $user->name == $user )
+				return false;
+		if ( empty ( $this->users ) )
+			$id = 1;
+		else
+			$id = count ( $this->users ) + 1;
+		$this->users->{$id} = array (
 			'name'		=> $user,
 			'register'	=> time(),
 			'admin'		=> false,
@@ -91,20 +110,28 @@ class Database {
 	function addUserToDate ( $date, $name, $userSchedule, $comment ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
+		$userid = null;
+		foreach ( $this->users as $id => $user )
+			if ( $user->name == $name ) {
+				$userid = $id;
+				break;
+			}
+		if ( $userid == null )
+			return false;
 		foreach ( $this->meetings->{$date}->schedule as $id => $item ) {
 			if ( $item->type == 'eat'
 				&& !$item->open ) {
-				if ( !empty($this->meetings->{$date}->{'users'}->{$name}) ) {
-					$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$id}->eating;
-					$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$id}->cooking;
+				if ( !empty($this->meetings->{$date}->{'users'}->{$userid}) ) {
+					$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->eating;
+					$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->cooking;
 				} else {
 					$userSchedule[$id]['eating'] = false;
 					$userSchedule[$id]['cooking'] = false;
 				}
 			}
 		}
-		$this->meetings->{$date}->{'users'}->{$name} = array (
-			'name'		=> $name,
+		$this->meetings->{$date}->{'users'}->{$userid} = array (
+			'name'		=> $this->users->{$userid}->name,
 			'schedule'	=> $userSchedule,
 			'comment'	=> $comment,
 			'modified'	=> time()

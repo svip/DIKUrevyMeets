@@ -125,7 +125,7 @@ class Admin extends Page {
 			if ( $item->type == 'meet' ) {
 				$form .= '<th>'.$item->title.'</th>';
 			} elseif ( $item->type == 'eat' ) {
-				$form .= '<th colspan="3">'.$item->title.'<br />'.($item->open?'<input type="submit" name="meeting-'.$item->id.'"-close" value="Luk" />':'<input type="submit" name="meeting-'.$item->id.'"-open" value="Åben" />').'</th>';
+				$form .= '<th colspan="3">'.$item->title.'<br />'.($item->open?'<input type="submit" name="meeting-'.$item->id.'-close" value="Luk" />':'<input type="submit" name="meeting-'.$item->id.'-open" value="Åben" />').'</th>';
 			}
 		}
 		$form .= '<th rowspan="2">Kommentar</th></tr><tr>';
@@ -137,18 +137,18 @@ class Admin extends Page {
 			}
 		}
 		$form .= '</tr>';
-		foreach ( $meeting->users as $user ) {
+		foreach ( $meeting->users as $userid => $user ) {
 			$form .= '<tr>
-			<td><a href="?admin=user&amp;user='.$user->name.'">'.$user->name.'</a></td>';
+			<td><a href="?admin=user&amp;user='.$userid.'">'.$user->name.'</a></td>';
 			foreach ( $schedule as $item ) {
 				$id = $item->id;
 				$useritem = $user->schedule->{$id};
 				if ( $item->type == 'meet' ) {
-					$form .= '<td class="centre '.($useritem->attending?'yes':'no').'"><input type="checkbox" name="meeting-'.$user->name.'-'.$id.'-attending" '.($useritem->attending?'checked="true"':'').' /></td>';
+					$form .= '<td class="centre '.($useritem->attending?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-attending" '.($useritem->attending?'checked="true"':'').' /></td>';
 				} elseif ( $item->type == 'eat' ) {
-					$form .= '<td class="centre '.($useritem->eating?'yes':'no').'"><input type="checkbox" name="meeting-'.$user->name.'-'.$id.'-eating" '.($useritem->eating?'checked="true"':'').' /></td>';
-					$form .= '<td class="centre '.($useritem->cooking?'yes':'no').'"><input type="checkbox" name="meeting-'.$user->name.'-'.$id.'-cooking" '.($useritem->cooking?'checked="true"':'').' /></td>';
-					$form .= '<td class="centre '.($useritem->paid?'yes':'no').'"><input type="checkbox" name="meeting-'.$user->name.'-'.$id.'-paid" '.($useritem->paid?'checked="true"':'').' /></td>';
+					$form .= '<td class="centre '.($useritem->eating?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-eating" '.($useritem->eating?'checked="true"':'').' /></td>';
+					$form .= '<td class="centre '.($useritem->cooking?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-cooking" '.($useritem->cooking?'checked="true"':'').' /></td>';
+					$form .= '<td class="centre '.($useritem->paid?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-paid" '.($useritem->paid?'checked="true"':'').' /></td>';
 				}
 			}
 			$form .= '<td><input type="text" name="meeting-'.$user->name.'-comment" value="'.$user->comment.'" /></td>';
