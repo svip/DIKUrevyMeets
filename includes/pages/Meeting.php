@@ -13,16 +13,6 @@ class Meeting extends Page {
 		$this->makePage ( $m, $meeting );
 	}
 	
-	private function sortSchedule ( $schedule ) {
-		$tmp = array();
-		foreach ( $schedule as $i => $item ) {
-			$tmp[intval(str_replace(':', '', $item->start))] = $item;
-			$tmp[intval(str_replace(':', '', $item->start))]->id = $i;
-		}
-		ksort($tmp);
-		return $tmp;
-	}
-	
 	private function makePage ( $date, $meeting ) {
 		$content = '<h1>'.$meeting->{'title'}.'</h1><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
 		$content .= '<p>';
@@ -47,7 +37,7 @@ class Meeting extends Page {
 				$table .= '<th>'.$item->title.'</th>';
 				$meets++;
 			} elseif ( $item->type == 'eat' ) {
-				$table .= '<th colspan="2">'.$item->title.'</th>';
+				$table .= '<th colspan="2">'.$item->title.(!$item->open?' (lukket)':'').'</th>';
 				$eats++;
 			}
 		}
@@ -63,10 +53,15 @@ class Meeting extends Page {
 		$table .= '</tr>';
 		$stats = array (
 			'users'		=> 0,
-			'attending'	=> 0,
-			'eating'	=> 0,
-			'cooking'	=> 0,
+			'schedule'	=> array()
 		);
+		foreach ( $schedule as $item ) {
+			if ( $item->type == 'meet' ) {
+				$stats['schedule'][$item->id] = array ( 'attending' => 0 );
+			} elseif ( $item->type == 'eat' ) {
+				$stats['schedule'][$item->id] = array ( 'eating' => 0, 'cooking' => 0 );
+			}
+		}
 		$tmp = array();
 		foreach ( $meeting->users as $name => $user )
 			$tmp[$name] = $user;
@@ -77,29 +72,42 @@ class Meeting extends Page {
 				&& $user->{'name'} == $this->auth->userinfo->{'name'} )
 				$currentInfo = $user;
 			$table .= '<tr><td>'.$user->{'name'}.'</td>';
-			$attending = 0;
-			$eating = 0;
-			$cooking = 0;
 			foreach ( $schedule as $item ) {
 				if ( $item->type == 'meet' ) {
-					if ( $user->schedule->{$item->id}->attending ) $attending++;
-					$table .= '<td>'.$this->tick($user->schedule->{$item->id}->attending).'</td>';
+					if ( $user->schedule->{$item->id}->attending ) $stats['schedule'][$item->id]['attending']++;
+					$table .= '<td class="centre '.($user->schedule->{$item->id}->attending?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->attending).'</td>';
 				} elseif ( $item->type == 'eat' ) {
-					if ( $user->schedule->{$item->id}->eating ) $eating++;
-					if ( $user->schedule->{$item->id}->cooking ) $cooking++;
-					$table .= '<td>'.$this->tick($user->schedule->{$item->id}->eating).'</td>';
-					$table .= '<td>'.$this->tick($user->schedule->{$item->id}->cooking).'</td>';
+					if ( $user->schedule->{$item->id}->eating ) $stats['schedule'][$item->id]['eating']++;;
+					if ( $user->schedule->{$item->id}->cooking ) $stats['schedule'][$item->id]['cooking']++;;
+					$table .= '<td class="centre '.($user->schedule->{$item->id}->eating?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->eating).'</td>';
+					$table .= '<td class="centre '.($user->schedule->{$item->id}->cooking?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->cooking).'</td>';
 				}
 			}
 			$table .= '<td>'.$user->comment.'</td></tr>';
 			$stats['users']++;
-			$stats['attending'] += $attending/$meets;
-			$stats['eating'] += $eating/$eats;
-			$stats['cooking'] += $cooking/$eats;
 		}
 		$table .= '</table>';
 		$content .= $table;
-		$content .= '<p>'.$stats['users'].' person(er)'.($eats==0?' og ':', ').$stats['attending'].' deltager'.($eats>0?', '.$stats['eating'].' spiser med og '.$stats['cooking'].' kok(ke)':'').'.</p>';
+		$statslist = array();
+		$statslist[] = '<b>'.$stats['users'].'</b> person(er)';
+		foreach ( $stats['schedule'] as $id => $item ) {
+			if ( $meeting->schedule->{$id}->type == 'meet' ) {
+				$statslist[] = '<b>'.$item['attending'].'</b> deltager til '.$meeting->schedule->{$id}->title;
+			} elseif ( $meeting->schedule->{$id}->type == 'eat' ) {
+				$statslist[] = '<b>'.$item['eating'].'</b> spiser med til '.$meeting->schedule->{$id}->title;
+				$statslist[] = '<b>'.$item['cooking'].'</b> er kok(ke) til '.$meeting->schedule->{$id}->title;
+			}
+		}
+		$content .= '<p>';
+		foreach ( $statslist as $i => $item ) {
+			if ( $i == count ( $statslist )-1 ) {
+				$content .= ' og ';
+			} elseif ( $i > 0 ) {
+				$content .= ', ';
+			}
+			$content .= $item;
+		}
+		$content .= '</p>';
 		if ( $this->auth->loggedIn() ) {
 			if ( isset ( $_POST['meeting-submit'] ) ) {
 				$this->handleMeetingSubmit($date, $schedule);
@@ -128,7 +136,8 @@ class Meeting extends Page {
 			} elseif ( $item->type == 'eat' ) {
 				$userSchedule[$item->id] = array (
 					'eating' => isset($_POST['meeting-'.$item->id.'-eating']),
-					'cooking' => isset($_POST['meeting-'.$item->id.'-cooking'])
+					'cooking' => isset($_POST['meeting-'.$item->id.'-cooking']),
+					'paid' => 0.0
 				);
 			}
 		}
@@ -143,13 +152,6 @@ class Meeting extends Page {
 		return '-';
 	}
 	
-	protected function safeString ( $str ) {
-		return str_replace ( 
-			array ( '"', '&' ),
-			array ( '&quot;', '&amp;' ),
-			$str );
-	}
-	
 	private function meetingForm ( $meeting, $currentInfo ) {
 		$userSchedule = array();
 		foreach ( $meeting->schedule as $item ) {
@@ -159,7 +161,10 @@ class Meeting extends Page {
 					$userSchedule[$item->id]['attending'] = $currentInfo->schedule->{$item->id}->attending;
 				}
 			} elseif ( $item->type == 'eat' ) {
-				$userSchedule[$item->id] = array ( 'eating' => true, 'cooking' => false );
+				if ( $item->open )
+					$userSchedule[$item->id] = array ( 'eating' => true, 'cooking' => false );
+				else
+					$userSchedule[$item->id] = array ( 'eating' => false, 'cooking' => false );
 				if ( $currentInfo != null ) {
 					$userSchedule[$item->id]['eating'] = $currentInfo->schedule->{$item->id}->eating;
 					$userSchedule[$item->id]['cooking'] = $currentInfo->schedule->{$item->id}->cooking;
@@ -188,16 +193,19 @@ class Meeting extends Page {
 
 		foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
 			if ( $item->type == 'meet' ) {
+				$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
 				$form .= '
 <input type="checkbox" name="meeting-'.$item->id.'-attending" id="meeting-'.$item->id.'-attending" '.($userSchedule[$item->id]['attending']?'checked="true"':'').' />
-<label for="meeting-'.$item->id.'-attending"><b>Kommer</b> til <b>'.$item->title.'</b></label><br />';
+<label for="meeting-'.$item->id.'-attending">Kommer</label>';
+				$form .= '<br />';
 			} elseif ( $item->type == 'eat' ) {
+				$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
 				$form .= '
 <input type="checkbox" name="meeting-'.$item->id.'-eating" id="meeting-'.$item->id.'-eating" '.($userSchedule[$item->id]['eating']?'checked="true"':'').' '.(!$item->open?'disabled="true"':'').' />
-<label for="meeting-'.$item->id.'-eating"><b>Spiser med</b> til <b>'.$item->title.'</b></label>';
+<label for="meeting-'.$item->id.'-eating">Spiser med</label>';
 				$form .= '
 <input type="checkbox" name="meeting-'.$item->id.'-cooking" id="meeting-'.$item->id.'-cooking" '.($userSchedule[$item->id]['cooking']?'checked="true"':'').' '.(!$item->open?'disabled="true"':'').' />
-<label for="meeting-'.$item->id.'-cooking"><b>Laver mad</b> til <b>'.$item->title.'</b></label>';
+<label for="meeting-'.$item->id.'-cooking">Laver mad</label>';
 				$form .= (!$item->open?' <span>(Kokkene har lukket for madtilmeldingen)</span>':'');
 				$form .= '<br />';
 			}

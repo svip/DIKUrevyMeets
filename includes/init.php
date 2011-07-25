@@ -9,6 +9,7 @@ class Page {
 	protected $content = '';
 	protected $database = null;
 	protected $auth = null;
+	protected $additionalScript = array();
 	
 	function __construct ( $database, $auth ) {
 		$this->database = $database;
@@ -18,6 +19,10 @@ class Page {
 	
 	function getContent ( ) {
 		return $this->content;
+	}
+	
+	function getAdditionalScripts ( ) {
+		return $this->additionalScript;
 	}
 	
 	protected function render ( ) {
@@ -38,6 +43,23 @@ class Page {
 
 	protected function logInFunction ( ) {
 		return $this->auth->logInFunction();
+	}
+	
+	protected function safeString ( $str ) {
+		return str_replace ( 
+			array ( '"', '&' ),
+			array ( '&quot;', '&amp;' ),
+			$str );
+	}
+	
+	protected function sortSchedule ( $schedule ) {
+		$tmp = array();
+		foreach ( $schedule as $i => $item ) {
+			$tmp[intval(str_replace(':', '', $item->start))] = $item;
+			$tmp[intval(str_replace(':', '', $item->start))]->id = $i;
+		}
+		ksort($tmp);
+		return $tmp;
 	}
 }
 

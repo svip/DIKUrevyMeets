@@ -12,10 +12,14 @@ class Output {
 	}
 	
 	function outputHtml ( ) {
+		$scripts = '';
+		foreach ( $this->page->getAdditionalScripts() as $script ) {
+			$scripts .= '<script src="./media/'.$script.'"></script>';
+		}
 		$template = file_get_contents ( 'includes/template.html' );
 		echo str_replace (
-			array ( '{{CONTENT}}', '{{TOPMENU}}' ),
-			array ( $this->page->getContent(), $this->topMenu() ),
+			array ( '{{CONTENT}}', '{{TOPMENU}}', '{{SCRIPT}}' ),
+			array ( $this->page->getContent(), $this->topMenu(), $scripts ),
 			$template );
 	}
 	

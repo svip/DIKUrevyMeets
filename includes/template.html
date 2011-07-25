@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>DIKUrevy møder</title>
+{{SCRIPT}}
 <style>
 body {
 	font-family: tahoma, sans, sans-serif;
@@ -12,7 +13,13 @@ h1 { margin-bottom: 0; }
 table, form {
 	margin: 0 auto;
 }
-form { width: 70%; background: #f0f0f0; padding: 15px 10px; }
+table { background: #eee; }
+table th { background: #ddd; padding: 1px 5px; vertical-align: bottom; }
+table td { background: #fafafa; padding: 1px 4px; }
+table td.centre { text-align: center; }
+td.yes { background: #0a0; color: #fff; font-weight: bold; }
+td.no { background: #a00; color: #fff; font-weight: bold; }
+form { width: 80%; background: #f0f0f0; padding: 15px 10px; }
 form#login > fieldset { display: none; }
 fieldset { border: 1px solid #999; }
 fieldset, form {
@@ -22,6 +29,8 @@ legend b { font-size: 125%; }
 input, label { width: 100%; }
 input[type=submit], input[type=checkbox] { width: auto; }
 .clear { clear: both; }
+fieldset .time { width: 100%; display: block; }
+fieldset .time input { width: 50px; text-align: right; }
 #topmenu { position: absolute; top: 0; right: 0; padding: 5px; font-size: 90%; }
 #login-select { list-style: none; padding-bottom: 20px; }
 #login-select li { 

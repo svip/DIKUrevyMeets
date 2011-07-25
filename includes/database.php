@@ -48,8 +48,10 @@ class Database {
 		return $tmp;
 	}
 	
-	function insertMeeting ( $date, $title, $schedule=array(array('title'=>'Aftensmad','type'=>'eat','start'=>'18:00','end'=>'19:00','open'=>true,
-	'spend'=>0.0,'costperperson'=>0.0),array('title'=>'Møde','type'=>'meet','start'=>'19:00','end'=>'23:00')), 
+	function insertMeeting ( $date, $title, $schedule=array(array
+			('title'=>'Aftensmad','type'=>'eat','start'=>'18:00',
+			'end'=>'19:00','open'=>true,'spend'=>0.0,'costperperson'=>0.0),
+			array('title'=>'Møde','type'=>'meet','start'=>'19:00','end'=>'23:00')), 
 			$comment='' ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 				return $this->meetings;
@@ -105,7 +107,6 @@ class Database {
 			'name'		=> $name,
 			'schedule'	=> $userSchedule,
 			'comment'	=> $comment,
-			'paid'		=> 0.0,
 			'modified'	=> time()
 		);
 		$i = 0;
