@@ -136,12 +136,16 @@ class Database {
 			'comment'	=> $comment,
 			'modified'	=> time()
 		);
-		$i = 0;
-		foreach ( $this->meetings->{$date}->users as $user )
-			if ( (is_object($user) && $user->eating)
-				|| ( is_array($user) && $user['eating'] ) )
-				$i++;
-		$this->meetings->{$date}->schedule->{0}->{'costperperson'} = $this->meetings->{$date}->schedule->{0}->{'spend'}/$i;
+		foreach ( $this->meetings->{$date}->schedule as $id => $item ) {
+			if ( $item->type == 'eat' ) {
+				$i = 0;
+				foreach ( $this->meetings->{$date}->users as $user )
+					if ( (is_object($user) && $user->schedule->{$id}->eating )
+						|| (is_array($user) && $user->schedule->{$id}>eating ) )
+						$i++;
+				$this->meetings->{$date}->schedule->{$id}->costperperson = $this->meetings->{$date}->schedule->{$id}->spend/$i;
+			}
+		}
 		$this->writeData ( 'meetings' );
 		return true;
 	}
