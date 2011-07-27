@@ -102,10 +102,9 @@ class Database {
 		foreach ( $this->users as $user )
 			if ( $user->name == $name )
 				return false;
-		if ( empty ( $this->users ) )
-			$id = 1;
-		else
-			$id = count ( $this->users ) + 1;
+		$id = 1;
+		foreach ( $this->users as $user )
+			$id++;
 		$this->users->{$id} = array (
 			'name'		=> $name,
 			'register'	=> time(),
