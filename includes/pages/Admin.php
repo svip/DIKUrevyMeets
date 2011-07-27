@@ -11,7 +11,10 @@ class Admin extends Page {
 		switch ( $_GET['admin'] ) {
 			case 'meeting':
 				$this->meetingPage();
-				break;		
+				break;
+			case 'rawmeeting':
+				$this->rawMeetingPage();
+				break;
 			case 'front':
 			default:
 				$this->frontPage();
@@ -108,6 +111,38 @@ class Admin extends Page {
 		if ( empty ($meeting) ) {
 			header( 'Location: ./?admin=front' );
 		}
+		if ( isset($_POST['meeting-submit']) ) {
+			$date = $_POST['meeting-date'];
+			$title = $_POST['meeting-title'];
+			$meetComment = $_POST['meeting-comment'];
+			$users = explode(',', $_POST['meeting-users']);
+			foreach ( $users as $userid ) {
+				$comment = $_POST['meeting-'.$userid.'-comment'];
+				$userSchedule = $meeting->users->{$userid}->schedule;
+				foreach ( $meeting->schedule as $id => $item ) {
+					if ( $item->type == 'meet' ) {
+						$userSchedule->{$id}->attending = isset($_POST['meeting-'.$userid.'-'.$id.'-attending']);
+					} elseif ( $item->type == 'eat' ) {
+						$userSchedule->{$id}->eating = isset($_POST['meeting-'.$userid.'-'.$id.'-eating']);
+						$userSchedule->{$id}->cooking = isset($_POST['meeting-'.$userid.'-'.$id.'-cooking']);
+						$userSchedule->{$id}->paid = isset($_POST['meeting-'.$userid.'-'.$id.'-paid'])?$item->costperperson:0.0;
+					}
+				}
+				$this->database->addUserToDate($date, $userid, $userSchedule, $comment, true, true);
+			}
+			$this->database->updateMeeting($date, $title, $meetComment);
+			header('Location: ./?admin=meeting&date='.$date);
+		}
+		foreach ( $meeting->schedule as $id => $item ) {
+			if ( isset ( $_POST['meeting-'.$id.'-open'] ) ) {
+				$this->database->openForEating($date, $id);
+				header('Location: ./?admin=meeting&date='.$date);
+			}
+			if ( isset ( $_POST['meeting-'.$id.'-close'] ) ) {
+				$this->database->closeForEating($date, $id);
+				header('Location: ./?admin=meeting&date='.$date);
+			}
+		}
 		$form = '<form method="post">
 <fieldset>
 <legend>Information</legend>
@@ -137,7 +172,11 @@ class Admin extends Page {
 			}
 		}
 		$form .= '</tr>';
+		$userids = '';
 		foreach ( $meeting->users as $userid => $user ) {
+			if ( $userids != '' )
+				$userids .= ',';
+			$userids .= $userid;
 			$form .= '<tr>
 			<td><a href="?admin=user&amp;user='.$userid.'">'.$user->name.'</a></td>';
 			foreach ( $schedule as $item ) {
@@ -148,16 +187,29 @@ class Admin extends Page {
 				} elseif ( $item->type == 'eat' ) {
 					$form .= '<td class="centre '.($useritem->eating?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-eating" '.($useritem->eating?'checked="true"':'').' /></td>';
 					$form .= '<td class="centre '.($useritem->cooking?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-cooking" '.($useritem->cooking?'checked="true"':'').' /></td>';
-					$form .= '<td class="centre '.($useritem->paid?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-paid" '.($useritem->paid?'checked="true"':'').' /></td>';
+					$form .= '<td class="centre '.($useritem->paid?'yes':($useritem->eating?'no':'nomatter')).'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-paid" '.($useritem->paid?'checked="true"':'').' /></td>';
 				}
 			}
-			$form .= '<td><input type="text" name="meeting-'.$user->name.'-comment" value="'.$user->comment.'" /></td>';
+			$form .= '<td><input type="text" name="meeting-'.$userid.'-comment" value="'.$user->comment.'" /></td>';
 			$form .= '</tr>';
 		}
 		$form .= '</table>';
+		$form .= '<input type="hidden" name="meeting-users" value="'.$userid.'" />';
 		$form .= '<input type="submit" name="meeting-submit" value="Ændr" />';
+		$form .= '<br /><a href="./?admin=rawmeeting&amp;date='.$date.'">Rådata</a>';
 		$form .= '</form>';
 		$this->content = $form;
+	}
+	
+	private function rawMeetingPage ( ) {
+		$date = $_GET['date'];
+		$meeting = $this->database->getMeeting($date);
+		if ( empty ($meeting) ) {
+			header( 'Location: ./?admin=front' );
+		}
+		$this->content = '<a href="./?admin=meeting&amp;date='.$date.'">Tilbage til møde</a>';
+		$this->content .= '<h2>Rådata for '.$date.'</h2>';
+		$this->content .= '<pre>'.print_r($meeting, true).'</pre>';
 	}
 }
 

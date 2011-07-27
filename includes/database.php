@@ -68,7 +68,7 @@ class Database {
 			array('title'=>'Møde','type'=>'meet','start'=>'19:00','end'=>'23:00')), 
 			$comment='' ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
-				return $this->meetings;
+			return $this->meetings;
 		if ( !empty( $this->meetings->{$date} ) )
 			return $this->meetings;
 		foreach ( $schedule as $item ) {
@@ -87,16 +87,27 @@ class Database {
 		return $this->meetings;
 	}
 	
-	function insertUser ( $user, $service, $identity, $signature ) {
+	function updateMeeting ( $date, $title, $comment ) {
+		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
+			return false;
+		if ( empty( $this->meetings->{$date} ) )
+			return false;
+		$this->meetings->{$date}->title = $title;
+		$this->meetings->{$date}->comment = $comment;
+		$this->writeData ( 'meetings' );
+		return true;
+	}
+	
+	function insertUser ( $name, $service, $identity, $signature ) {
 		foreach ( $this->users as $user )
-			if ( $user->name == $user )
+			if ( $user->name == $name )
 				return false;
 		if ( empty ( $this->users ) )
 			$id = 1;
 		else
 			$id = count ( $this->users ) + 1;
 		$this->users->{$id} = array (
-			'name'		=> $user,
+			'name'		=> $name,
 			'register'	=> time(),
 			'admin'		=> false,
 			'service'	=> $service,
@@ -107,26 +118,35 @@ class Database {
 		return true;
 	}
 	
-	function addUserToDate ( $date, $name, $userSchedule, $comment ) {
+	function addUserToDate ( $date, $name, $userSchedule, $comment,
+		$useridSupplied=false, $ignoreConstraints=false ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
-		$userid = null;
-		foreach ( $this->users as $id => $user )
-			if ( $user->name == $name ) {
-				$userid = $id;
-				break;
-			}
+		if ( $useridSupplied ) {
+			$userid = $name;
+		} else {
+			$userid = null;
+			foreach ( $this->users as $id => $user )
+				if ( $user->name == $name ) {
+					$userid = $id;
+					break;
+				}
+		}
 		if ( $userid == null )
 			return false;
-		foreach ( $this->meetings->{$date}->schedule as $id => $item ) {
-			if ( $item->type == 'eat'
-				&& !$item->open ) {
-				if ( !empty($this->meetings->{$date}->{'users'}->{$userid}) ) {
-					$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->eating;
-					$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->cooking;
-				} else {
-					$userSchedule[$id]['eating'] = false;
-					$userSchedule[$id]['cooking'] = false;
+		if ( !$ignoreConstraints ) {
+			foreach ( $this->meetings->{$date}->schedule as $id => $item ) {
+				if ( $item->type == 'eat'
+					&& !$item->open ) {
+					if ( is_array ( $userSchedule ) ) {
+						if ( !empty($this->meetings->{$date}->{'users'}->{$userid}) ) {
+							$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->eating;
+							$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->cooking;
+						} else {
+							$userSchedule[$id]['eating'] = false;
+							$userSchedule[$id]['cooking'] = false;
+						}
+					}
 				}
 			}
 		}
@@ -141,9 +161,12 @@ class Database {
 				$i = 0;
 				foreach ( $this->meetings->{$date}->users as $user )
 					if ( (is_object($user) && $user->schedule->{$id}->eating )
-						|| (is_array($user) && $user->schedule->{$id}>eating ) )
+						|| (is_array($user) && (
+							(is_object($user['schedule']) && $user['schedule']->{$id}->eating )
+							|| (is_array($user['schedule']) && $user['schedule'][$id]['eating'] ) ) ) )
 						$i++;
-				$this->meetings->{$date}->schedule->{$id}->costperperson = $this->meetings->{$date}->schedule->{$id}->spend/$i;
+				if ( $i === 0 ) $i = 1;
+				$this->meetings->{$date}->schedule->{$id}->costperperson = floatval($this->meetings->{$date}->schedule->{$id}->spend)/floatval($i);
 			}
 		}
 		$this->writeData ( 'meetings' );
@@ -154,6 +177,14 @@ class Database {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
 		$this->meetings->{$date}->schedule->{$id}->open = false;
+		$this->writeData ( 'meetings' );
+		return true;
+	}
+	
+	function openForEating ( $date, $id ) {
+		if ( empty ( $this->meetings->{$date} ) )
+			return false;
+		$this->meetings->{$date}->schedule->{$id}->open = true;
 		$this->writeData ( 'meetings' );
 		return true;
 	}
