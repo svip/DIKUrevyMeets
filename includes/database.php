@@ -36,6 +36,12 @@ class Database {
 		return $this->users;
 	}
 	
+	function getUserById ( $id ) {
+		if ( !empty($this->users->{$id} ) )
+			return $this->users->{$id};
+		return null;
+	}
+	
 	function getUser ( $name ) {
 		foreach ( $this->users as $user )
 			if ( $user->name == $name )
@@ -117,6 +123,17 @@ class Database {
 		return true;
 	}
 	
+	function updateUser ( $userid, $dataToUpdate ) {
+		if ( empty ( $this->users->{$userid} ) )
+			return false;
+		if ( !empty($dataToUpdate['username']) )
+			$this->users->{$userid}->name = $dataToUpdate['username'];
+		if ( isset($dataToUpdate['admin']) )
+			$this->users->{$userid}->admin = $dataToUpdate['admin'];
+		$this->writeData ( 'users' );
+		return true;
+	}
+	
 	function addUserToDate ( $date, $name, $userSchedule, $comment,
 		$useridSupplied=false, $ignoreConstraints=false ) {
 		if ( empty ( $this->meetings->{$date} ) )
@@ -150,7 +167,6 @@ class Database {
 			}
 		}
 		$this->meetings->{$date}->{'users'}->{$userid} = array (
-			'name'		=> $this->users->{$userid}->name,
 			'schedule'	=> $userSchedule,
 			'comment'	=> $comment,
 			'modified'	=> time()

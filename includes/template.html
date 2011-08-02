@@ -3,56 +3,7 @@
 <head>
 <title>DIKUrevy møder</title>
 {{SCRIPT}}
-<style>
-body {
-	font-family: tahoma, sans, sans-serif;
-}
-h1, h2, h3, h4, h5, h6, p { text-align: center; }
-h2 { margin-top: 0; }
-h1 { margin-bottom: 0; }
-a { color: #2a8; }
-a:visited { color: #486; }
-a:hover { color: #4ca; }
-a:active { color: #4ac; }
-table, form {
-	margin: 0 auto;
-}
-table { background: #eee; }
-table th { background: #ddd; padding: 1px 5px; vertical-align: bottom; }
-table td { background: #fafafa; padding: 1px 4px; }
-table td.centre { text-align: center; }
-td.yes { background: #0a0; color: #fff; font-weight: bold; }
-td.no { background: #a00; color: #fff; font-weight: bold; }
-td.nomatter { background: #daa; color: #fff; font-weight: bold; }
-form { width: 80%; background: #f0f0f0; padding: 15px 10px; }
-form#login > fieldset { display: none; }
-fieldset { border: 1px solid #999; }
-fieldset, form {
-	border-radius: 15px; -moz-border-radius: 15px; -webkit-border-radius: 15px;
-}
-table th, table td, input {
-	border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
-}
-legend b { font-size: 125%; }
-input, label { width: 100%; }
-input[type=submit], input[type=checkbox] { width: auto; }
-.clear { clear: both; }
-fieldset .time { width: 100%; display: block; }
-fieldset .time input { width: 50px; text-align: right; }
-#topmenu { position: absolute; top: 0; right: 0; padding: 5px; font-size: 90%; }
-#login-select { list-style: none; padding-bottom: 20px; }
-#login-select li { 
-	cursor: pointer; display: block; 
-	width: 100px; height: 0; padding-top: 25px;
-	overflow: hidden; background-repeat: no-repeat;
-	float: left; margin-right: 25px;
-}
-#login-select-openid { background-image: url(media/openid.png); }
-#login-select-google { background-image: url(media/google.png); }
-#login-select-browserid { background-image: url(media/browserid.png); }
-#login-select-facebook { background-image: url(media/facebook.png); }
-#login-select-twitter { background-image: url(media/twitter.png); }
-</style>
+<link rel="stylesheet" href="./media/styles.css" />
 <script>
 function loginSelect ( which ) {
 	var form = document.getElementsByTagName('form')[0];

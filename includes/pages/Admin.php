@@ -9,6 +9,9 @@ class Admin extends Page {
 		}
 		$this->additionalScript[] = 'admin.js';
 		switch ( $_GET['admin'] ) {
+			case 'user':
+				$this->userPage();
+				break;
 			case 'meeting':
 				$this->meetingPage();
 				break;
@@ -20,6 +23,35 @@ class Admin extends Page {
 				$this->frontPage();
 				break;
 		}
+	}
+	
+	private function userPage ( ) {
+		$userid = $_GET['user'];
+		$user = $this->database->getUserById($userid);
+		if ( empty($user) ) {
+			header('Location: ./?admin=front');
+			return;
+		}
+		if ( isset($_POST['user-submit']) ) {
+			$username = $_POST['user-name'];
+			$admin = isset($_POST['user-admin'])?true:false;
+			$this->database->updateUser($userid, array(
+				'admin'		=> $admin,
+				'username'	=> $username));
+			header('Location: ./?admin=user&user='.$userid);
+			return;
+		}
+		$form = '<form method="post">
+		<fieldset>
+		<legend>Ændre <b>'.$user->name.'</b>s data</legend>
+		<label for="user-name">Nyt brugernavn (blank for at lade brugernavnet være):</label>
+		<input type="text" name="user-name" id="user-name" />
+		<input type="checkbox" name="user-admin" id="user-admin" '.($user->admin?'checked="true"':'').' />
+		<label for="user-admin">Administrator?</label><br />
+		<input type="submit" name="user-submit" value="Opdatér" />
+		</fieldset>
+		</form>';
+		$this->content = '<p><a href="./?admin=front">Tilbage</a></p>'.$form;
 	}
 	
 	private function frontPage ( ) {
@@ -178,7 +210,7 @@ class Admin extends Page {
 				$userids .= ',';
 			$userids .= $userid;
 			$form .= '<tr>
-			<td><a href="?admin=user&amp;user='.$userid.'">'.$user->name.'</a></td>';
+			<td><a href="?admin=user&amp;user='.$userid.'">'.$this->database->getUserById($userid)->name.'</a></td>';
 			foreach ( $schedule as $item ) {
 				$id = $item->id;
 				$useritem = $user->schedule->{$id};

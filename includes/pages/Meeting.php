@@ -15,23 +15,13 @@ class Meeting extends Page {
 	
 	private function makePage ( $date, $meeting ) {
 		$content = '<h1>'.$meeting->{'title'}.'</h1><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
-		$content .= '<p>';
 		$schedule = $this->sortSchedule($meeting->schedule);
-		$content .= '<b>Program:</b> ';
-		$i = 0;
-		foreach ( $schedule as $item ) {
-			if ( $i > 0 )
-				$content .= ', ';
-			$content .= $item->title . ': <b>'.$item->start.'</b>';
-			$i++;
-		}
-		$content .= '.</p>';
 		$currentInfo = null;
 		$meets = 0;
 		$eats = 0;
 		$table = '<table>
 		<tr>
-		<th rowspan="2">Bruger</th>';
+		<th rowspan="2">Program</th>';
 		foreach ( $schedule as $item ) {
 			if ( $item->type == 'meet' ) {
 				$table .= '<th>'.$item->title.'</th>';
@@ -41,8 +31,17 @@ class Meeting extends Page {
 				$eats++;
 			}
 		}
-		$table .= '<th rowspan="2">Kommentar</th></tr>
+		$table .= '<th rowspan="3" class="comment">Kommentar</th></tr>
 		<tr>';
+		foreach ( $schedule as $item ) {
+			if ( $item->type == 'meet' ) {
+				$table .= '<th>'.$item->start.'</th>';
+			} elseif ( $item->type == 'eat' ) {
+				$table .= '<th colspan="2">'.$item->start.'</th>';
+			}
+		}
+		$table .= '</tr><tr>';
+		$table .= '<th>Bruger</th>';
 		foreach ( $schedule as $item ) {
 			if ( $item->type == 'meet' ) {
 				$table .= '<th>Kommer</th>';
@@ -67,54 +66,54 @@ class Meeting extends Page {
 			$tmp[$name] = $user;
 		ksort($tmp);
 		$users = $tmp;
-		foreach ( $users as $user ) {
+		foreach ( $users as $userid => $user ) {
 			if ( $this->auth->loggedIn()
-				&& $user->{'name'} == $this->auth->userinfo->{'name'} )
+				&& $this->database->getUserById($userid)->{'name'} == $this->auth->userinfo->{'name'} )
 				$currentInfo = $user;
-			$table .= '<tr><td>'.$user->{'name'}.'</td>';
+			$table .= '<tr><td>'.$this->database->getUserById($userid)->name.'</td>';
 			foreach ( $schedule as $item ) {
 				if ( $item->type == 'meet' ) {
 					if ( $user->schedule->{$item->id}->attending ) $stats['schedule'][$item->id]['attending']++;
 					$table .= '<td class="centre '.($user->schedule->{$item->id}->attending?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->attending).'</td>';
 				} elseif ( $item->type == 'eat' ) {
-					if ( $user->schedule->{$item->id}->eating ) $stats['schedule'][$item->id]['eating']++;;
-					if ( $user->schedule->{$item->id}->cooking ) $stats['schedule'][$item->id]['cooking']++;;
+					if ( $user->schedule->{$item->id}->eating ) $stats['schedule'][$item->id]['eating']++;
+					if ( $user->schedule->{$item->id}->cooking ) $stats['schedule'][$item->id]['cooking']++;
 					$table .= '<td class="centre '.($user->schedule->{$item->id}->eating?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->eating).'</td>';
 					$table .= '<td class="centre '.($user->schedule->{$item->id}->cooking?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->cooking).'</td>';
 				}
 			}
-			$table .= '<td>'.$user->comment.'</td></tr>';
+			$table .= '<td class="comment">'.$user->comment.'</td></tr>';
 			$stats['users']++;
 		}
-		$table .= '</table>';
-		$content .= $table;
-		$statslist = array();
-		$statslist[] = '<b>'.$stats['users'].'</b> person(er)';
+		$table .= '<tr>
+		<th>Bruger</th>';
+		foreach ( $schedule as $item ) {
+			if ( $item->type == 'meet' ) {
+				$table .= '<th>Kommer</th>';
+			} elseif ( $item->type == 'eat' ) {
+				$table .= '<th>Spiser med</th><th>Laver mad</th>';
+			}
+		}
+		$table .= '<th>Kommentar</th></tr>';
+		$table .= '<tr class="total">
+		<td>'.$stats['users'].'</td>';
 		foreach ( $stats['schedule'] as $id => $item ) {
 			if ( $meeting->schedule->{$id}->type == 'meet' ) {
-				$statslist[] = '<b>'.$item['attending'].'</b> deltager til '.$meeting->schedule->{$id}->title;
+				$table .= '<td>'.$item['attending'].'</td>';
 			} elseif ( $meeting->schedule->{$id}->type == 'eat' ) {
-				$statslist[] = '<b>'.$item['eating'].'</b> spiser med til '.$meeting->schedule->{$id}->title;
-				$statslist[] = '<b>'.$item['cooking'].'</b> er kok(ke) til '.$meeting->schedule->{$id}->title;
+				$table .= '<td>'.$item['eating'].'</td><td>'.$item['cooking'].'</td>';
 			}
 		}
-		$content .= '<p>';
-		foreach ( $statslist as $i => $item ) {
-			if ( $i == count ( $statslist )-1 ) {
-				$content .= ' og ';
-			} elseif ( $i > 0 ) {
-				$content .= ', ';
-			}
-			$content .= $item;
-		}
-		$content .= '</p>';
+		$table .= '<td>&nbsp;</td></tr>';
+		$table .= '</table>';
+		$content .= $table;
 		if ( $this->auth->loggedIn() ) {
 			if ( isset ( $_POST['meeting-submit'] ) ) {
 				$this->handleMeetingSubmit($date, $schedule);
 			}
 			foreach ( $schedule as $item ) {
 				if ( isset ( $_POST['closeeating-'.$item->id.'-submit'] )
-					&& $meeting->users->{$this->auth->userinfo->name}->schedule->{$item->id}->cooking ) {
+					&& $meeting->users->{$this->database->getUserId($this->auth->userinfo->name)}->schedule->{$item->id}->cooking ) {
 					$this->database->closeForEating($date, $item->id);
 					header ( 'Location: ./?meeting='.$date );					
 				}
