@@ -76,7 +76,7 @@ DTSTAMP:{$this->icalTime($date, $item->start)}
 TRANSP:OPAQUE
 SEQUENCE:0
 STATUS:CONFIRMED
-UID:dikurevy$date$i
+UID:dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}
 END:VEVENT
 
 EOF;
@@ -87,6 +87,10 @@ END:VCALENDAR
 
 EOF;
 		$this->content = $content;
+	}
+	
+	private function uid ( $date, $time, $id, $title ) {
+		return md5(str_replace('-', '', $date).$time.$id.preg_replace('@[^A-Za-z0-9]@is', '', $title));
 	}
 	
 	private function icalTime ( $date, $time ) {
