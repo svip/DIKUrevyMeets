@@ -4,11 +4,16 @@ class Output {
 
 	private $page = null;
 	private $auth = null;
+	private $contentType = null;
 	
 	function __construct ( $page, $auth ) {
 		$this->page = $page;
 		$this->auth = $auth;
-		$this->outputHtml();
+		$this->contentType = $page->getContentType();
+		if ( empty ($this->contentType) )
+			$this->outputHtml();
+		else
+			$this->outputRaw();
 	}
 	
 	function outputHtml ( ) {
@@ -21,6 +26,11 @@ class Output {
 			array ( '{{CONTENT}}', '{{TOPMENU}}', '{{SCRIPT}}' ),
 			array ( $this->page->getContent(), $this->topMenu(), $scripts ),
 			$template );
+	}
+	
+	function outputRaw ( ) {
+		header('Content-Type: '.$this->contentType.'; charset=UTF-8');
+		echo $this->page->getContent();
 	}
 	
 	private function topMenu ( ) {
