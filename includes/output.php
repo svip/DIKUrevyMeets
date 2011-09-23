@@ -41,7 +41,7 @@ class Output {
 			}
 			$menu[] = array ( './?do=logout', 'Log ud' );
 		}
-		$menu[] = array ( './?do=ical', 'ical' );
+		$menu[] = array ( 'http://moeder.dikurevy.dk/?do=ical', 'ical' );
 		$menu[] = array ( './', 'Forside' );
 		$str = '';
 		foreach ( $menu as $item ) {
