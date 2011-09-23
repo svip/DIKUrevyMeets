@@ -27,12 +27,7 @@ class Actions extends Page {
 	}
 	
 	private function logout ( ) {
-		foreach ( $_COOKIE as $cookie => $value ) {
-			if ( strpos($cookie, 'rym-')!==false ) {
-				$this->auth->unsetCookie ( $cookie );
-			}
-		}
-		header ( 'Location: ' . $_SERVER['HTTP_REFERER'] );
+		header ( 'Location: /logout' );
 	}
 }
 

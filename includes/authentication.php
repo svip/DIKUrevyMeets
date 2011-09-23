@@ -137,9 +137,50 @@ class Authentication {
 		}
 	}
 	
+	private function drupalRegister ( $uid, $name ) {
+		if ( $this->database->insertUser ( $name, 'drupal', $uid, null ) ) {
+			if ( !empty($_SERVER['HTTP_REFERER']) )
+				header('Location: '.$_SERVER['HTTP_REFERER']);
+			else
+				header('Location: ./');
+		}
+	}
+	
+	private function drupalCookie ( ) {
+		foreach ( $_COOKIE as $name => $cookie ) {
+			if ( preg_match("@SESS.*@is", $name ) ) {
+				$data = $cookie;
+				$i = gfDBQuery ( "SELECT s.`uid`, u.`name`
+					FROM `drupal_sessions` s
+						JOIN `drupal_users` u
+							ON s.`uid` = u.`uid`
+					WHERE s.`sid` = '$data' AND s.`uid` != 0" );
+				if ( gfDBGetNumRows($i) > 0 ) {
+					$result = gfDBGetResult($i);
+					foreach ( $this->database->getUsers() as $user ) {
+						if ( is_object($user)
+							&& $user->{'identity'} == $result['uid'] ) {
+							$this->userinfo = $user;
+							$this->loginChecked = true;
+							$this->login = true;
+							return true;
+						}
+					}
+					$this->drupalRegister($result['uid'], $result['name']);
+					$this->userinfo = $user;
+					$this->loginChecked = true;
+					$this->login = true;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public function loggedIn ( ) {
 		if ( $this->loginChecked ) 
 			return $this->login;
+		return $this->drupalCookie();
 		if ( !empty ( $_COOKIE['rym-openid-identity'] )
 			&& !empty ( $_COOKIE['rym-openid-sig'] ) ) {
 			$identity = $_COOKIE['rym-openid-identity'];
@@ -186,89 +227,8 @@ class Authentication {
 	}
 	
 	public function logInFunction ( ) {
-		$openidTruth = $this->openidLogin;
-		$googleTruth = $this->googleLogin;
-		$script = '';
-		if ( $openidTruth ) {
-			$script .= 'loginSelect(\'openid\');';
-		}
-		$form = '<form method="post" id="login">
-<h5>For at kunne tilmelde dig dette revymøde, skal du først logge ind via en af de følgende systemer.</h5>
-<h4>Hvem har du solgt din sjæl til?</h4>
-<ul id="login-select">
-<li id="login-select-openid" onclick="loginSelect(\'openid\');">OpenID</li>
-<li id="login-select-google" onclick="loginSelect(\'google\');">Google Konto</li>
-<li id="login-select-browserid" onclick="loginSelect(\'browserid\');">BrowserID</li>
-<li id="login-select-facebook" onclick="loginSelect(\'facebook\');">Facebook</li>
-<li id="login-select-twitter" onclick="loginSelect(\'twitter\');">Twitter</li>
-</ul>
-<div class="clear"></div>
-<fieldset id="login-openid">
-<legend>OpenID</legend>
-'.(!$openidTruth ? '
-<fieldset>
-<legend>Log ind</legend>
-<label for="login-openid-url">OpenID-identitet:</label>
-<input type="text" id="login-openid-url" name="login-openid-url" />
-<input type="submit" name="login-openid-submit" value="Log ind" />
-</fieldset>':'').'
-'.($openidTruth ? '
-<fieldset>
-<legend>Opret ny bruger</legend>
-<label for="register-openid-username">Ønsket brugernavn:</label>
-<input type="text" id="register-openid-username" name="register-openid-username" />
-<input type="submit" name="register-openid-submit" value="Opret ny bruger" />
-</fieldset>
-' : '').'
-</fieldset>
-<fieldset id="login-google">
-<legend>Google Konto</legend>
-'.(!$googleTruth ? '
-<fieldset>
-<legend>Log ind</legend>
-<input type="submit" name="login-google-submit" value="Klik her for at logge ind" />
-</fieldset>' : '' ).'
-'.($googleTruth ? '<fieldset>
-<legend>Opret ny bruger</legend>
-<label for="register-google-username">Ønsket brugernavn:</label>
-<input type="text" id="register-google-username" name="register-google-username" />
-<input type="submit" name="register-google-submit" value="Opret ny bruger" />
-</fieldset>' : '' ).'
-</fieldset>
-<fieldset id="login-browserid">
-<legend>BrowserID</legend>
-<fieldset>
-<legend>Log ind</legend>
-<button id="login-browserid-button">Klik her for at logge ind</button>
-</fieldset>
-<fieldset>
-<legend>Opret ny bruger</legend>
-</fieldset>
-</fieldset>
-<fieldset id="login-facebook">
-<legend>Facebook</legend>
-<fieldset>
-<legend>Log ind</legend>
-</fieldset>
-<fieldset>
-<legend>Opret ny bruger</legend>
-</fieldset>
-</fieldset>
-<fieldset id="login-twitter">
-<legend>Twitter</legend>
-<fieldset>
-<legend>Log ind</legend>
-</fieldset>
-<fieldset>
-<legend>Opret ny bruger</legend>
-</fieldset>
-</fieldset>
-<h5>Hvad hvis jeg ikke har solgt min sjæl til nogle af disse multinationale virksomheder som kun har tænkt sig at trække al personlig data om folk til sig for deres egne vindings skyld?</h5>
-<h5>Så har du tabt!  Dette er kun for sjæleløse individer.  Eller vent på Mozillas BrowserID bliver færdig.</h5>
-</form>';
-		if ( $script != '' )
-			$script = '<script>'.$script.'</script>';
-		return $form.$script;
+		$form = '<form><h5>For at kunne tilmelde dig dette revymøde, skal du logge ind via vores nye <a href="http://ny.dikurevy.dk/">Drupal system</a>.  Returnér her når du har logget ind der.</h5></form>';
+		return $form;
 	}
 }
 

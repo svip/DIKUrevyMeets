@@ -122,7 +122,7 @@ class Meeting extends Page {
 		} else {
 			$content .= $this->logInFunction();
 		}
-		$this->content = $content;
+		$this->content = '<p><a href="./">Tilbage</a></p>'.$content;
 	}
 	
 	private function handleMeetingSubmit ( $date, $schedule ) {

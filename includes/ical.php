@@ -63,20 +63,56 @@ END:STANDARD
 END:VTIMEZONE
 
 EOF;
-
 		foreach ( $meetings as $date => $meeting ) {
 			$schedule = $this->sortSchedule($meeting->schedule);
+			$day = array();
 			foreach ( $schedule as $i => $item ) {
+				if ( $item->unique ) {
+					if ( !isset($day[0]) )
+						$day[1] = array (
+							'title'		=>	"{$meeting->title}: {$item->title}",
+							'dtstart'	=>	$this->icalTime($date, $item->start),
+							'dtend'		=>	$this->icalTime($date, $item->end),
+							'dtstamp'	=>	$this->icalTime($date, $item->start),
+							'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
+						);
+					else
+						$day[] = array (
+							'title'		=>	"{$meeting->title}: {$item->title}",
+							'dtstart'	=>	$this->icalTime($date, $item->start),
+							'dtend'		=>	$this->icalTime($date, $item->end),
+							'dtstamp'	=>	$this->icalTime($date, $item->start),
+							'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
+						);
+				} else {
+					if ( isset($day[0]) ) {
+						if ( $this->isNewer($this->icalTime($date, $item->end), $day[0]['dtend']) )
+							$day[0]['dtend'] = $this->icalTime($date, $item->end);
+						if ( $this->isNewer($day[0]['dtstart'], $this->icalTime($date, $item->start)) )
+							$day[0]['dtstart'] = $this->icalTime($date, $item->start);
+					} else {
+						$day[0] = array (
+							'title'		=>	"{$meeting->title}",
+							'dtstart'	=>	$this->icalTime($date, $item->start),
+							'dtend'		=>	$this->icalTime($date, $item->end),
+							'dtstamp'	=>	$this->icalTime($date, $item->start),
+							'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
+						);
+					}
+				}
+			}
+			ksort($day);
+			foreach ( $day as $item ) {
 				$content .= <<<EOF
 BEGIN:VEVENT
-SUMMARY:{$meeting->title}: {$item->title}
-DTSTART:{$this->icalTime($date, $item->start)}
-DTEND:{$this->icalTime($date, $item->end)}
-DTSTAMP:{$this->icalTime($date, $item->start)}
+SUMMARY:{$item['title']}
+DTSTART:{$item['dtstart']}
+DTEND:{$item['dtend']}
+DTSTAMP:{$item['dtstamp']}
 TRANSP:OPAQUE
 SEQUENCE:0
 STATUS:CONFIRMED
-UID:dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}
+UID:{$item['uid']}
 END:VEVENT
 
 EOF;
@@ -95,6 +131,12 @@ EOF;
 	
 	private function icalTime ( $date, $time ) {
 		return str_replace('-', '', $date).'T'.str_replace(':', '', $time).'00Z';
+	}
+	
+	private function isNewer ( $test, $against ) {
+		$test = strptime($test, "%Y%m%dT%H%M00Z");
+		$against = strptime($against, "%Y%m%dT%H%M00Z");
+		return $test > $against;
 	}
 	
 	private function sortSchedule ( $schedule ) {

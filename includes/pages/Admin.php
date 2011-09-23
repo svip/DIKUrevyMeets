@@ -18,6 +18,12 @@ class Admin extends Page {
 			case 'rawmeeting':
 				$this->rawMeetingPage();
 				break;
+			case 'userlist':
+				$this->userListPage();
+				break;
+			case 'deletemeeting':
+				$this->deleteMeetingPage();
+				break;
 			case 'front':
 			default:
 				$this->frontPage();
@@ -51,7 +57,17 @@ class Admin extends Page {
 		<input type="submit" name="user-submit" value="Opdatér" />
 		</fieldset>
 		</form>';
-		$this->content = '<p><a href="./?admin=front">Tilbage</a></p>'.$form;
+		$this->content = '<p><a href="./?admin=userlist">Tilbage</a></p>'.$form;
+	}
+	
+	private function userListPage ( ) {
+		$users = $this->database->getUsers();
+		$content = '<ul>';
+		foreach ( $users as $id => $user ) {
+			$content .= '<li><a href="./?admin=user&amp;user='.$id.'">'.$user->name.'</a></li>';
+		}
+		$content .= '</ul>';
+		$this->content = $content;
 	}
 	
 	private function frontPage ( ) {
@@ -72,6 +88,7 @@ class Admin extends Page {
 							'type'		=> 'meet',
 							'start'		=> $_POST['newmeeting-'.$i.'-start'],
 							'end'		=> $_POST['newmeeting-'.$i.'-end'],
+							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
 						);
 					} elseif ( $type == 'eat' ) {
 						$spend = isset($_POST['newmeeting-'.$i.'-spend'])
@@ -85,6 +102,7 @@ class Admin extends Page {
 							'open'		=> true,
 							'spend'		=> $spend,
 							'costperperson'	=> $spend,
+							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
 						);
 					}
 				}
@@ -96,7 +114,7 @@ class Admin extends Page {
 		}
 		$list = "<ul>\n";
 		foreach ( $this->database->getSortedMeetings() as $date => $meeting ) {
-			$list .= '<li><a href="./?admin=meeting&amp;date='.$date.'">'.$date.': '.$meeting->{'title'}."</a></li>\n";
+			$list .= '<li><a href="./?admin=meeting&amp;date='.$date.'">'.$date.': '.$meeting->{'title'}.'</a> (<a href="./?admin=deletemeeting&amp;date='.$date."\">Slet</a>)</li>\n";
 		}
 		$list .= "</ul>\n";
 		$form = '<form method="post">
@@ -115,6 +133,8 @@ class Admin extends Page {
 <input type="text" id="newmeeting-0-title" name="newmeeting-0-title" value="Møde" />
 <label for="newmeeting-0-start">Mødetid:</label>
 <span class="time"><input type="text" id="newmeeting-0-start" name="newmeeting-0-start" value="19:00" /><span> - </span><input type="text" id="newmeeting-0-end" name="newmeeting-0-end" value="23:00" /></span>
+<input type="checkbox" name="newmeeting-0-unique" id="newmeeting-0-unique" />
+<label for="newmeeting-0-unique">Vis separat på ical?</label>
 <input type="hidden" name="newmeeting-0-type" value="meet" />
 </fieldset>
 <fieldset id="newmeeting-1">
@@ -126,6 +146,8 @@ class Admin extends Page {
 <span class="time"><input type="text" id="newmeeting-1-start" name="newmeeting-1-start" value="18:00" /><span> - </span><input type="text" id="newmeeting-1-end" name="newmeeting-1-end" value="19:00" /></span>
 <label for="newmeeting-1-spend">Indkøbspris (i hele kroner):</label>
 <input type="text" id="newmeeting-1-spend" name="newmeeting-1-spend" />
+<input type="checkbox" name="newmeeting-1-unique" id="newmeeting-1-unique" />
+<label for="newmeeting-1-unique">Vis separat på ical?</label>
 <input type="hidden" name="newmeeting-1-type" value="eat" />
 </fieldset>
 </div>
@@ -133,7 +155,8 @@ class Admin extends Page {
 <input type="submit" name="newmeeting-submit" value="Nyt møde!" />
 </fieldset>
 </form>';
-		$this->content = $list.$form;
+		$menu = '<p><a href="./?admin=userlist">Brugerliste</a></p>';
+		$this->content = $menu.$list.$form;
 	}
 	
 	private function meetingPage ( ) {
@@ -226,11 +249,30 @@ class Admin extends Page {
 			$form .= '</tr>';
 		}
 		$form .= '</table>';
-		$form .= '<input type="hidden" name="meeting-users" value="'.$userid.'" />';
+		$form .= '<input type="hidden" name="meeting-users" value="'.$userids.'" />';
 		$form .= '<input type="submit" name="meeting-submit" value="Ændr" />';
 		$form .= '<br /><a href="./?admin=rawmeeting&amp;date='.$date.'">Rådata</a>';
 		$form .= '</form>';
-		$this->content = $form;
+		$this->content = '<p><a href="?admin=front">Tilbage</a></p>'.$form;
+	}
+	
+	private function deleteMeetingPage ( ) {
+		$date = $_GET['date'];
+		$meeting = $this->database->getMeeting($date);
+		if ( isset($_POST['deletemeeting-yes']) ) {
+			$this->database->deleteMeeting($date);
+		}
+		if ( isset($_POST['deletemeeting-yes'])
+			|| isset($_POST['deletemeeting-no']) ) {
+			header('Location: ./?admin=front');
+		}
+		$this->content = '<form method="post">
+<fieldset>
+<legend>Slet '.$meeting->title.'?</legend>
+<input type="submit" name="deletemeeting-yes" value="Ja" />
+<input type="submit" name="deletemeeting-no" value="Nej" />
+</fieldset>
+</form>';
 	}
 	
 	private function rawMeetingPage ( ) {

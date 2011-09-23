@@ -2,12 +2,16 @@
 
 error_reporting ( E_ALL );
 
-ini_set('display_errors', '1');
+ini_set('display_errors', 1);
 
-require ( 'includes/database.php' );
+require_once ( 'config.php' );
 
-require ( 'includes/authentication.php' );
+require_once ( 'includes/database.php' );
 
-require ( 'includes/init.php' );
+require_once ( 'includes/globalfunctions.php' );
 
-require ( 'includes/output.php' );
+require_once ( 'includes/authentication.php' );
+
+require_once ( 'includes/init.php' );
+
+require_once ( 'includes/output.php' );
