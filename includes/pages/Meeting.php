@@ -13,6 +13,10 @@ class Meeting extends Page {
 		$this->makePage ( $m, $meeting );
 	}
 	
+	function userSort ( $a, $b ) {
+		return strncasecmp($a->name, $b->name, 4);
+	}
+	
 	private function makePage ( $date, $meeting ) {
 		$content = '<h1>'.$meeting->{'title'}.'</h1><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
 		$schedule = $this->sortSchedule($meeting->schedule);
@@ -62,9 +66,11 @@ class Meeting extends Page {
 			}
 		}
 		$tmp = array();
-		foreach ( $meeting->users as $name => $user )
-			$tmp[$name] = $user;
-		ksort($tmp);
+		foreach ( $meeting->users as $userid => $user ) {
+			$tmp[$userid] = $user;
+			$tmp[$userid]->name = $this->database->getUserById($userid)->name;
+		}
+		uasort($tmp, array(__CLASS__, 'userSort'));
 		$users = $tmp;
 		foreach ( $users as $userid => $user ) {
 			if ( $this->auth->loggedIn()
@@ -114,7 +120,7 @@ class Meeting extends Page {
 			foreach ( $schedule as $item ) {
 				if ( isset ( $_POST['closeeating-'.$item->id.'-submit'] )
 					&& $meeting->users->{$this->database->getUserId($this->auth->userinfo->name)}->schedule->{$item->id}->cooking ) {
-					$this->database->closeForEating($date, $item->id);
+					$this->database->closeForEating($date, $item->id, $_POST['closeeating-'.$item->id.'-spend']);
 					header ( 'Location: ./?meeting='.$date );					
 				}
 			}
@@ -182,6 +188,8 @@ class Meeting extends Page {
 				$form .= '
 <fieldset>
 <legend>Luk for flere spisetilmeldinger til <b>'.$item->title.'</b></legend>
+<label for="closeeasting-'.$item->id.'-spend">Indkøbt for (i danske kroner):</label>
+<input type="text" name="closeeating-'.$item->id.'-spend" id="closeeating-'.$item->id.'-spend" value="'.$item->spend.'" />
 <input type="submit" name="closeeating-'.$item->id.'-submit" value="Luk nu" />
 </fieldset>';
 			}

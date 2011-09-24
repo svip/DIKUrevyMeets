@@ -10,7 +10,7 @@ class Front extends Page {
 				<td><a href="?meeting='.$date.'">'.$meeting->{'title'}."</a></td></tr>\n";
 		}
 		$list .= '</table>';
-		$this->content = '<h1>DIKUrevy møder</h1>';
+		$this->content = '<h1>DIKUrevy-møder</h1>';
 		$this->content .= $list;
 	}
 	

@@ -7,6 +7,8 @@ class Admin extends Page {
 			$this->content = '<p>Du skal lige som være administrator her, eh?</p>';
 			return;
 		}
+		$this->additionalStyles[] = 'jsdatepick.css';
+		$this->additionalScript[] = 'jsdatepick.js';
 		$this->additionalScript[] = 'admin.js';
 		switch ( $_GET['admin'] ) {
 			case 'user':
@@ -43,14 +45,15 @@ class Admin extends Page {
 			$admin = isset($_POST['user-admin'])?true:false;
 			$this->database->updateUser($userid, array(
 				'admin'		=> $admin,
-				'username'	=> $username));
+				'username'	=> $username)
+			);
 			header('Location: ./?admin=user&user='.$userid);
 			return;
 		}
 		$form = '<form method="post">
 		<fieldset>
 		<legend>Ændre <b>'.$user->name.'</b>s data</legend>
-		<label for="user-name">Nyt brugernavn (blank for at lade brugernavnet være):</label>
+		<label for="user-name">Nyt brugernavn (blank for at lade brugernavnet være; brugernavnet vil <em>kun</em> blive ændret på denne side og ikke andre sider, det kan være praktisk hvis folk ikke kender ens normale brugernavn):</label>
 		<input type="text" name="user-name" id="user-name" />
 		<input type="checkbox" name="user-admin" id="user-admin" '.($user->admin?'checked="true"':'').' />
 		<label for="user-admin">Administrator?</label><br />
@@ -62,7 +65,8 @@ class Admin extends Page {
 	
 	private function userListPage ( ) {
 		$users = $this->database->getUsers();
-		$content = '<ul>';
+		$content = '<p><a href="./?admin=front">Tilbage</a></p>';
+		$content .= '<ul>';
 		foreach ( $users as $id => $user ) {
 			$content .= '<li><a href="./?admin=user&amp;user='.$id.'">'.$user->name.'</a></li>';
 		}
@@ -155,7 +159,7 @@ class Admin extends Page {
 <input type="submit" name="newmeeting-submit" value="Nyt møde!" />
 </fieldset>
 </form>';
-		$menu = '<p><a href="./?admin=userlist">Brugerliste</a></p>';
+		$menu = '<p><a href="./">Forside</a> &middot; <a href="./?admin=userlist">Brugerliste</a></p>';
 		$this->content = $menu.$list.$form;
 	}
 	

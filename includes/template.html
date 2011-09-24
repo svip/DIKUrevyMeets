@@ -1,21 +1,10 @@
 <!doctype html>
 <html>
 <head>
-<title>DIKUrevy møder</title>
+<title>DIKUrevy-møder</title>
 {{SCRIPT}}
 <link rel="stylesheet" href="./media/styles.css" />
-<script>
-function loginSelect ( which ) {
-	var form = document.getElementsByTagName('form')[0];
-	var kids = form.childNodes;
-	for ( var i = 0; i < kids.length; i++ ) {
-		if ( kids[i].nodeName.toLowerCase() == 'fieldset' ) {
-			kids[i].style.display = 'none';
-		}
-	}
-	document.getElementById('login-'+which).style.display = 'block';
-}
-</script>
+{{STYLE}}
 </head>
 <body>
 <div id="topmenu">{{TOPMENU}}</div>

@@ -49,3 +49,16 @@ function addEat ( ) {
 	fieldset.getElementsByTagName('input')[5].name = 'newmeeting-'+currentId+'-type';
 	master.appendChild(fieldset);
 }
+
+window.onload = function() {
+	if ( document.getElementById('newmeeting-date') ) {
+		new JsDatePick({
+			useMode: 2,
+			dateFormat: "%Y-%m-%d",
+			target: 'newmeeting-date',
+			limitToToday: false,
+			imgPath:"/media/img",
+			cellColorScheme: 'beige'
+		});
+	}
+};

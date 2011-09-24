@@ -172,27 +172,33 @@ class Database {
 			'comment'	=> $comment,
 			'modified'	=> time()
 		);
+		$this->calculateSpend($date);
+		$this->writeData ( 'meetings' );
+		return true;
+	}
+	
+	private function calculateSpend ( $date ) {
 		foreach ( $this->meetings->{$date}->schedule as $id => $item ) {
 			if ( $item->type == 'eat' ) {
 				$i = 0;
 				foreach ( $this->meetings->{$date}->users as $user )
 					if ( (is_object($user) && $user->schedule->{$id}->eating )
 						|| (is_array($user) && (
-							(is_object($user['schedule']) && $user['schedule']->{$id}->eating )
-							|| (is_array($user['schedule']) && $user['schedule'][$id]['eating'] ) ) ) )
+						(is_object($user['schedule']) && $user['schedule']->{$id}->eating )
+						|| (is_array($user['schedule']) && $user['schedule'][$id]['eating'] ) ) ) )
 						$i++;
 				if ( $i === 0 ) $i = 1;
 				$this->meetings->{$date}->schedule->{$id}->costperperson = floatval($this->meetings->{$date}->schedule->{$id}->spend)/floatval($i);
 			}
-		}
-		$this->writeData ( 'meetings' );
-		return true;
+		}	
 	}
 	
-	function closeForEating ( $date, $id ) {
+	function closeForEating ( $date, $id, $spend=0 ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
 		$this->meetings->{$date}->schedule->{$id}->open = false;
+		$this->meetings->{$date}->schedule->{$id}->spend = $spend;
+		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
 		return true;
 	}

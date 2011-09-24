@@ -11,6 +11,7 @@ abstract class Page {
 	protected $auth = null;
 	protected $contentType = null;
 	protected $additionalScript = array();
+	protected $additionalStyles = array();
 	
 	function __construct ( $database, $auth ) {
 		$this->database = $database;
@@ -24,6 +25,10 @@ abstract class Page {
 	
 	function getAdditionalScripts ( ) {
 		return $this->additionalScript;
+	}
+	
+	function getAdditionalStyles ( ) {
+		return $this->additionalStyles;
 	}
 	
 	function getContentType ( ) {

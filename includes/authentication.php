@@ -1,31 +1,23 @@
 <?php
 
-require ( 'openid.php' );
-
 class Authentication {
 	
 	public $userinfo = array();
 	private $database = null;
 	private $loginChecked = false;
 	private $login = false;
-	private $openid = null;
-	private $openidLogin = false;
-	private $google = null;
-	private $googleLogin = false;
 
 	function __construct ( $database ) {
 		$this->database = $database;
-		$this->openIdInit();
-		$this->googleInit();
 		$this->checkLoginAttempt();
 	}
 	
 	public function setCookie ( $name, $value ) {
-		setcookie ( $name, $value, time() + 365*24*60*60, '/', 'dikurevy.dk' );
+		setcookie ( $name, $value, time() + 365*24*60*60, '/', '.dikurevy.dk' );
 	}
 	
 	public function unsetCookie ( $name ) {
-		setcookie ( $name, '', 0, '/', 'dikurevy.dk' );
+		setcookie ( $name, '', 0, '/', '.dikurevy.dk' );
 	}
 	
 	private function checkLoginAttempt ( ) {
@@ -53,90 +45,6 @@ class Authentication {
 		return null;
 	}
 	
-	private function openIdInit ( ) {
-		if ( isset ( $_GET['openid_identity'] )
-			&& strpos ( $_GET['openid_identity'], 'google.com' ) !== false )
-			return;
-		$this->openid = new LightOpenID('dikurevy.dk');
-		if ( $this->openid->validate() ) {
-			$this->openidLogin = true;
-			$this->setCookie('rym-openid-identity', $this->openid->identity);
-			$signature = $this->getSignature($this->openid->identity, 'openid');
-			if ( $signature != null ) {
-				$this->setCookie('rym-openid-sig', $signature);
-				if ( isset ( $_GET['meeting'] ) ) {
-					header ( 'Location: ./?meeting='.$_GET['meeting'] );
-				} else {
-					header ( 'Location: ./' );
-				}				
-			} else {
-				$this->setCookie('rym-openid-sig', $_GET['openid_sig']);
-			}
-		}
-		if ( isset ( $_COOKIE['rym-openid-identity'] ) ) {
-			$this->openid->identity = $_COOKIE['rym-openid-identity'];
-		}
-	}
-	
-	private function openIdLogin ( ) {
-		try {
-			if(!$this->openid->mode) {
-				if( isset( $_POST['login-openid-url'] ) ) {
-				    $this->openid->identity = $_POST['login-openid-url'];
-				    header('Location: ' . $this->openid->authUrl());
-				}
-			}
-		} catch(ErrorException $e) {
-			echo $e->getMessage();
-		}		
-	}
-	
-	private function openIdRegister ( ) {
-		if ( isset ( $_POST['register-openid-username'] ) ) {
-			$this->database->insertUser ( $_POST['register-openid-username'], 'openid', $_COOKIE['rym-openid-identity'], $_COOKIE['rym-openid-sig'] );
-		}
-	}
-	
-	private function googleInit ( ) {
-    	$this->google = new LightOpenID('dikurevy.dk');
-		if ( $this->google->validate() ) {
-			$this->googleLogin = true;
-			$this->setCookie('rym-google-identity', $this->google->identity);
-			$signature = $this->getSignature($this->google->identity, 'google');
-			if ( $signature != null ) {
-				$this->setCookie('rym-google-sig', $signature);
-				if ( isset ( $_GET['meeting'] ) ) {
-					header ( 'Location: ./?meeting='.$_GET['meeting'] );
-				} else {
-					header ( 'Location: ./' );
-				}
-				
-			} else {
-				$this->setCookie('rym-google-sig', $_GET['openid_sig']);
-			}
-		}
-		if ( isset ( $_COOKIE['rym-google-identity'] ) ) {
-			$this->openid->identity = $_COOKIE['rym-google-identity'];
-		}
-	}
-	
-	private function googleLogin ( ) {
-		try {
-			if(!$this->google->mode) {
-			    $this->google->identity = 'https://www.google.com/accounts/o8/id';
-			    header('Location: ' . $this->google->authUrl());
-			}
-		} catch(ErrorException $e) {
-			echo $e->getMessage();
-		}		
-	}
-	
-	private function googleRegister ( ) {
-		if ( isset ( $_POST['register-google-username'] ) ) {
-			$this->database->insertUser ( $_POST['register-google-username'], 'google', $_COOKIE['rym-google-identity'], $_COOKIE['rym-google-sig'] );
-		}
-	}
-	
 	private function drupalRegister ( $uid, $name ) {
 		if ( $this->database->insertUser ( $name, 'drupal', $uid, null ) ) {
 			if ( !empty($_SERVER['HTTP_REFERER']) )
@@ -150,10 +58,12 @@ class Authentication {
 		foreach ( $_COOKIE as $name => $cookie ) {
 			if ( preg_match("@SESS.*@is", $name ) ) {
 				$data = $cookie;
-				$i = gfDBQuery ( "SELECT s.`uid`, u.`name`
+				$i = gfDBQuery ( "SELECT s.`uid`, u.`name`, p.`value`
 					FROM `drupal_sessions` s
 						JOIN `drupal_users` u
 							ON s.`uid` = u.`uid`
+						LEFT JOIN `drupal_profile_values` p
+							ON p.`uid` = s.`uid` AND p.`fid` = 14
 					WHERE s.`sid` = '$data' AND s.`uid` != 0" );
 				if ( gfDBGetNumRows($i) > 0 ) {
 					$result = gfDBGetResult($i);
@@ -163,10 +73,15 @@ class Authentication {
 							$this->userinfo = $user;
 							$this->loginChecked = true;
 							$this->login = true;
+							if ( $result['value'] != null
+								&& $result['value'] != $user->name ) {
+								$this->database->updateUser ( $result['uid'],
+									array ( 'username' => $result['value'] ) );	
+							}
 							return true;
 						}
 					}
-					$this->drupalRegister($result['uid'], $result['name']);
+					$this->drupalRegister($result['uid'], (!empty($result['value'])?$result['value']:$result['name']));
 					$this->userinfo = $user;
 					$this->loginChecked = true;
 					$this->login = true;
@@ -174,6 +89,8 @@ class Authentication {
 				}
 			}
 		}
+		$this->loginChecked = true;
+		$this->login = false;
 		return false;
 	}
 	
@@ -181,41 +98,6 @@ class Authentication {
 		if ( $this->loginChecked ) 
 			return $this->login;
 		return $this->drupalCookie();
-		if ( !empty ( $_COOKIE['rym-openid-identity'] )
-			&& !empty ( $_COOKIE['rym-openid-sig'] ) ) {
-			$identity = $_COOKIE['rym-openid-identity'];
-			$signature = $_COOKIE['rym-openid-sig'];
-			foreach ( $this->database->getUsers() as $user ) {
-				if ( is_object($user)
-					&& $user->{'identity'} == $identity
-					&& $user->{'service'} == 'openid'
-					&& $user->{'signature'} == $signature ) {
-					$this->userinfo = $user;
-					$this->loginChecked = true;
-					$this->login = true;
-					return true;
-				}
-			}
-		}
-		if ( !empty ( $_COOKIE['rym-google-identity'] )
-			&& !empty ( $_COOKIE['rym-google-sig'] ) ) {
-			$identity = $_COOKIE['rym-google-identity'];
-			$signature = $_COOKIE['rym-google-sig'];
-			foreach ( $this->database->getUsers() as $user ) {
-				if ( is_object($user)
-					&& $user->{'identity'} == $identity
-					&& $user->{'service'} == 'google'
-					&& $user->{'signature'} == $signature ) {
-					$this->userinfo = $user;
-					$this->loginChecked = true;
-					$this->login = true;
-					return true;
-				}
-			}			
-		}
-		$this->loginChecked = true;
-		$this->login = false;
-		return false;
 	}
 	
 	public function isAdmin ( ) {

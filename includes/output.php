@@ -21,10 +21,14 @@ class Output {
 		foreach ( $this->page->getAdditionalScripts() as $script ) {
 			$scripts .= '<script src="./media/'.$script.'"></script>';
 		}
+		$styles = '';
+		foreach ( $this->page->getAdditionalStyles() as $style ) {
+			$styles .= '<link rel="stylesheet" href="./media/'.$style.'" />';
+		}
 		$template = file_get_contents ( 'includes/template.html' );
 		echo str_replace (
-			array ( '{{CONTENT}}', '{{TOPMENU}}', '{{SCRIPT}}' ),
-			array ( $this->page->getContent(), $this->topMenu(), $scripts ),
+			array ( '{{CONTENT}}', '{{TOPMENU}}', '{{SCRIPT}}', '{{STYLE}}' ),
+			array ( $this->page->getContent(), $this->topMenu(), $scripts, $styles ),
 			$template );
 	}
 	
@@ -43,6 +47,7 @@ class Output {
 		}
 		$menu[] = array ( 'http://moeder.dikurevy.dk/?do=ical', 'ical' );
 		$menu[] = array ( './', 'Forside' );
+		$menu[] = array ( 'http://dikurevy.dk/', 'dikurevy.dk' );
 		$str = '';
 		foreach ( $menu as $item ) {
 			if ( $str != '' )
