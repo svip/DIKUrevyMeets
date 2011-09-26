@@ -93,6 +93,7 @@ class Admin extends Page {
 							'start'		=> $_POST['newmeeting-'.$i.'-start'],
 							'end'		=> $_POST['newmeeting-'.$i.'-end'],
 							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
+							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
 						);
 					} elseif ( $type == 'eat' ) {
 						$spend = isset($_POST['newmeeting-'.$i.'-spend'])
@@ -107,6 +108,7 @@ class Admin extends Page {
 							'spend'		=> $spend,
 							'costperperson'	=> $spend,
 							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
+							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
 						);
 					}
 				}
@@ -127,7 +129,7 @@ class Admin extends Page {
 <label for="newmeeting-title">Overskrift:</label>
 <input type="text" id="newmeeting-title" name="newmeeting-title" />
 <label for="newmeeting-comment">Eventuel kommentar:</label>
-<input type="text" id="newmeeting-comment" name="newmeeting-comment" />
+<textarea cols="52" rows="5" id="newmeeting-comment" name="newmeeting-comment"></textarea>
 <label for="newmeeting-date">Dato (format: <tt>ÅÅÅÅ-MM-DD</tt>):</label>
 <input type="text" id="newmeeting-date" name="newmeeting-date" />
 <div id="schedule">
@@ -140,6 +142,8 @@ class Admin extends Page {
 <input type="checkbox" name="newmeeting-0-unique" id="newmeeting-0-unique" />
 <label for="newmeeting-0-unique">Vis separat på ical?</label>
 <input type="hidden" name="newmeeting-0-type" value="meet" />
+<input type="checkbox" name="newmeeting-0-nojoin" id="newmeeting-0-nojoin" />
+<label for="newmeeting-0-nojoin">Ingen tilmelding</label>
 </fieldset>
 <fieldset id="newmeeting-1">
 <legend>Måltid</legend>
@@ -153,6 +157,8 @@ class Admin extends Page {
 <input type="checkbox" name="newmeeting-1-unique" id="newmeeting-1-unique" />
 <label for="newmeeting-1-unique">Vis separat på ical?</label>
 <input type="hidden" name="newmeeting-1-type" value="eat" />
+<input type="checkbox" name="newmeeting-1-nojoin" id="newmeeting-1-nojoin" />
+<label for="newmeeting-1-nojoin">Ingen tilmelding</label>
 </fieldset>
 </div>
 <a onclick="addMeet();" href="javascript://">Endnu et møde</a> &middot; <a onclick="addEat();" href="javascript://">Endnu et måltid</a><br />
@@ -188,6 +194,7 @@ class Admin extends Page {
 							'start'		=> $_POST['newmeeting-'.$i.'-start'],
 							'end'		=> $_POST['newmeeting-'.$i.'-end'],
 							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
+							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
 						);
 					} elseif ( $type == 'eat' ) {
 						$spend = isset($_POST['newmeeting-'.$i.'-spend'])
@@ -202,12 +209,12 @@ class Admin extends Page {
 							'spend'		=> $spend,
 							'costperperson'	=> $spend,
 							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
+							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
 						);
 					}
 				}
 				$i++;
 			}
-			print_r($newSchedule);
 			$users = explode(',', $_POST['meeting-users']);
 			foreach ( $users as $userid ) {
 				if ( empty($userid) ) continue;
@@ -247,7 +254,7 @@ class Admin extends Page {
 <label for="meeting-title">Overskrift:</label>
 <input type="text" name="meeting-title" id="meeting-title" value="'.$meeting->title.'" />
 <label for="meeting-comment">Kommentar:</label>
-<input type="text" name="meeting-comment" id="meeting-comment" value="'.$meeting->comment.'" />
+<textarea cols="52" rows="5" id="meeting-comment" name="meeting-comment">'.$meeting->comment.'</textarea>
 <div id="schedule">';
 		foreach ( $meeting->schedule as $id => $item ) {
 			if ( $item->type == 'meet' ) {
@@ -261,6 +268,8 @@ class Admin extends Page {
 <input type="checkbox" name="newmeeting-'.$id.'-unique" id="newmeeting-'.$id.'-unique"'.($item->unique?' checked="true"':'').' />
 <label for="newmeeting-'.$id.'-unique">Vis separat på ical?</label>
 <input type="hidden" name="newmeeting-'.$id.'-type" value="meet" />
+<input type="checkbox" name="newmeeting-'.$id.'-nojoin" id="newmeeting-'.$id.'-nojoin"'.($item->nojoin?' checked="true"':'').' />
+<label for="newmeeting-'.$id.'-nojoin">Ingen tilmelding</label>
 </fieldset>
 ';
 			} elseif ( $item->type == 'eat' ) {
@@ -276,6 +285,8 @@ class Admin extends Page {
 <input type="checkbox" name="newmeeting-'.$id.'-unique" id="newmeeting-'.$id.'-unique"'.($item->unique?' checked="true"':'').' />
 <label for="newmeeting-'.$id.'-unique">Vis separat på ical?</label>
 <input type="hidden" name="newmeeting-'.$id.'-type" value="eat" />
+<input type="checkbox" name="newmeeting-'.$id.'-nojoin" id="newmeeting-'.$id.'-nojoin"'.($item->nojoin?' checked="true"':'').' />
+<label for="newmeeting-'.$id.'-nojoin">Ingen tilmelding</label>
 </fieldset>
 ';
 			}

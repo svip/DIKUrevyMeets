@@ -18,6 +18,9 @@ function addMeet ( ) {
 		fieldset.getElementsByTagName('input')[3].name = 'newmeeting-'+currentId+'-unique';
 		fieldset.getElementsByTagName('label')[2].setAttribute('for', 'newmeeting-'+currentId+'-unique');
 		fieldset.getElementsByTagName('input')[4].name = 'newmeeting-'+currentId+'-type';
+		fieldset.getElementsByTagName('input')[5].id = 'newmeeting-'+currentId+'-nojoin';
+		fieldset.getElementsByTagName('input')[5].name = 'newmeeting-'+currentId+'-nojoin';
+		fieldset.getElementsByTagName('label')[3].setAttribute('for', 'newmeeting-'+currentId+'-nojoin');
 		var tickbox = document.createElement('input');
 		tickbox.setAttribute('type', 'checkbox');
 		tickbox.setAttribute('id', 'newmeeting-'+currentId+'-ignore');
@@ -44,6 +47,9 @@ function addMeet ( ) {
 		fieldset.getElementsByTagName('input')[4].name = 'newmeeting-'+currentId+'-unique';
 		fieldset.getElementsByTagName('label')[3].setAttribute('for', 'newmeeting-'+currentId+'-unique');
 		fieldset.getElementsByTagName('input')[5].name = 'newmeeting-'+currentId+'-type';
+		fieldset.getElementsByTagName('input')[6].id = 'newmeeting-'+currentId+'-nojoin';
+		fieldset.getElementsByTagName('input')[6].name = 'newmeeting-'+currentId+'-nojoin';
+		fieldset.getElementsByTagName('label')[4].setAttribute('for', 'newmeeting-'+currentId+'-nojoin');
 	}
 	master.appendChild(fieldset);
 }
@@ -72,10 +78,23 @@ function addEat ( ) {
 	fieldset.getElementsByTagName('label')[4].setAttribute('for', 'newmeeting-'+currentId+'-unique');
 	fieldset.getElementsByTagName('input')[6].name = 'newmeeting-'+currentId+'-type';
 	master.appendChild(fieldset);
+	fieldset.getElementsByTagName('input')[7].id = 'newmeeting-'+currentId+'-nojoin';
+	fieldset.getElementsByTagName('input')[7].name = 'newmeeting-'+currentId+'-nojoin';
+	fieldset.getElementsByTagName('label')[5].setAttribute('for', 'newmeeting-'+currentId+'-nojoin');
 }
 
 window.onload = function() {
 	if ( document.getElementById('newmeeting-date') ) {
+		new JsDatePick({
+			useMode: 2,
+			dateFormat: "%Y-%m-%d",
+			target: 'newmeeting-date',
+			limitToToday: false,
+			imgPath:"/media/img",
+			cellColorScheme: 'beige'
+		});
+	}
+	if ( document.getElementById('meeting-date') ) {
 		new JsDatePick({
 			useMode: 2,
 			dateFormat: "%Y-%m-%d",

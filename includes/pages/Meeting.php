@@ -18,7 +18,7 @@ class Meeting extends Page {
 	}
 	
 	private function makePage ( $date, $meeting ) {
-		$content = '<h1>'.$meeting->{'title'}.'</h1><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
+		$content = '<h1>'.$meeting->{'title'}.'</h1><h3>'.nl2br($meeting->{'comment'}).'</h3><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
 		$schedule = $this->sortSchedule($meeting->schedule);
 		$currentInfo = null;
 		$meets = 0;
@@ -79,13 +79,23 @@ class Meeting extends Page {
 			$table .= '<tr><td>'.$this->database->getUserById($userid)->name.'</td>';
 			foreach ( $schedule as $item ) {
 				if ( $item->type == 'meet' ) {
-					if ( $user->schedule->{$item->id}->attending ) $stats['schedule'][$item->id]['attending']++;
-					$table .= '<td class="centre '.($user->schedule->{$item->id}->attending?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->attending).'</td>';
+					if (!isset($user->schedule->{$item->id})
+						|| ($item->nojoin) )
+						$table .= '<td class="centre">?</td>';					
+					else {
+						if ( $user->schedule->{$item->id}->attending ) $stats['schedule'][$item->id]['attending']++;
+						$table .= '<td class="centre '.($user->schedule->{$item->id}->attending?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->attending).'</td>';
+					}
 				} elseif ( $item->type == 'eat' ) {
-					if ( $user->schedule->{$item->id}->eating ) $stats['schedule'][$item->id]['eating']++;
-					if ( $user->schedule->{$item->id}->cooking ) $stats['schedule'][$item->id]['cooking']++;
-					$table .= '<td class="centre '.($user->schedule->{$item->id}->eating?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->eating).'</td>';
-					$table .= '<td class="centre '.($user->schedule->{$item->id}->cooking?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->cooking).'</td>';
+					if (!isset($user->schedule->{$item->id})
+						|| ($item->nojoin) )
+						$table .= '<td class="centre">?</td>';
+					else {
+						if ( $user->schedule->{$item->id}->eating ) $stats['schedule'][$item->id]['eating']++;
+						if ( $user->schedule->{$item->id}->cooking ) $stats['schedule'][$item->id]['cooking']++;
+						$table .= '<td class="centre '.($user->schedule->{$item->id}->eating?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->eating).'</td>';
+						$table .= '<td class="centre '.($user->schedule->{$item->id}->cooking?'yes':'no').'">'.$this->tick($user->schedule->{$item->id}->cooking).'</td>';
+					}
 				}
 			}
 			$table .= '<td class="comment">'.$user->comment.'</td></tr>';
@@ -159,12 +169,16 @@ class Meeting extends Page {
 	
 	private function meetingForm ( $meeting, $currentInfo ) {
 		$userSchedule = array();
+		$canJoin = false;
 		foreach ( $meeting->schedule as $item ) {
-			if ( $item->type == 'meet' ) {
+			if ( isset($item->nojoin) && $item->nojoin ) {
+				continue;
+			} elseif ( $item->type == 'meet' ) {
 				$userSchedule[$item->id] = array ( 'attending' => true );
 				if ( $currentInfo != null ) {
 					$userSchedule[$item->id]['attending'] = $currentInfo->schedule->{$item->id}->attending;
 				}
+				$canJoin = true;
 			} elseif ( $item->type == 'eat' ) {
 				if ( $item->open )
 					$userSchedule[$item->id] = array ( 'eating' => true, 'cooking' => false );
@@ -173,16 +187,20 @@ class Meeting extends Page {
 				if ( $currentInfo != null ) {
 					$userSchedule[$item->id]['eating'] = $currentInfo->schedule->{$item->id}->eating;
 					$userSchedule[$item->id]['cooking'] = $currentInfo->schedule->{$item->id}->cooking;
-				}			
+				}		
+				$canJoin = true;	
 			}
 		}
 		$comment = '';
 		if ( $currentInfo != null ) {
 			$comment = $this->safeString($currentInfo->comment);
 		}
+		if ( !$canJoin ) return '';
 		$form = '<form method="post">';
 		foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
-			if ( $item->type == 'eat' 
+			if ( isset($item->nojoin) && $item->nojoin ) {
+				continue;
+			} elseif ( $item->type == 'eat' 
 				&& $userSchedule[$item->id]['cooking']
 				&& $item->open ) {
 				$form .= '
@@ -199,7 +217,9 @@ class Meeting extends Page {
 <legend>'.($currentInfo!=null?'Ændre <b>'.$this->auth->userinfo->{'name'}.'</b>s tilmelding':'Tilmeld <b>'.$this->auth->userinfo->{'name'}.'</b> møde').'</legend>';
 
 		foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
-			if ( $item->type == 'meet' ) {
+			if ( $item->nojoin ) {
+				continue;
+			} else if ( $item->type == 'meet' ) {
 				$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
 				$form .= '
 <input type="checkbox" name="meeting-'.$item->id.'-attending" id="meeting-'.$item->id.'-attending" '.($userSchedule[$item->id]['attending']?'checked="true"':'').' />

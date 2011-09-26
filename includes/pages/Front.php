@@ -5,8 +5,8 @@ class Front extends Page {
 	protected function render ( ) {
 		$list = '<table>';
 		foreach ( $this->database->getSortedMeetings() as $date => $meeting ) {
-			$list .= '<tr><td><a href="?meeting='.$date.'">'.$this->weekDay($date, true).'</a></td>
-				<td><a href="?meeting='.$date.'">'.$this->readableDate($date).'</a></td>
+			$list .= '<tr><td>'.$this->weekDay($date, true).'</td>
+				<td>'.$this->readableDate($date).'</td>
 				<td><a href="?meeting='.$date.'">'.$meeting->{'title'}."</a></td></tr>\n";
 		}
 		$list .= '</table>';

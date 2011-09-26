@@ -4,6 +4,7 @@ body {
 h1, h2, h3, h4, h5, h6, p { text-align: center; }
 h2 { margin-top: 0; }
 h1 { margin-bottom: 0; }
+h3 { margin: 0; }
 a { color: #2a8; }
 a:visited { color: #486; }
 a:hover { color: #4ca; }
@@ -24,11 +25,11 @@ fieldset { border: 1px solid #999; }
 fieldset, form {
 	border-radius: 15px; -moz-border-radius: 15px; -webkit-border-radius: 15px;
 }
-table th, table td, input {
+table th, table td, input, textarea {
 	border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
 }
 legend b { font-size: 125%; }
-input, label { width: 100%; }
+input, label, textarea { width: 100%; }
 input[type=submit], input[type=checkbox] { width: auto; }
 .clear { clear: both; }
 .total td { text-align: center; }
