@@ -100,13 +100,14 @@ class Database {
 		return true;
 	}
 	
-	function updateMeeting ( $date, $title, $comment ) {
+	function updateMeeting ( $date, $title, $comment, $schedule ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 			return false;
 		if ( empty( $this->meetings->{$date} ) )
 			return false;
 		$this->meetings->{$date}->title = $title;
 		$this->meetings->{$date}->comment = $comment;
+		$this->meetings->{$date}->schedule = $schedule;
 		$this->writeData ( 'meetings' );
 		return true;
 	}

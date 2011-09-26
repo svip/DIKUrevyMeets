@@ -14,16 +14,18 @@ function addMeet ( ) {
 	fieldset.getElementsByTagName('input')[2].id = 'newmeeting-'+currentId+'-end';
 	fieldset.getElementsByTagName('input')[2].name = 'newmeeting-'+currentId+'-end';
 	fieldset.getElementsByTagName('input')[3].name = 'newmeeting-'+currentId+'-type';
-	var tickbox = document.createElement('input');
-	tickbox.setAttribute('type', 'checkbox');
-	tickbox.setAttribute('id', 'newmeeting-'+currentId+'-ignore');
-	tickbox.setAttribute('name', 'newmeeting-'+currentId+'-ignore');
-	var label = document.createElement('label');
-	label.setAttribute('for', 'newmeeting-'+currentId+'-ignore');
-	label.appendChild(document.createTextNode('Ignorér'));
-	fieldset.insertBefore(tickbox, fieldset.getElementsByTagName('label')[0]);
-	fieldset.insertBefore(label, fieldset.getElementsByTagName('label')[0]);
-	fieldset.insertBefore(document.createElement('br'), fieldset.getElementsByTagName('label')[1]);
+	if ( !document.getElementById('newmeeting-0-ignore') ) {
+		var tickbox = document.createElement('input');
+		tickbox.setAttribute('type', 'checkbox');
+		tickbox.setAttribute('id', 'newmeeting-'+currentId+'-ignore');
+		tickbox.setAttribute('name', 'newmeeting-'+currentId+'-ignore');
+		var label = document.createElement('label');
+		label.setAttribute('for', 'newmeeting-'+currentId+'-ignore');
+		label.appendChild(document.createTextNode('Ignorér'));
+		fieldset.insertBefore(tickbox, fieldset.getElementsByTagName('label')[0]);
+		fieldset.insertBefore(label, fieldset.getElementsByTagName('label')[0]);
+		fieldset.insertBefore(document.createElement('br'), fieldset.getElementsByTagName('label')[1]);
+	}	
 	master.appendChild(fieldset);
 }
 

@@ -142,7 +142,7 @@ class Admin extends Page {
 <input type="hidden" name="newmeeting-0-type" value="meet" />
 </fieldset>
 <fieldset id="newmeeting-1">
-<legend>Spisning</legend>
+<legend>Måltid</legend>
 <input type="checkbox" id="newmeeting-1-ignore" name="newmeeting-1-ignore" /><label for="newmeeting-1-ignore">Ignorér</label><br />
 <label for="newmeeting-1-title">Titel:</label>
 <input type="text" id="newmeeting-1-title" name="newmeeting-1-title" value="Aftensmad" />
@@ -155,7 +155,7 @@ class Admin extends Page {
 <input type="hidden" name="newmeeting-1-type" value="eat" />
 </fieldset>
 </div>
-<a onclick="addMeet();" href="javascript://">Endnu et møde</a> &middot; <a onclick="addEat();" href="javascript://">Endnu en spisning</a><br />
+<a onclick="addMeet();" href="javascript://">Endnu et møde</a> &middot; <a onclick="addEat();" href="javascript://">Endnu et måltid</a><br />
 <input type="submit" name="newmeeting-submit" value="Nyt møde!" />
 </fieldset>
 </form>';
@@ -166,7 +166,6 @@ class Admin extends Page {
 	private function meetingPage ( ) {
 		$date = $_GET['date'];
 		$meeting = $this->database->getMeeting($date);
-		$schedule = $this->sortSchedule($meeting->schedule);
 		if ( empty ($meeting) ) {
 			header( 'Location: ./?admin=front' );
 		}
@@ -174,8 +173,43 @@ class Admin extends Page {
 			$date = $_POST['meeting-date'];
 			$title = $_POST['meeting-title'];
 			$meetComment = $_POST['meeting-comment'];
+			
+			$i = 0;
+			$newSchedule = array();
+			while ( true ) {
+				if ( !isset($_POST['newmeeting-'.$i.'-type']) )
+					break;
+				if ( !isset($_POST['newmeeting-'.$i.'-ignore']) ) {
+					$type = $_POST['newmeeting-'.$i.'-type'];
+					if ( $type == 'meet' ) {
+						$newSchedule[] = array (
+							'title'		=> $_POST['newmeeting-'.$i.'-title'],
+							'type'		=> 'meet',
+							'start'		=> $_POST['newmeeting-'.$i.'-start'],
+							'end'		=> $_POST['newmeeting-'.$i.'-end'],
+							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
+						);
+					} elseif ( $type == 'eat' ) {
+						$spend = isset($_POST['newmeeting-'.$i.'-spend'])
+							?floatval($_POST['newmeeting-'.$i.'-spend'])
+							:0.0;
+						$newSchedule[] = array (
+							'title'		=> $_POST['newmeeting-'.$i.'-title'],
+							'type'		=> 'eat',
+							'start'		=> $_POST['newmeeting-'.$i.'-start'],
+							'end'		=> $_POST['newmeeting-'.$i.'-end'],
+							'open'		=> true,
+							'spend'		=> $spend,
+							'costperperson'	=> $spend,
+							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
+						);
+					}
+				}
+				$i++;
+			}
 			$users = explode(',', $_POST['meeting-users']);
 			foreach ( $users as $userid ) {
+				if ( empty($userid) ) continue;
 				$comment = $_POST['meeting-'.$userid.'-comment'];
 				$userSchedule = $meeting->users->{$userid}->schedule;
 				foreach ( $meeting->schedule as $id => $item ) {
@@ -189,9 +223,10 @@ class Admin extends Page {
 				}
 				$this->database->addUserToDate($date, $userid, $userSchedule, $comment, true, true);
 			}
-			$this->database->updateMeeting($date, $title, $meetComment);
+			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule);
 			header('Location: ./?admin=meeting&date='.$date);
 		}
+		$schedule = $this->sortSchedule($meeting->schedule);
 		foreach ( $meeting->schedule as $id => $item ) {
 			if ( isset ( $_POST['meeting-'.$id.'-open'] ) ) {
 				$this->database->openForEating($date, $id);
@@ -211,6 +246,40 @@ class Admin extends Page {
 <input type="text" name="meeting-title" id="meeting-title" value="'.$meeting->title.'" />
 <label for="meeting-comment">Kommentar:</label>
 <input type="text" name="meeting-comment" id="meeting-comment" value="'.$meeting->comment.'" />
+<div id="schedule">';
+		foreach ( $meeting->schedule as $id => $item ) {
+			if ( $item->type == 'meet' ) {
+				$form .= '<fieldset id="newmeeting-'.$id.'">
+<legend>Møde</legend>
+<input type="checkbox" id="newmeeting-'.$id.'-ignore" name="newmeeting-'.$id.'-ignore" /><label for="newmeeting-'.$id.'-ignore">Slet</label><br />
+<label for="newmeeting-'.$id.'">Titel:</label>
+<input type="text" id="newmeeting-'.$id.'-title" name="newmeeting-'.$id.'-title" value="'.$item->title.'" />
+<label for="newmeeting-'.$id.'-start">Mødetid:</label>
+<span class="time"><input type="text" id="newmeeting-'.$id.'-start" name="newmeeting-'.$id.'-start" value="'.$item->start.'" /><span> - </span><input type="text" id="newmeeting-'.$id.'-end" name="newmeeting-'.$id.'-end" value="'.$item->end.'" /></span>
+<input type="checkbox" name="newmeeting-'.$id.'-unique" id="newmeeting-'.$id.'-unique"'.($item->unique?' checked="true"':'').' />
+<label for="newmeeting-'.$id.'-unique">Vis separat på ical?</label>
+<input type="hidden" name="newmeeting-'.$id.'-type" value="meet" />
+</fieldset>
+';
+			} elseif ( $item->type == 'eat' ) {
+				$form .= '<fieldset id="newmeeting-'.$id.'">
+<legend>Måltid</legend>
+<input type="checkbox" id="newmeeting-'.$id.'-ignore" name="newmeeting-'.$id.'-ignore" /><label for="newmeeting-'.$id.'-ignore">Slet</label><br />
+<label for="newmeeting-'.$id.'-title">Titel:</label>
+<input type="text" id="newmeeting-'.$id.'-title" name="newmeeting-'.$id.'-title" value="'.$item->title.'" />
+<label for="newmeeting-'.$id.'-start">Spisetid:</label>
+<span class="time"><input type="text" id="newmeeting-1-start" name="newmeeting-1-start" value="'.$item->start.'" /><span> - </span><input type="text" id="newmeeting-'.$id.'-end" name="newmeeting-'.$id.'-end" value="'.$item->end.'" /></span>
+<label for="newmeeting-'.$id.'-spend">Indkøbspris (i hele kroner):</label>
+<input type="text" id="newmeeting-'.$id.'-spend" name="newmeeting-'.$id.'-spend" value="'.$item->spend.'" />
+<input type="checkbox" name="newmeeting-'.$id.'-unique" id="newmeeting-'.$id.'-unique"'.($item->unique?' checked="true"':'').' />
+<label for="newmeeting-'.$id.'-unique">Vis separat på ical?</label>
+<input type="hidden" name="newmeeting-'.$id.'-type" value="eat" />
+</fieldset>
+';
+			}
+		}
+		$form .= '</div>
+<a onclick="addMeet();" href="javascript://">Endnu et møde</a> &middot; <a onclick="addEat();" href="javascript://">Endnu et måltid</a><br />
 <input type="submit" name="meeting-submit" value="Ændr" />
 </fieldset>';
 		$form .= '<table>
