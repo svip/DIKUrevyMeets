@@ -5,16 +5,19 @@ function addMeet ( ) {
 	var master = document.getElementById('schedule');
 	currentId++;
 	fieldset.setAttribute('id', 'newmeeting-'+currentId);
-	fieldset.getElementsByTagName('input')[0].id = 'newmeeting-'+currentId+'-title';
-	fieldset.getElementsByTagName('input')[0].name = 'newmeeting-'+currentId+'-title';
-	fieldset.getElementsByTagName('label')[0].setAttribute('for', 'newmeeting-'+currentId+'-title');
-	fieldset.getElementsByTagName('input')[1].id = 'newmeeting-'+currentId+'-start';
-	fieldset.getElementsByTagName('label')[1].setAttribute('for', 'newmeeting-'+currentId+'-start');
-	fieldset.getElementsByTagName('input')[1].name = 'newmeeting-'+currentId+'-start';
-	fieldset.getElementsByTagName('input')[2].id = 'newmeeting-'+currentId+'-end';
-	fieldset.getElementsByTagName('input')[2].name = 'newmeeting-'+currentId+'-end';
-	fieldset.getElementsByTagName('input')[3].name = 'newmeeting-'+currentId+'-type';
 	if ( !document.getElementById('newmeeting-0-ignore') ) {
+		fieldset.getElementsByTagName('input')[0].id = 'newmeeting-'+currentId+'-title';
+		fieldset.getElementsByTagName('input')[0].name = 'newmeeting-'+currentId+'-title';
+		fieldset.getElementsByTagName('label')[0].setAttribute('for', 'newmeeting-'+currentId+'-title');
+		fieldset.getElementsByTagName('input')[1].id = 'newmeeting-'+currentId+'-start';
+		fieldset.getElementsByTagName('label')[1].setAttribute('for', 'newmeeting-'+currentId+'-start');
+		fieldset.getElementsByTagName('input')[1].name = 'newmeeting-'+currentId+'-start';
+		fieldset.getElementsByTagName('input')[2].id = 'newmeeting-'+currentId+'-end';
+		fieldset.getElementsByTagName('input')[2].name = 'newmeeting-'+currentId+'-end';
+		fieldset.getElementsByTagName('input')[3].id = 'newmeeting-'+currentId+'-unique';
+		fieldset.getElementsByTagName('input')[3].name = 'newmeeting-'+currentId+'-unique';
+		fieldset.getElementsByTagName('label')[2].setAttribute('for', 'newmeeting-'+currentId+'-unique');
+		fieldset.getElementsByTagName('input')[4].name = 'newmeeting-'+currentId+'-type';
 		var tickbox = document.createElement('input');
 		tickbox.setAttribute('type', 'checkbox');
 		tickbox.setAttribute('id', 'newmeeting-'+currentId+'-ignore');
@@ -25,7 +28,23 @@ function addMeet ( ) {
 		fieldset.insertBefore(tickbox, fieldset.getElementsByTagName('label')[0]);
 		fieldset.insertBefore(label, fieldset.getElementsByTagName('label')[0]);
 		fieldset.insertBefore(document.createElement('br'), fieldset.getElementsByTagName('label')[1]);
-	}	
+	} else {
+		fieldset.getElementsByTagName('input')[0].id = 'newmeeting-'+currentId+'-ignore';
+		fieldset.getElementsByTagName('input')[0].name = 'newmeeting-'+currentId+'-ignore';
+		fieldset.getElementsByTagName('label')[0].setAttribute('for', 'newmeeting-'+currentId+'-ignore');
+		fieldset.getElementsByTagName('input')[1].id = 'newmeeting-'+currentId+'-title';
+		fieldset.getElementsByTagName('input')[1].name = 'newmeeting-'+currentId+'-title';
+		fieldset.getElementsByTagName('label')[1].setAttribute('for', 'newmeeting-'+currentId+'-title');
+		fieldset.getElementsByTagName('input')[2].id = 'newmeeting-'+currentId+'-start';
+		fieldset.getElementsByTagName('label')[2].setAttribute('for', 'newmeeting-'+currentId+'-start');
+		fieldset.getElementsByTagName('input')[2].name = 'newmeeting-'+currentId+'-start';
+		fieldset.getElementsByTagName('input')[3].id = 'newmeeting-'+currentId+'-end';
+		fieldset.getElementsByTagName('input')[3].name = 'newmeeting-'+currentId+'-end';
+		fieldset.getElementsByTagName('input')[4].id = 'newmeeting-'+currentId+'-unique';
+		fieldset.getElementsByTagName('input')[4].name = 'newmeeting-'+currentId+'-unique';
+		fieldset.getElementsByTagName('label')[3].setAttribute('for', 'newmeeting-'+currentId+'-unique');
+		fieldset.getElementsByTagName('input')[5].name = 'newmeeting-'+currentId+'-type';
+	}
 	master.appendChild(fieldset);
 }
 
@@ -48,7 +67,10 @@ function addEat ( ) {
 	fieldset.getElementsByTagName('input')[4].id = 'newmeeting-'+currentId+'-spend';
 	fieldset.getElementsByTagName('label')[3].setAttribute('for', 'newmeeting-'+currentId+'-spend');
 	fieldset.getElementsByTagName('input')[4].name = 'newmeeting-'+currentId+'-spend';
-	fieldset.getElementsByTagName('input')[5].name = 'newmeeting-'+currentId+'-type';
+	fieldset.getElementsByTagName('input')[5].id = 'newmeeting-'+currentId+'-unique';
+	fieldset.getElementsByTagName('input')[5].name = 'newmeeting-'+currentId+'-unique';
+	fieldset.getElementsByTagName('label')[4].setAttribute('for', 'newmeeting-'+currentId+'-unique');
+	fieldset.getElementsByTagName('input')[6].name = 'newmeeting-'+currentId+'-type';
 	master.appendChild(fieldset);
 }
 

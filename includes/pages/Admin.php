@@ -207,6 +207,7 @@ class Admin extends Page {
 				}
 				$i++;
 			}
+			print_r($newSchedule);
 			$users = explode(',', $_POST['meeting-users']);
 			foreach ( $users as $userid ) {
 				if ( empty($userid) ) continue;
@@ -225,6 +226,7 @@ class Admin extends Page {
 			}
 			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule);
 			header('Location: ./?admin=meeting&date='.$date);
+			#return;
 		}
 		$schedule = $this->sortSchedule($meeting->schedule);
 		foreach ( $meeting->schedule as $id => $item ) {
