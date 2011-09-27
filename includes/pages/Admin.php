@@ -318,8 +318,14 @@ class Admin extends Page {
 			if ( $userids != '' )
 				$userids .= ',';
 			$userids .= $userid;
-			$form .= '<tr>
+			if ( is_object($this->database->getUserById($userid)) )
+				$form .= '<tr>
 			<td><a href="?admin=user&amp;user='.$userid.'">'.$this->database->getUserById($userid)->name.'</a></td>';
+			else {
+				$split = explode('-', $userid);
+				$form .= '<tr>
+			<td>'.$user->name.' (tilmeldt af <a href="?admin=user&amp;user='.$split[0].'">'.$this->database->getUserById($split[0])->name.'</a>)</td>';
+			}
 			foreach ( $schedule as $item ) {
 				$id = $item->id;
 				$useritem = $user->schedule->{$id};
