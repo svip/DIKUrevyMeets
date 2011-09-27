@@ -170,9 +170,61 @@ class Database {
 		}
 		$this->meetings->{$date}->{'users'}->{$userid} = array (
 			'schedule'	=> $userSchedule,
+			'usertype'	=> 'normal',
 			'comment'	=> $comment,
 			'modified'	=> time()
 		);
+		$this->calculateSpend($date);
+		$this->writeData ( 'meetings' );
+		return true;
+	}
+	
+	function makeSubId ( $name ) {
+		return substr(md5($name), 0, 4);
+	}
+	
+	function addNonUserToDate ( $date, $ownerid, $name, $userSchedule, $comment,
+		$ignoreConstraints=false ) {
+		if ( empty ( $this->meetings->{$date} ) )
+			return false;
+		if ( empty ( $ownerid ) )
+			return false;
+		$userid = $ownerid.'-'.$this->makeSubId($name);
+		if ( !$ignoreConstraints ) {
+			foreach ( $this->meetings->{$date}->schedule as $id => $item ) {
+				if ( $item->type == 'eat'
+					&& !$item->open ) {
+					if ( is_array ( $userSchedule ) ) {
+						if ( !empty($this->meetings->{$date}->{'users'}->{$userid}) ) {
+							$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->eating;
+							$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->cooking;
+						} else {
+							$userSchedule[$id]['eating'] = false;
+							$userSchedule[$id]['cooking'] = false;
+						}
+					}
+				}
+			}
+		}
+		$this->meetings->{$date}->{'users'}->{$userid} = array (
+			'name'		=> $name,
+			'usertype'	=> 'extra',
+			'schedule'	=> $userSchedule,
+			'comment'	=> $comment,
+			'modified'	=> time()
+		);
+		$this->calculateSpend($date);
+		$this->writeData ( 'meetings' );
+		return true;
+	}
+	
+	function removeNonUserFromDate ( $date, $ownerid, $name ) {
+		if ( empty ( $this->meetings->{$date} ) )
+			return false;
+		if ( empty ( $ownerid ) )
+			return false;
+		$userid = $ownerid.'-'.$this->makeSubId($name);
+		unset($this->meetings->{$date}->users->{$userid});
 		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
 		return true;

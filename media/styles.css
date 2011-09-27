@@ -35,6 +35,8 @@ input[type=submit], input[type=checkbox] { width: auto; }
 .total td { text-align: center; }
 fieldset .time { width: 100%; display: block; }
 fieldset .time input { width: 50px; text-align: right; }
+fieldset p { margin: 0; text-align: left; font-size: 90%; margin-bottom: 3px; }
+.distanceitself { margin-bottom: 20px; }
 #topmenu { position: absolute; top: 0; right: 0; padding: 5px; font-size: 90%; }
 #login-select { list-style: none; padding-bottom: 20px; }
 #login-select li { 
