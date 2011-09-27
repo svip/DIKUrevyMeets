@@ -18,12 +18,12 @@ class Front extends Page {
 			}
 			if ( $renderSelf )
 				$list .= '<tr><td>'.$this->weekDay($date, true).'</td>
-				<td>'.$this->readableDate($date).'</td>
+				<td class="date">'.$this->readableDate($date).'</td>
 				<td><a href="?meeting='.$date.'">'.$meeting->{'title'}."</a></td></tr>\n";
 			else
 				$list .= '<tr><td rowspan="'.($uniques+1).'">'.$this->weekDay($date, true).'</td>
-				<td rowspan="'.($uniques+1).'">'.$this->readableDate($date).'</td>
-				<td>'.$meeting->{'title'}."</td></tr>\n";
+				<td class="date" rowspan="'.($uniques+1).'">'.$this->readableDate($date).'</td>
+				<td class="title">'.$meeting->{'title'}."</td></tr>\n";
 			foreach ( $meeting->schedule as $id => $item ) {
 				if ( $item->unique ) {
 					$list .= '<tr><td><a href="?meeting='.$date.'&amp;subid='.(isset($item->id)?$item->id:$id).'">'.$item->{'title'}."</a></td></tr>\n";

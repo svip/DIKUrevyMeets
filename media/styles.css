@@ -16,6 +16,8 @@ table { background: #eee; margin-bottom: 15px; }
 table th { background: #ddd; padding: 1px 5px; vertical-align: bottom; }
 table td { background: #fafafa; padding: 1px 4px; }
 table td.centre { text-align: center; }
+table .date { text-align: right; }
+table .title { font-weight: bold; }
 td.yes { background: #0a0; color: #fff; font-weight: bold; }
 td.no { background: #a00; color: #fff; font-weight: bold; }
 td.nomatter { background: #daa; color: #fff; font-weight: bold; }
@@ -38,15 +40,3 @@ fieldset .time input { width: 50px; text-align: right; }
 fieldset p { margin: 0; text-align: left; font-size: 90%; margin-bottom: 3px; }
 .distanceitself { margin-bottom: 20px; }
 #topmenu { position: absolute; top: 0; right: 0; padding: 5px; font-size: 90%; }
-#login-select { list-style: none; padding-bottom: 20px; }
-#login-select li { 
-	cursor: pointer; display: block; 
-	width: 100px; height: 0; padding-top: 25px;
-	overflow: hidden; background-repeat: no-repeat;
-	float: left; margin-right: 25px;
-}
-#login-select-openid { background-image: url(openid.png); }
-#login-select-google { background-image: url(google.png); }
-#login-select-browserid { background-image: url(browserid.png); }
-#login-select-facebook { background-image: url(facebook.png); }
-#login-select-twitter { background-image: url(twitter.png); }
