@@ -189,6 +189,7 @@ class Admin extends Page {
 					$type = $_POST['newmeeting-'.$i.'-type'];
 					if ( $type == 'meet' ) {
 						$newSchedule[] = array (
+							'id'		=> $i,
 							'title'		=> $_POST['newmeeting-'.$i.'-title'],
 							'type'		=> 'meet',
 							'start'		=> $_POST['newmeeting-'.$i.'-start'],
@@ -201,6 +202,7 @@ class Admin extends Page {
 							?floatval($_POST['newmeeting-'.$i.'-spend'])
 							:0.0;
 						$newSchedule[] = array (
+							'id'		=> $i,
 							'title'		=> $_POST['newmeeting-'.$i.'-title'],
 							'type'		=> 'eat',
 							'start'		=> $_POST['newmeeting-'.$i.'-start'],
