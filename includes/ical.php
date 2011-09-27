@@ -26,24 +26,6 @@ X-WR-CALNAME:DIKUrevy møder
 X-WR-TIMEZONE:Europe/Copenhagen
 X-WR-CALCDESC:DIKUrevy møder
 BEGIN:VTIMEZONE
-TZID:Europe/Paris
-X-LIC-LOCATION:Europe/Paris
-BEGIN:DAYLIGHT
-TZOFFSETFROM:+0100
-TZOFFSETTO:+0200
-TZNAME:CEST
-DTSTART:19700329T020000
-RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
-END:DAYLIGHT
-BEGIN:STANDARD
-TZOFFSETFROM:+0200
-TZOFFSETTO:+0100
-TZNAME:CET
-DTSTART:19701025T030000
-RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
-END:STANDARD
-END:VTIMEZONE
-BEGIN:VTIMEZONE
 TZID:Europe/Copenhagen
 X-LIC-LOCATION:Europe/Copenhagen
 BEGIN:DAYLIGHT
@@ -106,9 +88,9 @@ EOF;
 				$content .= <<<EOF
 BEGIN:VEVENT
 SUMMARY:{$item['title']}
-DTSTART:{$item['dtstart']}
-DTEND:{$item['dtend']}
-DTSTAMP:{$item['dtstamp']}
+DTSTART;TZID=Europe/Copenhagen;VALUE=DATE-TIME:{$item['dtstart']}
+DTEND;TZID=Europe/Copenhagen;VALUE=DATE-TIME:{$item['dtend']}
+DTSTAMP;TZID=Europe/Copenhagen;VALUE=DATE-TIME:{$item['dtstamp']}
 TRANSP:OPAQUE
 SEQUENCE:0
 STATUS:CONFIRMED
@@ -130,12 +112,12 @@ EOF;
 	}
 	
 	private function icalTime ( $date, $time ) {
-		return str_replace('-', '', $date).'T'.str_replace(':', '', $time).'00Z';
+		return str_replace('-', '', $date).'T'.str_replace(':', '', $time).'00';
 	}
 	
 	private function isNewer ( $test, $against ) {
-		$test = strptime($test, "%Y%m%dT%H%M00Z");
-		$against = strptime($against, "%Y%m%dT%H%M00Z");
+		$test = strptime($test, "%Y%m%dT%H%M00");
+		$against = strptime($against, "%Y%m%dT%H%M00");
 		return $test > $against;
 	}
 	
