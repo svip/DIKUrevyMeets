@@ -187,7 +187,7 @@ class Database {
 		$ignoreConstraints=false ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
-		if ( empty ( $ownerid ) )
+		if ( empty ( $ownerid ) || empty( $name ) )
 			return false;
 		$userid = $ownerid.'-'.$this->makeSubId($name);
 		if ( !$ignoreConstraints ) {
@@ -221,7 +221,7 @@ class Database {
 	function removeNonUserFromDate ( $date, $ownerid, $name ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
-		if ( empty ( $ownerid ) )
+		if ( empty ( $ownerid ) || empty ( $name ) )
 			return false;
 		$userid = $ownerid.'-'.$this->makeSubId($name);
 		unset($this->meetings->{$date}->users->{$userid});
