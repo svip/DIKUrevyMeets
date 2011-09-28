@@ -27,7 +27,7 @@ class Meeting extends Page {
 			foreach ( $meeting->schedule as $id => $item ) {
 				if ($id != $itemid)
 					continue;
-				$schedule[] = $item;
+				$schedule[$item->start] = $item;
 			}	
 		}
 		$meets = 0;
@@ -240,7 +240,10 @@ class Meeting extends Page {
 					$canJoin = true;	
 				}
 			}
-			$userSchedule[$subuserid]['comment'] = $this->safeString($currentInfo[$subuserid]->comment);
+			if ( !is_null($currentInfo[$subuserid]) )
+				$userSchedule[$subuserid]['comment'] = $this->safeString($currentInfo[$subuserid]->comment);
+			else
+				$userSchedule[$subuserid]['comment'] = '';
 		}
 		if ( !$canJoin ) return '';
 		foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
@@ -270,13 +273,14 @@ class Meeting extends Page {
 			else
 				$form .= '
 <input type="hidden" name="meeting-usertype" value="extra" />
-<input type="hidden" name="meeting-name" value="'.$user->name.'" />';
+<input type="hidden" name="meeting-name" value="'.$this->safeString($user->name).'" />';
 
 			foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
 				if ( $item->nojoin ) {
 					continue;
 				} else {
-					if ( !is_null($itemid) && $item->id == $itemid) {
+					if ( !is_null($itemid) && $item->id == $itemid
+						|| is_null($itemid) ) {
 						 if ( $item->type == 'meet' ) {
 							$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
 							$form .= '
@@ -319,7 +323,8 @@ class Meeting extends Page {
 			if ( $item->nojoin ) {
 				continue;
 			} else {
-				if ( !is_null($itemid) && $item->id == $itemid) {
+				if ( !is_null($itemid) && $item->id == $itemid
+					|| is_null($itemid) ) {
 					if ( $item->type == 'meet' ) {
 						$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
 						$form .= '
