@@ -68,6 +68,10 @@ class Database {
 		return $tmp;
 	}
 	
+	function stripHtml ( $string ) {
+		return str_replace(array('<', '>'), array('&lt;', '&gt;'), $string);
+	}
+	
 	function insertMeeting ( $date, $title, $schedule=array(array
 			('title'=>'Aftensmad','type'=>'eat','start'=>'18:00',
 			'end'=>'19:00','open'=>true,'spend'=>0.0,'costperperson'=>0.0,
@@ -87,7 +91,7 @@ class Database {
 		$this->meetings->{$date} = array (
 			'title'			=> $title,
 			'schedule'		=> $schedule,
-			'comment'		=> $comment,
+			'comment'		=> $this->stripHtml($comment),
 			'users'			=> array()
 		);
 		$this->writeData ( 'meetings' );
@@ -210,7 +214,7 @@ class Database {
 			'name'		=> $name,
 			'usertype'	=> 'extra',
 			'schedule'	=> $userSchedule,
-			'comment'	=> $comment,
+			'comment'	=> $this->stripHtml($comment),
 			'modified'	=> time()
 		);
 		$this->calculateSpend($date);

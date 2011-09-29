@@ -194,7 +194,7 @@ class Meeting extends Page {
 				);
 			}
 		}
-		$comment = $_POST['meeting-comment'];
+		$comment = $this->database->stripHtml($_POST['meeting-comment']);
 		if ( $_POST['meeting-usertype'] == 'extra' ) {
 			$name = $_POST['meeting-name'];
 			$this->database->addNonUserToDate ( $date, $this->auth->userinfo->{'identity'}, $name, $userSchedule, $comment );
