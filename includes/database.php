@@ -10,10 +10,12 @@ class Database {
 	public function __construct ( ) {
 		$this->usersFile = fopen ( "data/users.json", 'r+' );
 		$this->meetingsFile = fopen ( "data/meetings.json", 'r+' );
-		$this->users = json_decode ( fread($this->usersFile, 
-			filesize("data/users.json") ) );
-		$this->meetings = json_decode ( fread($this->meetingsFile, 
-			filesize("data/meetings.json") ) );
+		$this->users = json_decode ( trim(fread($this->usersFile, 
+			filesize("data/users.json") )) );
+		rewind($this->usersFile);
+		$this->meetings = json_decode ( trim(fread($this->meetingsFile, 
+			filesize("data/meetings.json") )) );
+		rewind($this->meetingsFile);
 		flock($this->usersFile, LOCK_EX);
 		flock($this->meetingsFile, LOCK_EX);
 	}
