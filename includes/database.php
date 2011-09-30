@@ -4,23 +4,36 @@ class Database {
 
 	private $users = null;
 	private $meetings = null;
+	private $usersFile = null;
+	private $meetingsFile = null;
 	
 	public function __construct ( ) {
-		$this->users = json_decode ( file_get_contents( 'data/users.json' ) );
-		$this->meetings = json_decode ( file_get_contents( 'data/meetings.json' ) );
+		$this->usersFile = fopen ( "data/users.json", 'r+' );
+		$this->meetingsFile = fopen ( "data/meetings.json", 'r+' );
+		$this->users = json_decode ( fread($this->usersFile, 
+			filesize("data/users.json") ) );
+		$this->meetings = json_decode ( fread($this->meetingsFile, 
+			filesize("data/meetings.json") ) );
+		flock($this->usersFile, LOCK_EX);
+		flock($this->meetingsFile, LOCK_EX);
+	}
+	
+	public function __destruct ( ) {
+		fclose($this->usersFile);
+		fclose($this->meetingsFile);
 	}
 	
 	private function writeData ( $file ) {
 		switch ( $file ) {
 			case 'meetings':
-				$hl = fopen ( "data/$file.json", 'w' );
-				fwrite ( $hl, json_encode ( $this->meetings, JSON_FORCE_OBJECT ) );
-				fclose ( $hl );
+				ftruncate ( $this->meetingsFile, 0 );
+				fwrite ( $this->meetingsFile, json_encode ( $this->meetings, JSON_FORCE_OBJECT ) );
+				rewind( $this->meetingsFile );
 				break;
 			case 'users':
-				$hl = fopen ( "data/$file.json", 'w' );
-				fwrite ( $hl, json_encode ( $this->users, JSON_FORCE_OBJECT ) );
-				fclose ( $hl );
+				ftruncate ( $this->usersFile, 0 );
+				fwrite ( $this->usersFile, json_encode ( $this->users, JSON_FORCE_OBJECT ) );
+				rewind( $this->usersFile );
 				break;
 			default: break;
 		}
