@@ -8,8 +8,12 @@ class Database {
 	private $meetingsFile = null;
 	
 	public function __construct ( ) {
-		$this->usersFile = fopen ( "data/users.json", 'r+' );
-		$this->meetingsFile = fopen ( "data/meetings.json", 'r+' );
+		$this->usersFile = @fopen ( "data/users.json", 'r+' );
+		$this->meetingsFile = @fopen ( "data/meetings.json", 'r+' );
+		if ( empty($this->usersFile) || empty($this->meetingsFile) ) {
+			// If we fail, tell the user.
+			die('Kunne ikke få adgang til datafilerne.  Kontakt administratorer.');
+		}
 		$this->users = json_decode ( trim(fread($this->usersFile, 
 			filesize("data/users.json") )) );
 		rewind($this->usersFile);
@@ -18,11 +22,12 @@ class Database {
 		rewind($this->meetingsFile);
 		flock($this->usersFile, LOCK_EX);
 		flock($this->meetingsFile, LOCK_EX);
+		$this->checkMeetings();
 	}
 	
 	public function __destruct ( ) {
-		fclose($this->usersFile);
-		fclose($this->meetingsFile);
+		@fclose($this->usersFile);
+		@fclose($this->meetingsFile);
 	}
 	
 	private function writeData ( $file ) {
@@ -39,6 +44,22 @@ class Database {
 				break;
 			default: break;
 		}
+	}
+	
+	private function checkMeetings ( ) {
+		foreach ( $this->meetings as $date => $meeting ) {
+			if ( $this->isBeforeToday($date)
+				&& ( isset($meeting->hidden)
+					&& $this->meetings->{$date}->hidden ) ) {
+				$this->meetings->{$date}->hidden = true;
+				$this->meetings->{$date}->locked = true;
+			}
+		}
+		$this->writeData ( 'meetings' );
+	}
+	
+	private function isBeforeToday ( $date ) {
+		return strtotime($date) - time()+24*60*60;
 	}
 	
 	function getMeeting ( $date ) {
@@ -78,7 +99,8 @@ class Database {
 	function getSortedMeetings ( ) {
 		$tmp = array();
 		foreach ( $this->meetings as $date => $meeting )
-			$tmp[$date] = $meeting;
+			if ( !isset($meeting->hidden) || !$meeting->hidden )
+				$tmp[$date] = $meeting;
 		ksort($tmp);
 		return $tmp;
 	}

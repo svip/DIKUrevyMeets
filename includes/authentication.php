@@ -46,11 +46,13 @@ class Authentication {
 	}
 	
 	private function drupalRegister ( $uid, $name ) {
+		global $debug;
 		if ( $this->database->insertUser ( $name, 'drupal', $uid, null ) ) {
-			if ( !empty($_SERVER['HTTP_REFERER']) )
-				header('Location: '.$_SERVER['HTTP_REFERER']);
-			else
-				header('Location: ./');
+			if ( !$debug ) // Never redirect in debug mode.
+				if ( !empty($_SERVER['HTTP_REFERER']) )
+					header('Location: '.$_SERVER['HTTP_REFERER']);
+				else
+					header('Location: ./');
 		}
 	}
 	

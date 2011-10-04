@@ -22,32 +22,6 @@ function gfRawMsg ( ) {
 	return $msg;
 }
 
-function gfCallFunction ( $array ) {
-	if ( !isset($GLOBALS[$array[0]]) )
-		throw new CKException("No such class, '{$array[0]}'.");
-	return $GLOBALS[$array[0]]->$array[1]((isset($array[2])?$array[2]:null));
-}
-
-function gfLink ( $subpages=null ) {
-	$gvPageLocation = './';
-	if ( is_null($subpages) ) {
-		return $gvPageLocation;
-	} else {
-		if ( !is_array($subpages) )
-			return "$gvPageLocation?page=$subpages";
-		$tmp = '';
-		foreach ( $subpages as $var => $value ) {
-			if ( $tmp != '' ) $tmp .= '&amp;';
-			$tmp .= "$var=$value";
-		}
-		return "$gvPageLocation?$tmp";
-	}
-}
-
-function gfTestFlag ( $flag, $flags ) {
-	return ($flag & $flags) == $flag;
-}
-
 function gfGetDB ( ) {
 	global $DB;
 	return $DB;
