@@ -19,7 +19,18 @@ class Meeting extends Page {
 	}
 	
 	private function makePage ( $date, $meeting, $itemid ) {
-		$content = '<h1>'.$meeting->{'title'}.'</h1><h3>'.nl2br($meeting->{'comment'}).'</h3><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
+		$nav = '';
+		$prevMeeting = $this->database->getMeetingBefore($date);
+		if ( $prevMeeting!==false )
+			$nav .= '<a href="./?meeting='.$prevMeeting['date'].'">&lt; '.$prevMeeting['date'].': '.$prevMeeting['title'].'</a>';
+		$nextMeeting = $this->database->getMeetingAfter($date);
+		if ( $nextMeeting!==false ) {
+			if ( $prevMeeting!==false )
+				$nav .= ' &middot; ';
+			$nav .= '<a href="./?meeting='.$nextMeeting['date'].'">'.$nextMeeting['date'].': '.$nextMeeting['title'].' &gt;</a>';
+		}
+		$content = "<p>$nav</p>\n";
+		$content .= '<h1>'.$meeting->{'title'}.'</h1><h3>'.nl2br($meeting->{'comment'}).'</h3><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
 		if ( is_null($itemid) ) 
 			$schedule = $this->sortSchedule($meeting->schedule);
 		else {

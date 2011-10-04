@@ -68,6 +68,34 @@ class Database {
 		return $this->meetings->{$date};
 	}
 	
+	function getMeetingBefore ( $checkDate ) {
+		$testDate = false;
+		foreach ( $this->getSortedMeetings() as $date => $meeting ) {
+			if ( $date == $checkDate )
+				return $testDate;
+			$testDate = array (
+				'date'	=>	$date,
+				'title'	=>	$meeting->title
+			);
+		}
+		return $testDate;
+	}
+	
+	function getMeetingAfter ( $checkDate ) {
+		$returnNext = false;
+		foreach ( $this->getSortedMeetings() as $date => $meeting ) {
+			$testDate = array (
+				'date'	=>	$date,
+				'title'	=>	$meeting->title
+			);
+			if ( $returnNext )
+				return $testDate;
+			if ( $date == $checkDate )
+				$returnNext = true;
+		}
+		return false;
+	}
+	
 	function getUsers ( ) {
 		return $this->users;
 	}
