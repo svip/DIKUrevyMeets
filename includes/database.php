@@ -129,7 +129,9 @@ class Database {
 			'title'			=> $title,
 			'schedule'		=> $schedule,
 			'comment'		=> $this->stripHtml($comment),
-			'users'			=> array()
+			'users'			=> array(),
+			'hidden'		=> false,
+			'locked'		=> false,
 		);
 		$this->writeData ( 'meetings' );
 		return $this->meetings;
@@ -141,14 +143,23 @@ class Database {
 		return true;
 	}
 	
-	function updateMeeting ( $date, $title, $comment, $schedule ) {
+	function updateMeeting ( $date, $title, $comment, $schedule, $locked=null,
+		$hidden=null ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 			return false;
 		if ( empty( $this->meetings->{$date} ) )
 			return false;
+		if ( isset($this->meeting->{$date}->locked) 
+			&& $this->meeting->{$date}->locked )
+			// don't do anything with a locked meeting.
+			return false;
 		$this->meetings->{$date}->title = $title;
 		$this->meetings->{$date}->comment = $comment;
 		$this->meetings->{$date}->schedule = $schedule;
+		if ( !is_null($locked) )
+			$this->meetings->{$date}->locked = $locked;
+		if ( !is_null($hidden) )
+			$this->meetings->{$date}->hidden = $hidden;
 		$this->writeData ( 'meetings' );
 		return true;
 	}

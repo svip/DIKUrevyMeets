@@ -216,6 +216,9 @@ class Meeting extends Page {
 	private function meetingForm ( $meeting, $currentInfo, $itemid ) {
 		$userSchedule = array();
 		$canJoin = false;
+		if ( $meeting->locked ) {
+			return '<p>Tilmeldingen er lukket.</p>';
+		}
 		$form = '';
 		foreach ( $currentInfo as $subuserid => $a ) {
 			foreach ( $meeting->schedule as $id => $item ) {

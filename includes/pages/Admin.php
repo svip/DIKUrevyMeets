@@ -120,7 +120,7 @@ class Admin extends Page {
 		}
 		$list = "<ul>\n";
 		foreach ( $this->database->getSortedMeetings() as $date => $meeting ) {
-			$list .= '<li><a href="./?admin=meeting&amp;date='.$date.'">'.$date.': '.$meeting->{'title'}.'</a> (<a href="./?admin=deletemeeting&amp;date='.$date."\">Slet</a>)</li>\n";
+			$list .= '<li><a href="./?admin=meeting&amp;date='.$date.'">'.$date.': '.$meeting->{'title'}.'</a> (<a href="./?admin=deletemeeting&amp;date='.$date.'">Slet</a>) ('.((isset($meeting->locked) && $meeting->locked)?'Låst':'Åben').")</li>\n";
 		}
 		$list .= "</ul>\n";
 		$form = '<form method="post">
@@ -179,6 +179,8 @@ class Admin extends Page {
 			$date = $_POST['meeting-date'];
 			$title = $_POST['meeting-title'];
 			$meetComment = $_POST['meeting-comment'];
+			$locked = isset($_POST['meeting-locked']);
+			$hidden = isset($_POST['meeting-hidden']);
 			
 			$i = 0;
 			$newSchedule = array();
@@ -233,7 +235,7 @@ class Admin extends Page {
 				}
 				$this->database->addUserToDate($date, $userid, $userSchedule, $comment, true, true);
 			}
-			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule);
+			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $locked, $hidden);
 			header('Location: ./?admin=meeting&date='.$date);
 			#return;
 		}
@@ -253,6 +255,10 @@ class Admin extends Page {
 <legend>Information</legend>
 <label for="meeting-date">Dato:</label>
 <input type="text" name="meeting-date" id="meeting-date" value="'.$date.'" />
+<input type="checkbox" name="meeting-locked" id="meeting-locked" '.((isset($meeting->locked) && $meeting->locked)?'checked="true"':'').' />
+<label for="meeting-locked">Låst?</label>
+<input type="checkbox" name="meeting-hidden" id="meeting-hidden" '.((isset($meeting->hidden) && $meeting->hidden)?'checked="true"':'').' /><br />
+<label for="meeting-hidden">Skjult?</label>
 <label for="meeting-title">Overskrift:</label>
 <input type="text" name="meeting-title" id="meeting-title" value="'.$meeting->title.'" />
 <label for="meeting-comment">Kommentar:</label>
