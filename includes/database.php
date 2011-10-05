@@ -34,12 +34,16 @@ class Database {
 		switch ( $file ) {
 			case 'meetings':
 				ftruncate ( $this->meetingsFile, 0 );
-				fwrite ( $this->meetingsFile, json_encode ( $this->meetings, JSON_FORCE_OBJECT ) );
+				//$str = str_replace ( ',', ",\n", json_encode ( $this->meetings, JSON_FORCE_OBJECT ) );
+				$str = json_encode ( $this->meetings, JSON_FORCE_OBJECT );
+				fwrite ( $this->meetingsFile, $str );
 				rewind( $this->meetingsFile );
 				break;
 			case 'users':
 				ftruncate ( $this->usersFile, 0 );
-				fwrite ( $this->usersFile, json_encode ( $this->users, JSON_FORCE_OBJECT ) );
+				//$str = str_replace ( ',', ",\n", json_encode ( $this->users, JSON_FORCE_OBJECT ) );
+				$str = json_encode ( $this->users, JSON_FORCE_OBJECT );
+				fwrite ( $this->usersFile, $str );
 				rewind( $this->usersFile );
 				break;
 			default: break;
