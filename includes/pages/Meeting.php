@@ -147,7 +147,7 @@ class Meeting extends Page {
 			if ( $this->auth->loggedIn()
 				&& strpos($userid, '-')!==false ) {
 				$split = explode('-', $userid);
-				if (intval($split[0]) == $userid)
+				if (intval($split[0]) == $this->auth->userinfo->{'identity'})
 					$currentInfo[] = $user;
 			}
 			$table .= '<tr><td>'.$user->name.'</td>';
