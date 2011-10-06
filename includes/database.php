@@ -128,10 +128,10 @@ class Database {
 		return $this->meetings;
 	}
 	
-	function getSortedMeetings ( ) {
+	function getSortedMeetings ( $includeHidden=false ) {
 		$tmp = array();
 		foreach ( $this->meetings as $date => $meeting )
-			if ( !isset($meeting->hidden) || !$meeting->hidden )
+			if ( $includeHidden || (!isset($meeting->hidden) || !$meeting->hidden) )
 				$tmp[$date] = $meeting;
 		ksort($tmp);
 		return $tmp;

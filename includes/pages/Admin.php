@@ -121,7 +121,7 @@ class Admin extends Page {
 			header ( 'Location: ./?admin=front' );
 		}
 		$list = "<ul>\n";
-		foreach ( $this->database->getSortedMeetings() as $date => $meeting ) {
+		foreach ( $this->database->getSortedMeetings(true) as $date => $meeting ) {
 			$list .= '<li><a href="./?admin=meeting&amp;date='.$date.'">'.$date.': '.$meeting->{'title'}.'</a> (<a href="./?admin=deletemeeting&amp;date='.$date.'">Slet</a>) ('.((isset($meeting->locked) && $meeting->locked)?'Låst':'Åben').")</li>\n";
 		}
 		$list .= "</ul>\n";
