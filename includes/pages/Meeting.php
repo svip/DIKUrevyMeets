@@ -54,20 +54,31 @@ class Meeting extends Page {
 		return $content;
 	}
 	
-	private function makePage ( $date, $meeting, $itemid ) {
+	private function onlyUniques ( $date ) {
+		$meeting = $this->database->getMeeting($date);
+		foreach ( $meeting->schedule as $item )
+			if ( !$item->unique )
+				return false;
+		return true;
+	}
+	
+	private function navigation ( $date ) {
 		$nav = '';
 		$prevMeeting = $this->database->getMeetingBefore($date);
 		if ( $prevMeeting!==false )
-			$nav .= '<a href="./?meeting='.$prevMeeting['date'].'">&lt; '.$prevMeeting['date'].': '.$prevMeeting['title'].'</a>';
+			$nav .= '<a href="./?meeting='.$prevMeeting['date'].($this->onlyUniques($prevMeeting['date'])?'&amp;subid=0':'').'">&lt; '.$prevMeeting['date'].': '.$prevMeeting['title'].'</a>';
 		$nextMeeting = $this->database->getMeetingAfter($date);
 		if ( $nextMeeting!==false ) {
 			if ( $prevMeeting!==false )
 				$nav .= ' &middot; ';
-			$nav .= '<a href="./?meeting='.$nextMeeting['date'].'">'.$nextMeeting['date'].': '.$nextMeeting['title'].' &gt;</a>';
+			$nav .= '<a href="./?meeting='.$nextMeeting['date'].($this->onlyUniques($nextMeeting['date'])?'&amp;subid=0':'').'">'.$nextMeeting['date'].': '.$nextMeeting['title'].' &gt;</a>';
 		}
+		return $nav;
+	}
+	
+	private function makePage ( $date, $meeting, $itemid ) {
+		$nav = $this->navigation($date);
 		$content = "<p>$nav</p>\n";
-		$content .= '<h1>'.$meeting->{'title'}.'</h1><h3>'.nl2br($meeting->{'comment'}).'</h3><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
-		$content .= $this->seeAlso($date, $meeting, $itemid);
 		if ( is_null($itemid) ) {
 			$schedule = $this->sortSchedule($meeting->schedule);
 			$tmp = array();
@@ -82,8 +93,11 @@ class Meeting extends Page {
 				if ($item->id != $itemid)
 					continue;
 				$schedule[$item->start] = $item;
-			}	
+				break;
+			}
 		}
+		$content .= '<h1>'.$meeting->{'title'}.(!is_null($itemid)?': '.$item->title:'').'</h1><h3>'.nl2br($meeting->{'comment'}).'</h3><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
+		$content .= $this->seeAlso($date, $meeting, $itemid);
 		$meets = 0;
 		$eats = 0;
 		$table = '<table>
