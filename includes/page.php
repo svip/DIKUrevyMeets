@@ -63,8 +63,9 @@ abstract class Page {
 	protected function sortSchedule ( $schedule ) {
 		$tmp = array();
 		foreach ( $schedule as $i => $item ) {
-			$tmp[intval(str_replace(':', '', $item->start))] = $item;
-			$tmp[intval(str_replace(':', '', $item->start))]->id = $i;
+			$time = intval(str_replace(':', '', $item->start));
+			$tmp[$time] = $item;
+			$tmp[$time]->id = $i;
 		}
 		ksort($tmp);
 		return $tmp;

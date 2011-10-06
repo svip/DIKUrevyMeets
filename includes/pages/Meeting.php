@@ -18,6 +18,42 @@ class Meeting extends Page {
 		return strncasecmp($a->name, $b->name, 4);
 	}
 	
+	private function seeAlso ( $date, $meeting, $itemid ) {
+		$seeAlso = array();
+		if ( is_null($itemid) ) {
+			$schedule = $this->sortSchedule($meeting->schedule);
+			foreach ( $schedule as $key => $item ) {
+				if ( $item->unique )
+					$seeAlso[] = $item;
+			}
+		} else {
+			foreach ( $meeting->schedule as $id => $item ) {
+				if ($id != $itemid) {
+					if ($item->unique)
+						$seeAlso[] = $item;
+					elseif ( !in_array($meeting, $seeAlso) )
+						$seeAlso[-1] = $meeting;
+				}
+			}
+		}
+		if (count($seeAlso) == 0)
+			return '';
+		ksort($seeAlso);
+		$content = '<p>Se også for denne dato: ';
+		$i = 0;
+		foreach ($seeAlso as $id => $item) {
+			if ( $i != 0 )
+				$content .= ' &middot; ';
+			if ( $id === -1 )
+				$content .= '<a href="./?meeting='.$date.'">'.$item->title.'</a>';
+			else
+				$content .= '<a href="./?meeting='.$date.'&amp;subid='.$item->id.'">'.$item->title.'</a>';
+			$i++;
+		}
+		$content .= '</p>';
+		return $content;
+	}
+	
 	private function makePage ( $date, $meeting, $itemid ) {
 		$nav = '';
 		$prevMeeting = $this->database->getMeetingBefore($date);
@@ -31,12 +67,19 @@ class Meeting extends Page {
 		}
 		$content = "<p>$nav</p>\n";
 		$content .= '<h1>'.$meeting->{'title'}.'</h1><h3>'.nl2br($meeting->{'comment'}).'</h3><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
-		if ( is_null($itemid) ) 
+		$content .= $this->seeAlso($date, $meeting, $itemid);
+		if ( is_null($itemid) ) {
 			$schedule = $this->sortSchedule($meeting->schedule);
-		else {
+			$tmp = array();
+			foreach ( $schedule as $key => $item ) {
+				if ( !$item->unique )
+					$tmp[$key] = $item;
+			}
+			$schedule = $tmp;
+		} else {
 			$schedule = array();
-			foreach ( $meeting->schedule as $id => $item ) {
-				if ($id != $itemid)
+			foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
+				if ($item->id != $itemid)
 					continue;
 				$schedule[$item->start] = $item;
 			}	
@@ -78,11 +121,11 @@ class Meeting extends Page {
 			'users'		=> 0,
 			'schedule'	=> array()
 		);
-		foreach ( $schedule as $id => $item ) {
+		foreach ( $schedule as $item ) {
 			if ( $item->type == 'meet' ) {
-				$stats['schedule'][(isset($item->id)?$item->id:$id)] = array ( 'attending' => 0 );
+				$stats['schedule'][$item->id] = array ( 'attending' => 0 );
 			} elseif ( $item->type == 'eat' ) {
-				$stats['schedule'][(isset($item->id)?$item->id:$id)] = array ( 'eating' => 0, 'cooking' => 0 );
+				$stats['schedule'][$item->id] = array ( 'eating' => 0, 'cooking' => 0 );
 			}
 		}
 		$tmp = array();
@@ -108,8 +151,8 @@ class Meeting extends Page {
 					$currentInfo[] = $user;
 			}
 			$table .= '<tr><td>'.$user->name.'</td>';
-			foreach ( $schedule as $id => $item ) {
-				$id = (isset($item->id)?$item->id:$id);
+			foreach ( $schedule as $item ) {
+				$id = $item->id;
 				if ( $item->type == 'meet' ) {
 					if (!isset($user->schedule->{$id})
 						|| ($item->nojoin) )
@@ -227,7 +270,7 @@ class Meeting extends Page {
 	private function meetingForm ( $meeting, $currentInfo, $itemid ) {
 		$userSchedule = array();
 		$canJoin = false;
-		if ( $meeting->locked ) {
+		if ( @$meeting->locked ) {
 			return '<p>Tilmeldingen er lukket.</p>';
 		}
 		$form = '';
@@ -262,7 +305,8 @@ class Meeting extends Page {
 		if ( !$canJoin ) return '';
 		foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
 			if ( $item->nojoin
-				|| (!is_null($itemid) && $item->id != $itemid) ) {
+				|| (!is_null($itemid) && $item->id != $itemid)
+				|| (is_null($itemid) && $item->unique) ) {
 				continue;
 			} elseif ( $item->type == 'eat' 
 				&& $userSchedule[0][$item->id]['cooking']
@@ -293,8 +337,8 @@ class Meeting extends Page {
 				if ( $item->nojoin ) {
 					continue;
 				} else {
-					if ( !is_null($itemid) && $item->id == $itemid
-						|| is_null($itemid) ) {
+					if ( (!is_null($itemid) && $item->id == $itemid)
+						|| (is_null($itemid) && !$item->unique) ) {
 						 if ( $item->type == 'meet' ) {
 							$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
 							$form .= '
@@ -337,8 +381,8 @@ class Meeting extends Page {
 			if ( $item->nojoin ) {
 				continue;
 			} else {
-				if ( !is_null($itemid) && $item->id == $itemid
-					|| is_null($itemid) ) {
+				if ( (!is_null($itemid) && $item->id == $itemid)
+					|| (is_null($itemid) && !$item->unique) ) {
 					if ( $item->type == 'meet' ) {
 						$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
 						$form .= '
