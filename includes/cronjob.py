@@ -66,7 +66,7 @@ class MailTask(object):
 class GitCommit(object):
 	
 	def __init__( self ):
-		os.system ( "cd /var/www/dikurevy/meets && git commit -a -m 'Data-opdatering'" )
+		os.system ( "cd /var/www/dikurevy/meets && git add data/*.json && git commit -m 'Data-opdatering'" )
 		#&& git push git@github.com:svip/DIKUrevyMeets.git
 
 def main ( ):
