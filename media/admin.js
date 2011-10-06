@@ -33,8 +33,10 @@ function addEat ( ) {
 function fixIds ( fieldset ) {
 	var kids = fieldset.getElementsByTagName('input');
 	for ( var i = 0; i < kids.length; i++ ) {
-		kids[i].id.replace(/[0-9]+/, currentId);
-		kids[i].name.replace(/[0-9]+/, currentId);
+		if ( kids[i].getAttribute('id')!=null )
+			// hidden input has no id
+			kids[i].setAttribute('id', kids[i].getAttribute('id').replace(/[0-9]+/, currentId) );
+		kids[i].setAttribute('name', kids[i].getAttribute('name').replace(/[0-9]+/, currentId) );
 	}
 	var kids = fieldset.getElementsByTagName('label');
 	for ( var i = 0; i < kids.length; i++ ) {
