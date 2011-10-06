@@ -92,7 +92,7 @@ class Meeting extends Page {
 			foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
 				if ($item->id != $itemid)
 					continue;
-				$schedule[$item->start] = $item;
+				$schedule[$item->start . $item->end] = $item;
 				break;
 			}
 		}
