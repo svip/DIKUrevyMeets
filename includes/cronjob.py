@@ -9,6 +9,8 @@ class MailTask(object):
 	
 	today = 0
 	debug = False
+	months = ['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli',
+			'august', 'september', 'oktober', 'november', 'december']
 
 	def monthsInTheFuture ( self, date ):
 		now = self.today
@@ -23,6 +25,9 @@ class MailTask(object):
 	def formatDate ( self, date ):
 		date = date.split('-')
 		return '%s/%s/%s' % (date[2], date[1], date[0])
+	
+	def monthName ( self, month ):
+		return self.months[month-1]
 
 	def __init__ ( self, today=None, debug=False ):
 		self.debug = debug
@@ -63,11 +68,14 @@ class MailTask(object):
 		s = u'%s\n\nTilmeld dig møder på http://møder.dikurevy.dk/' % s
 		s = s.strip()
 		
+		subject = u'Revy-begivenheder for %s' % self.monthName(self.today.month)
+		
 		if self.debug:
+			print subject
 			print s
 		else:
 			msg = MIMEText(s.encode('utf-8'))
-			msg['Subject'] = u'De tre næste måneders revymøder'
+			msg['Subject'] = subject
 			msg['From'] = 'revyboss@diku.dk'
 			msg['Reply-To'] = 'revy@diku.dk'
 			msg['To'] = 'revy@diku.dk'
