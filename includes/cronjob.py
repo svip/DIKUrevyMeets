@@ -8,6 +8,7 @@ from optparse import OptionParser
 class MailTask(object):
 	
 	today = 0
+	debug = False
 
 	def monthsInTheFuture ( self, date ):
 		now = self.today
@@ -23,7 +24,8 @@ class MailTask(object):
 		date = date.split('-')
 		return '%s/%s/%s' % (date[2], date[1], date[0])
 
-	def __init__ ( self, today=None ):
+	def __init__ ( self, today=None, debug=False ):
+		self.debug = debug
 		if today != None:
 			s = today.split('-')
 			self.today = datetime.date(int(s[0]), int(s[1]), int(s[2]))
@@ -60,19 +62,22 @@ class MailTask(object):
 	%s -- %s''' % (s, self.formatDate(date[0]), date[1]['title'])
 		s = u'%s\n\nTilmeld dig møder på http://møder.dikurevy.dk/' % s
 		s = s.strip()
-	
-		msg = MIMEText(s.encode('utf-8'))
-		msg['Subject'] = u'De tre næste måneders revymøder'
-		msg['From'] = 'revyboss@diku.dk'
-		msg['Reply-To'] = 'revy@diku.dk'
-		msg['To'] = 'revy@diku.dk'
-		t = smtplib.SMTP('localhost')
-		t.sendmail('revyboss@diku.dk', 'revy@diku.dk', msg.as_string())
-		t.quit()
+		
+		if self.debug:
+			print s
+		else:
+			msg = MIMEText(s.encode('utf-8'))
+			msg['Subject'] = u'De tre næste måneders revymøder'
+			msg['From'] = 'revyboss@diku.dk'
+			msg['Reply-To'] = 'revy@diku.dk'
+			msg['To'] = 'revy@diku.dk'
+			t = smtplib.SMTP('localhost')
+			t.sendmail('revyboss@diku.dk', 'revy@diku.dk', msg.as_string())
+			t.quit()
 
 class GitCommit(object):
 	
-	def __init__( self ):
+	def __init__( self, debug ):
 		os.system ( "cd /var/www/dikurevy/meets && git add data/*.json && git commit -m 'Data-opdatering'" )
 		#&& git push git@github.com:svip/DIKUrevyMeets.git
 
@@ -81,12 +86,14 @@ def main ( ):
 	parser.add_option("--daily", dest="daily", action="store_true")
 	parser.add_option("--monthly", dest="monthly", action="store_true")
 	parser.add_option("--date", dest="date", help="Set date to test by.")
+	parser.add_option("-d", "--debug", dest="debug", help="Set debug mode",
+			action="store_true")
 	(options, args) = parser.parse_args()
 	
 	if options.monthly:
-		MailTask(options.date)
+		MailTask(options.date, options.debug)
 	elif options.daily:
-		GitCommit()
+		GitCommit(options.debug)
 	else:
 		print "You forgot to ask for anything to do, see --help"
 
