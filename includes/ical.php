@@ -49,7 +49,7 @@ EOF;
 			$schedule = $this->sortSchedule($meeting->schedule);
 			$day = array();
 			foreach ( $schedule as $i => $item ) {
-				if ( $item->unique ) {
+				if ( $item->icalunique ) {
 					if ( !isset($day[0]) )
 						$day[1] = array (
 							'title'		=>	"{$meeting->title}: {$item->title}",

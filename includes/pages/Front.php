@@ -7,23 +7,21 @@ class Front extends Page {
 		foreach ( $this->database->getSortedMeetings() as $date => $meeting ) {
 			$renderSelf = null;
 			$uniques = 0;
+			$nonuniques = 0;
 			foreach ( $meeting->schedule as $item ) {
 				if ( $item->unique ) {
 					$uniques++;
 					if ( is_null($renderSelf) )
 						$renderSelf = false;
 				} else {
-					$renderSelf = true;
+					$nonuniques++;
+					if ( is_null($renderSelf) )
+						$renderSelf = true;
 				}
 			}
-			if ( $renderSelf )
-				$list .= '<tr><td>'.$this->weekDay($date, true).$this->loggedInUserInDate($date).'</td>
-				<td class="date">'.$this->readableDate($date).'</td>
-				<td><a href="?meeting='.$date.'">'.$meeting->{'title'}."</a></td></tr>\n";
-			else
-				$list .= '<tr><td rowspan="'.($uniques+1).'">'.$this->weekDay($date, true).$this->loggedInUserInDate($date).'</td>
+			$list .= '<tr><td rowspan="'.($uniques+1).'">'.$this->weekDay($date, true).$this->loggedInUserInDate($date).'</td>
 				<td class="date" rowspan="'.($uniques+1).'">'.$this->readableDate($date).'</td>
-				<td class="title">'.$meeting->{'title'}."</td></tr>\n";
+				<td'.($uniques > 0?' class="title"':'').'>'.($nonuniques > 0?'<a href="?meeting='.$date.'">'.$meeting->{'title'}.'</a>':$meeting->title)."</td></tr>\n";
 			foreach ( $meeting->schedule as $id => $item ) {
 				if ( $item->unique ) {
 					$list .= '<tr><td><a href="?meeting='.$date.'&amp;subid='.(isset($item->id)?$item->id:$id).'">'.$item->{'title'}."</a></td></tr>\n";
