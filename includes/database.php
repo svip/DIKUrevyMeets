@@ -14,14 +14,14 @@ class Database {
 			// If we fail, tell the user.
 			die('Kunne ikke få adgang til datafilerne.  Kontakt administratorer.');
 		}
+		flock($this->usersFile, LOCK_EX);
+		flock($this->meetingsFile, LOCK_EX);
 		$this->users = json_decode ( trim(fread($this->usersFile, 
 			filesize("data/users.json") )) );
 		rewind($this->usersFile);
 		$this->meetings = json_decode ( trim(fread($this->meetingsFile, 
 			filesize("data/meetings.json") )) );
 		rewind($this->meetingsFile);
-		flock($this->usersFile, LOCK_EX);
-		flock($this->meetingsFile, LOCK_EX);
 		$this->checkMeetings();
 	}
 	
