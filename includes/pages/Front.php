@@ -8,7 +8,10 @@ class Front extends Page {
 			$renderSelf = null;
 			$uniques = 0;
 			$nonuniques = 0;
-			foreach ( $meeting->schedule as $item ) {
+			$start = null;
+			foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
+				if ( is_null($start) )
+					$start = $item->start;
 				if ( $item->unique ) {
 					$uniques++;
 					if ( is_null($renderSelf) )
@@ -21,10 +24,11 @@ class Front extends Page {
 			}
 			$list .= '<tr><td rowspan="'.($uniques+1).'">'.$this->weekDay($date, true).$this->loggedInUserInDate($date).'</td>
 				<td class="date" rowspan="'.($uniques+1).'">'.$this->readableDate($date).'</td>
-				<td'.($uniques > 0?' class="title"':'').'>'.($nonuniques > 0?'<a href="?meeting='.$date.'">'.$meeting->{'title'}.'</a>':$meeting->title)."</td></tr>\n";
+				<td'.($uniques > 0?' class="title"':'').'>'.($nonuniques > 0?'<a href="?meeting='.$date.'">'.$meeting->{'title'}.'</a>':$meeting->title).'</td>
+				<td>'.$start."</td></tr>\n";
 			foreach ( $meeting->schedule as $id => $item ) {
 				if ( $item->unique ) {
-					$list .= '<tr><td><a href="?meeting='.$date.'&amp;subid='.(isset($item->id)?$item->id:$id).'">'.$item->{'title'}."</a></td></tr>\n";
+					$list .= '<tr><td><a href="?meeting='.$date.'&amp;subid='.(isset($item->id)?$item->id:$id).'">'.$item->{'title'}.'</a></td><td>'.$item->start."</tr>\n";
 				}
 			}
 		}
