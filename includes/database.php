@@ -185,6 +185,9 @@ class Database {
 			&& $this->meeting->{$date}->locked )
 			// don't do anything with a locked meeting.
 			return false;
+		foreach ( $schedule as $id => $item )
+			if ( $item['type'] == 'eat' )
+				$schedule[$id]['open'] = $this->meetings->{$date}->schedule->{$id}->open;
 		$this->meetings->{$date}->title = $title;
 		$this->meetings->{$date}->comment = $comment;
 		$this->meetings->{$date}->schedule = $schedule;
@@ -360,11 +363,12 @@ class Database {
 		}
 	}
 	
-	function closeForEating ( $date, $id, $spend=0 ) {
+	function closeForEating ( $date, $id, $spend=false ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
 		$this->meetings->{$date}->schedule->{$id}->open = false;
-		$this->meetings->{$date}->schedule->{$id}->spend = $spend;
+		if ( is_numeric($spend) )
+			$this->meetings->{$date}->schedule->{$id}->spend = $spend;
 		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
 		return true;

@@ -246,7 +246,7 @@ class Admin extends Page {
 							'type'		=> 'eat',
 							'start'		=> $_POST['newmeeting-'.$i.'-start'],
 							'end'		=> $_POST['newmeeting-'.$i.'-end'],
-							'open'		=> true,
+							'open'		=> null,
 							'spend'		=> $spend,
 							'costperperson'	=> 0.0, // let the database calc
 							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
