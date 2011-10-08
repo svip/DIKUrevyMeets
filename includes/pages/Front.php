@@ -37,6 +37,12 @@ class Front extends Page {
 		$this->content .= $list;
 		if ( $this->auth->loggedIn() )
 			$this->content .= '<p>* = dage du er tilmeldt.</p>';
+		// Munters kalendersystem virker ikke lige endnu p.g.a. autoritetsproblemer
+		// lader koden ligge her indtil da.
+		/*
+		$this->content .= '<iframe 
+src="//webmail.one.com/calendar/embed.html#src=http%3A%2F%2Fmoeder.dikurevy.dk%2F%3Fdo%3Dical&amp;name=DIKUrevy%20m%C3%B8der&amp;color=%23802c26&amp;navigation=true&amp;date=true&amp;tabs=true&amp;view=month&amp;weekStart=1&amp;locale=da&amp;tz=Europe%2FCopenhagen&amp;title=DIKUrevy" style="border-width: 0" scrolling="no" frameborder="0" width="600" height="600"></iframe>';
+		*/
 	}
 	
 	private function loggedInUserInDate ( $date ) {
