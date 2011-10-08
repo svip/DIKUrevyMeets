@@ -63,11 +63,15 @@ abstract class Page {
 	protected function sortSchedule ( $schedule ) {
 		$tmp = array();
 		foreach ( $schedule as $i => $item ) {
-			$time = intval(str_replace(':', '', $item->start.$item->end));
+			$time = $this->timeval($item->start.$item->end);
 			$tmp[$time] = $item;
 			$tmp[$time]->id = $i;
 		}
 		ksort($tmp);
 		return $tmp;
+	}
+	
+	protected function timeval ( $time ) {
+		return intval ( str_replace ( ':', '', $time ) );
 	}
 }

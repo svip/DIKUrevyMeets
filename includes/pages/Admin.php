@@ -74,6 +74,20 @@ class Admin extends Page {
 		$this->content = $content;
 	}
 	
+	private function findNextStartTime ( $time, $times ) {
+		sort($times);
+		foreach ( $times as $id => $test )
+			if ( $this->timeval($test) > $this->timeval($time) )
+				return $test;
+		return '24:00';
+	}
+	
+	private function parsePostedTime ( $post ) {
+		if ( !preg_match('@[0-9]{2}\:[0-9]{2}@is', $post ) )
+			return null;
+		return $post;
+	}
+	
 	private function frontPage ( ) {
 		if ( isset ( $_POST['newmeeting-submit'] ) ) {
 			$title = $_POST['newmeeting-title'];
@@ -90,8 +104,8 @@ class Admin extends Page {
 						$schedule[] = array (
 							'title'		=> $_POST['newmeeting-'.$i.'-title'],
 							'type'		=> 'meet',
-							'start'		=> $_POST['newmeeting-'.$i.'-start'],
-							'end'		=> $_POST['newmeeting-'.$i.'-end'],
+							'start'		=> $this->parsePostedTime($_POST['newmeeting-'.$i.'-start']),
+							'end'		=> $this->parsePostedTime($_POST['newmeeting-'.$i.'-end']),
 							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
 							'icalunique'	=> isset($_POST['newmeeting-'.$i.'-icalunique']),
 							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
@@ -103,8 +117,8 @@ class Admin extends Page {
 						$schedule[] = array (
 							'title'		=> $_POST['newmeeting-'.$i.'-title'],
 							'type'		=> 'eat',
-							'start'		=> $_POST['newmeeting-'.$i.'-start'],
-							'end'		=> $_POST['newmeeting-'.$i.'-end'],
+							'start'		=> $this->parsePostedTime($_POST['newmeeting-'.$i.'-start']),
+							'end'		=> $this->parsePostedTime($_POST['newmeeting-'.$i.'-end']),
 							'open'		=> true,
 							'spend'		=> $spend,
 							'costperperson'	=> $spend,
@@ -115,6 +129,22 @@ class Admin extends Page {
 					}
 				}
 				$i++;
+			}
+			$itemsEndTimeToFix = array();
+			$times = array();
+			foreach ( $schedule as $id => $item ) {
+				if ( is_null($item['start']) ) {
+					// BREAK!!!
+					header ( 'Location: ./?admin=front' );
+					return;
+				}
+				if ( is_null($item['end']) ) {
+					$itemsEndTimeToFix[] = $id;
+				}
+				$times[$id] = $item['start'];
+			}
+			foreach ( $itemsEndTimeToFix as $id ) {
+				$schedule[$id]['end'] = $this->findNextStartTime($schedule[$id]['start'], $times);
 			}
 			$this->database->insertMeeting($date, $title, $schedule, 
 				$comment);
