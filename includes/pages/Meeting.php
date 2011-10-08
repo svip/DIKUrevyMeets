@@ -76,9 +76,17 @@ class Meeting extends Page {
 		return $nav;
 	}
 	
+	private function isJoinableEvent ( $schedule ) {
+		foreach ( $schedule as $item ) 
+			if ( !$item->nojoin )
+				return true;
+		return false;
+	}
+	
 	private function makePage ( $date, $meeting, $itemid ) {
 		$nav = $this->navigation($date);
-		$content = "<p>$nav</p>\n";
+		$content = '<p><a href="./">Tilbage</a></p>';
+		$content .= "<p>$nav</p>\n";
 		if ( is_null($itemid) ) {
 			$schedule = $this->sortSchedule($meeting->schedule);
 			$tmp = array();
@@ -98,6 +106,14 @@ class Meeting extends Page {
 		}
 		$content .= '<h1>'.$meeting->{'title'}.(!is_null($itemid)?': '.$item->title:'').'</h1><h3>'.nl2br($meeting->{'comment'}).'</h3><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
 		$content .= $this->seeAlso($date, $meeting, $itemid);
+		if ( !$this->isJoinableEvent($schedule) ) {
+			$content .= '<h3>Program:</h3>';
+			foreach ( $schedule as $item ) {
+				$content .= '<h4>'.$item->title.': '.$item->start.'-'.$item->end.'</h4>';
+			}
+			$this->content = $content;
+			return;
+		}
 		$meets = 0;
 		$eats = 0;
 		$table = '<table>
@@ -234,7 +250,7 @@ class Meeting extends Page {
 		} else {
 			$content .= $this->logInFunction();
 		}
-		$this->content = '<p><a href="./">Tilbage</a></p>'.$content;
+		$this->content = $content;
 	}
 	
 	private function handleMeetingRemove ( $date, $itemid ) {
