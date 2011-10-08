@@ -271,7 +271,17 @@ class Admin extends Page {
 						$userSchedule->{$id}->paid = isset($_POST['meeting-'.$userid.'-'.$id.'-paid'])?$item->costperperson:0.0;
 					}
 				}
-				$this->database->addUserToDate($date, $userid, $userSchedule, $comment, true, true);
+				if ( strpos($userid, '-')!==false ) {
+					$name = $meeting->users->{$userid}->name;
+					if ( !$name )
+						$name = 'N/A';
+					$this->database->addNonUserToDate ( $date, $userid, $name, $userSchedule, $comment, true, true );
+				} elseif ( is_numeric($userid) ) {
+					$this->database->addUserToDate ( $date, $userid, $userSchedule, $comment, true, true );
+				} else {
+					// unsane userid, remove it.
+					$this->database->removeUserFromDate ( $date, $userid );
+				}
 			}
 			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $locked, $hidden);
 			header('Location: ./?admin=meeting&date='.$date);

@@ -268,12 +268,15 @@ class Database {
 	}
 	
 	function addNonUserToDate ( $date, $ownerid, $name, $userSchedule, $comment,
-		$ignoreConstraints=false ) {
+		$ignoreConstraints=false, $fullUserIdSupplied=false ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
 		if ( empty ( $ownerid ) || empty( $name ) )
 			return false;
-		$userid = $ownerid.'-'.$this->makeSubId($name);
+		if ( !$fullUserIdSupplied )
+			$userid = $ownerid.'-'.$this->makeSubId($name);
+		else
+			$userid = $ownerid;
 		if ( !$ignoreConstraints ) {
 			foreach ( $this->meetings->{$date}->schedule as $id => $item ) {
 				if ( $item->type == 'eat'
@@ -308,6 +311,17 @@ class Database {
 		if ( empty ( $ownerid ) || empty ( $name ) )
 			return false;
 		$userid = $ownerid.'-'.$this->makeSubId($name);
+		unset($this->meetings->{$date}->users->{$userid});
+		$this->calculateSpend($date);
+		$this->writeData ( 'meetings' );
+		return true;
+	}
+	
+	function removeUserFromDate ( $date, $userid ) {
+		if ( empty ( $this->meetings->{$date} ) )
+			return false;
+		if ( empty ( $userid ) )
+			return false;
 		unset($this->meetings->{$date}->users->{$userid});
 		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );

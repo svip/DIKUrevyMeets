@@ -171,6 +171,10 @@ class Meeting extends Page {
 		$users = $tmp;
 		$currentInfo = array ( 0 => null );
 		foreach ( $users as $userid => $user ) {
+			if ( $user->name == 'N/A' )
+				// this is a bug, do not display it for general use
+				// admins can see it, however.
+				continue;
 			if ( $this->auth->loggedIn()
 				&& $userid == $this->auth->userinfo->{'identity'} )
 				$currentInfo[0] = $user;
