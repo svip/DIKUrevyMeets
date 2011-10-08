@@ -192,6 +192,7 @@ class Database {
 			$this->meetings->{$date}->locked = $locked;
 		if ( !is_null($hidden) )
 			$this->meetings->{$date}->hidden = $hidden;
+		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
 		return true;
 	}
@@ -330,18 +331,33 @@ class Database {
 	
 	private function calculateSpend ( $date ) {
 		foreach ( $this->meetings->{$date}->schedule as $id => $item ) {
-			if ( $item->type == 'eat' ) {
-				$i = 0;
-				foreach ( $this->meetings->{$date}->users as $user )
-					if ( (is_object($user) && $user->schedule->{$id}->eating )
-						|| (is_array($user) && (
-						(is_object($user['schedule']) && $user['schedule']->{$id}->eating )
-						|| (is_array($user['schedule']) && $user['schedule'][$id]['eating'] ) ) ) )
+			if ( is_array($item) ) {
+				if ( $item['type'] == 'eat' ) {
+					$i = 0;
+					foreach ( $this->meetings->{$date}->users as $user )
+						if ( (is_object($user) && $user->schedule->{$id}->eating )
+							|| (is_array($user) && (
+							(is_object($user['schedule']) && $user['schedule']->{$id}->eating )
+							|| (is_array($user['schedule']) && $user['schedule'][$id]['eating'] ) ) ) )
 						$i++;
-				if ( $i === 0 ) $i = 1;
-				$this->meetings->{$date}->schedule->{$id}->costperperson = floatval($this->meetings->{$date}->schedule->{$id}->spend)/floatval($i);
+					if ( $i === 0 ) $i = 1;
+					$this->meetings->{$date}->schedule[$id]['costperperson'] = round(floatval($this->meetings->{$date}->schedule[$id]['spend'])/floatval($i), 2);
+				}
 			}
-		}	
+			if ( is_object($item) ) {
+				if ( $item->type == 'eat' ) {
+					$i = 0;
+					foreach ( $this->meetings->{$date}->users as $user )
+						if ( (is_object($user) && $user->schedule->{$id}->eating )
+							|| (is_array($user) && (
+							(is_object($user['schedule']) && $user['schedule']->{$id}->eating )
+							|| (is_array($user['schedule']) && $user['schedule'][$id]['eating'] ) ) ) )
+						$i++;
+					if ( $i === 0 ) $i = 1;
+					$this->meetings->{$date}->schedule->{$id}->costperperson = round(floatval($this->meetings->{$date}->schedule->{$id}->spend)/floatval($i), 2);
+				}
+			}
+		}
 	}
 	
 	function closeForEating ( $date, $id, $spend=0 ) {
