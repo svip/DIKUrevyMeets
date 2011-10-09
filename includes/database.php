@@ -147,7 +147,7 @@ class Database {
 			'end'=>'19:00','open'=>true,'spend'=>0.0,'costperperson'=>0.0,
 			'unique'=>false),
 			array('title'=>'Møde','type'=>'meet','start'=>'19:00','end'=>'23:00',
-			'unique'=>false)), $comment='' ) {
+			'unique'=>false)), $comment='', $tags=array() ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 			return $this->meetings;
 		if ( !empty( $this->meetings->{$date} ) )
@@ -165,6 +165,7 @@ class Database {
 			'users'			=> array(),
 			'hidden'		=> false,
 			'locked'		=> false,
+			'tags'			=> $tags,
 		);
 		$this->writeData ( 'meetings' );
 		return $this->meetings;
@@ -176,8 +177,8 @@ class Database {
 		return true;
 	}
 	
-	function updateMeeting ( $date, $title, $comment, $schedule, $locked=null,
-		$hidden=null, $ignoreConstraints=false ) {
+	function updateMeeting ( $date, $title, $comment, $schedule, $tags=array(),
+		$locked=null, $hidden=null, $ignoreConstraints=false ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 			return false;
 		if ( empty( $this->meetings->{$date} ) )
@@ -196,6 +197,7 @@ class Database {
 			$this->meetings->{$date}->locked = $locked;
 		if ( !is_null($hidden) )
 			$this->meetings->{$date}->hidden = $hidden;
+		$this->meetings->{$date}->tags = $tags;
 		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
 		return true;
