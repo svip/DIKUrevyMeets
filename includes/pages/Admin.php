@@ -386,7 +386,7 @@ class Admin extends Page {
 				$form .= '<th colspan="3">'.$item->title.'<br />'.($item->open?'<input type="submit" name="meeting-'.$item->id.'-close" value="Luk" />':'<input type="submit" name="meeting-'.$item->id.'-open" value="Åben" />').'</th>';
 			}
 		}
-		$form .= '<th rowspan="2">Kommentar</th></tr><tr>';
+		$form .= '<th rowspan="2">Kommentar</th><th rowspan="2">Ændret</th></tr><tr>';
 		foreach ( $schedule as $item ) {
 			if ( $item->type == 'meet' ) {
 				$form .= '<th>Kommer</th>';
@@ -420,6 +420,7 @@ class Admin extends Page {
 				}
 			}
 			$form .= '<td><input type="text" name="meeting-'.$userid.'-comment" value="'.$user->comment.'" /></td>';
+			$form .= '<td class="modified">'.$this->fullTimestamp($user->modified).'</td>';
 			$form .= '</tr>';
 		}
 		$form .= '</table>';

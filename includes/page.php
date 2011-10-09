@@ -74,4 +74,8 @@ abstract class Page {
 	protected function timeval ( $time ) {
 		return intval ( str_replace ( ':', '', $time ) );
 	}
+	
+	protected function fullTimestamp ( $time ) {
+		return date ( 'd/m/Y H:i:s', $time );
+	}
 }

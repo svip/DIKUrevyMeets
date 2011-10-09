@@ -266,7 +266,9 @@ class Database {
 			'schedule'	=> $userSchedule,
 			'usertype'	=> 'normal',
 			'comment'	=> $comment,
-			'modified'	=> time()
+			'modified'	=> ($ignoreConstraints
+				?$this->meetings->{$date}->{'users'}->{$userid}->modified
+				:time())
 		);
 		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
@@ -311,7 +313,9 @@ class Database {
 			'usertype'	=> 'extra',
 			'schedule'	=> $userSchedule,
 			'comment'	=> $this->stripHtml($comment),
-			'modified'	=> time()
+			'modified'	=> ($ignoreConstraints
+				?$this->meetings->{$date}->{'users'}->{$userid}->modified
+				:time())
 		);
 		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
