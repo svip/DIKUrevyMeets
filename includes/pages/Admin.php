@@ -280,10 +280,10 @@ class Admin extends Page {
 					$this->database->addUserToDate ( $date, $userid, $userSchedule, $comment, true, true );
 				} else {
 					// unsane userid, remove it.
-					$this->database->removeUserFromDate ( $date, $userid );
+					$this->database->removeUserFromDate ( $date, $userid, true );
 				}
 			}
-			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $locked, $hidden);
+			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $locked, $hidden, true);
 			header('Location: ./?admin=meeting&date='.$date);
 			#return;
 		}
