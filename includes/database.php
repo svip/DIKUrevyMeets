@@ -52,9 +52,10 @@ class Database {
 	
 	private function checkMeetings ( ) {
 		foreach ( $this->meetings as $date => $meeting ) {
-			if ( $this->isBeforeToday($date)
-				&& ( isset($meeting->hidden)
-					&& $this->meetings->{$date}->hidden ) ) {
+			if ( $this->isBeforeToday($date) ) {
+				// lock and hide events if they are before today
+				// admins can overrule this.
+				// TODO: Allow admins to overrule this.
 				$this->meetings->{$date}->hidden = true;
 				$this->meetings->{$date}->locked = true;
 			}
@@ -63,7 +64,7 @@ class Database {
 	}
 	
 	private function isBeforeToday ( $date ) {
-		return strtotime($date) - time()+24*60*60;
+		return strtotime($date) < time()+24*60*60;
 	}
 	
 	function getMeeting ( $date ) {
