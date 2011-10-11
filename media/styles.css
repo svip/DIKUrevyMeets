@@ -39,5 +39,7 @@ fieldset .time { width: 100%; display: block; }
 fieldset .time input { width: 50px; text-align: right; }
 fieldset p { margin: 0; text-align: left; font-size: 90%; margin-bottom: 3px; }
 .distanceitself { margin-bottom: 20px; }
+.modified { font-size: 80%; }
 #topmenu { position: absolute; top: 0; right: 0; padding: 5px; font-size: 90%; }
+#footer { width: 70%; margin: 0 auto; padding: 0 30px; border-top: 1px solid #ddd; font-size: 90%; }
 iframe { margin: 0 auto; width: 600px; }

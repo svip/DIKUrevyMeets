@@ -52,9 +52,10 @@ class Database {
 	
 	private function checkMeetings ( ) {
 		foreach ( $this->meetings as $date => $meeting ) {
-			if ( $this->isBeforeToday($date)
-				&& ( isset($meeting->hidden)
-					&& $this->meetings->{$date}->hidden ) ) {
+			if ( $this->isBeforeToday($date) ) {
+				// lock and hide events if they are before today
+				// admins can overrule this.
+				// TODO: Allow admins to overrule this.
 				$this->meetings->{$date}->hidden = true;
 				$this->meetings->{$date}->locked = true;
 			}
@@ -63,7 +64,7 @@ class Database {
 	}
 	
 	private function isBeforeToday ( $date ) {
-		return strtotime($date) - time()+24*60*60;
+		return strtotime($date) < time()+24*60*60;
 	}
 	
 	function getMeeting ( $date ) {
@@ -146,7 +147,7 @@ class Database {
 			'end'=>'19:00','open'=>true,'spend'=>0.0,'costperperson'=>0.0,
 			'unique'=>false),
 			array('title'=>'Møde','type'=>'meet','start'=>'19:00','end'=>'23:00',
-			'unique'=>false)), $comment='' ) {
+			'unique'=>false)), $comment='', $tags=array() ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 			return $this->meetings;
 		if ( !empty( $this->meetings->{$date} ) )
@@ -164,6 +165,7 @@ class Database {
 			'users'			=> array(),
 			'hidden'		=> false,
 			'locked'		=> false,
+			'tags'			=> $tags,
 		);
 		$this->writeData ( 'meetings' );
 		return $this->meetings;
@@ -175,14 +177,14 @@ class Database {
 		return true;
 	}
 	
-	function updateMeeting ( $date, $title, $comment, $schedule, $locked=null,
-		$hidden=null ) {
+	function updateMeeting ( $date, $title, $comment, $schedule, $tags=array(),
+		$locked=null, $hidden=null, $ignoreConstraints=false ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 			return false;
 		if ( empty( $this->meetings->{$date} ) )
 			return false;
-		if ( isset($this->meeting->{$date}->locked) 
-			&& $this->meeting->{$date}->locked )
+		if ( @$this->meeting->{$date}->locked
+			&& !$ignoreConstraints )
 			// don't do anything with a locked meeting.
 			return false;
 		foreach ( $schedule as $id => $item )
@@ -195,6 +197,7 @@ class Database {
 			$this->meetings->{$date}->locked = $locked;
 		if ( !is_null($hidden) )
 			$this->meetings->{$date}->hidden = $hidden;
+		$this->meetings->{$date}->tags = $tags;
 		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
 		return true;
@@ -228,6 +231,9 @@ class Database {
 		$useridSupplied=false, $ignoreConstraints=false ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
+		if ( @$this->meetings->{$date}->locked
+			&& !$ignoreConstraints )
+			return false;
 		if ( $useridSupplied ) {
 			$userid = $name;
 		} else {
@@ -260,7 +266,9 @@ class Database {
 			'schedule'	=> $userSchedule,
 			'usertype'	=> 'normal',
 			'comment'	=> $comment,
-			'modified'	=> time()
+			'modified'	=> ($ignoreConstraints
+				?$this->meetings->{$date}->{'users'}->{$userid}->modified
+				:time())
 		);
 		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
@@ -276,6 +284,9 @@ class Database {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
 		if ( empty ( $ownerid ) || empty( $name ) )
+			return false;
+		if ( @$this->meetings->{$date}->locked
+			&& !$ignoreConstraints )
 			return false;
 		if ( !$fullUserIdSupplied )
 			$userid = $ownerid.'-'.$this->makeSubId($name);
@@ -302,17 +313,23 @@ class Database {
 			'usertype'	=> 'extra',
 			'schedule'	=> $userSchedule,
 			'comment'	=> $this->stripHtml($comment),
-			'modified'	=> time()
+			'modified'	=> ($ignoreConstraints
+				?$this->meetings->{$date}->{'users'}->{$userid}->modified
+				:time())
 		);
 		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
 		return true;
 	}
 	
-	function removeNonUserFromDate ( $date, $ownerid, $name ) {
+	function removeNonUserFromDate ( $date, $ownerid, $name,
+		$ignoreConstraints=false ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
 		if ( empty ( $ownerid ) || empty ( $name ) )
+			return false;
+		if ( @$this->meetings->{$date}->locked
+			&& !$ignoreConstraints )
 			return false;
 		$userid = $ownerid.'-'.$this->makeSubId($name);
 		unset($this->meetings->{$date}->users->{$userid});
@@ -321,10 +338,13 @@ class Database {
 		return true;
 	}
 	
-	function removeUserFromDate ( $date, $userid ) {
+	function removeUserFromDate ( $date, $userid, $ignoreConstraints=false ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
 		if ( empty ( $userid ) )
+			return false;
+		if ( @$this->meetings->{$date}->locked
+			&& !$ignoreConstraints )
 			return false;
 		unset($this->meetings->{$date}->users->{$userid});
 		$this->calculateSpend($date);

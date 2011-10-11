@@ -88,11 +88,24 @@ class Admin extends Page {
 		return $post;
 	}
 	
+	private function tagImplode ( $tags ) {
+		$c = '';
+		foreach ( $tags as $tag ) {
+			if ( $c != '' )
+				$c .= ', ';
+			$c .= $tag;
+		}
+		return $c;
+	}
+	
 	private function frontPage ( ) {
 		if ( isset ( $_POST['newmeeting-submit'] ) ) {
 			$title = $_POST['newmeeting-title'];
 			$comment = $_POST['newmeeting-comment'];
 			$date = $_POST['newmeeting-date'];
+			$tags = explode(',', $_POST['newmeeting-tags']);
+			foreach ( $tags as $k => $tag )
+				$tags[$k] = trim($tag);
 			$i = 0;
 			$schedule = array();
 			while ( true ) {
@@ -147,7 +160,7 @@ class Admin extends Page {
 				$schedule[$id]['end'] = $this->findNextStartTime($schedule[$id]['start'], $times);
 			}
 			$this->database->insertMeeting($date, $title, $schedule, 
-				$comment);
+				$comment, $tags);
 			header ( 'Location: ./?admin=front' );
 		}
 		$list = "<ul>\n";
@@ -164,6 +177,8 @@ class Admin extends Page {
 <textarea cols="52" rows="5" id="newmeeting-comment" name="newmeeting-comment"></textarea>
 <label for="newmeeting-date">Dato (format: <tt>ÅÅÅÅ-MM-DD</tt>):</label>
 <input type="text" id="newmeeting-date" name="newmeeting-date" />
+<label for="newmeeting-tags">Etiketter (adskil med komma):</label>
+<input type="text" id="newmeeting-tags" name="newmeeting-tags" />
 <div id="schedule">
 <fieldset id="newmeeting-0">
 <legend>Møde</legend>
@@ -217,6 +232,9 @@ class Admin extends Page {
 			$meetComment = $_POST['meeting-comment'];
 			$locked = isset($_POST['meeting-locked']);
 			$hidden = isset($_POST['meeting-hidden']);
+			$tags = explode(',', $_POST['meeting-tags']);
+			foreach ( $tags as $k => $tag )
+				$tags[$k] = trim($tag);
 			
 			$i = 0;
 			$newSchedule = array();
@@ -280,10 +298,10 @@ class Admin extends Page {
 					$this->database->addUserToDate ( $date, $userid, $userSchedule, $comment, true, true );
 				} else {
 					// unsane userid, remove it.
-					$this->database->removeUserFromDate ( $date, $userid );
+					$this->database->removeUserFromDate ( $date, $userid, true );
 				}
 			}
-			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $locked, $hidden);
+			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $tags, $locked, $hidden, true);
 			header('Location: ./?admin=meeting&date='.$date);
 			#return;
 		}
@@ -311,6 +329,8 @@ class Admin extends Page {
 <input type="text" name="meeting-title" id="meeting-title" value="'.$meeting->title.'" />
 <label for="meeting-comment">Kommentar:</label>
 <textarea cols="52" rows="5" id="meeting-comment" name="meeting-comment">'.$meeting->comment.'</textarea>
+<label for="meeting-tags">Etiketter (adskil med komma):</label>
+<input type="text" id="meeting-tags" name="meeting-tags" value="'.$this->tagImplode($meeting->tags).'" />
 <div id="schedule">';
 		foreach ( $meeting->schedule as $id => $item ) {
 			if ( $item->type == 'meet' ) {
@@ -366,7 +386,7 @@ class Admin extends Page {
 				$form .= '<th colspan="3">'.$item->title.'<br />'.($item->open?'<input type="submit" name="meeting-'.$item->id.'-close" value="Luk" />':'<input type="submit" name="meeting-'.$item->id.'-open" value="Åben" />').'</th>';
 			}
 		}
-		$form .= '<th rowspan="2">Kommentar</th></tr><tr>';
+		$form .= '<th rowspan="2">Kommentar</th><th rowspan="2">Ændret</th></tr><tr>';
 		foreach ( $schedule as $item ) {
 			if ( $item->type == 'meet' ) {
 				$form .= '<th>Kommer</th>';
@@ -400,6 +420,7 @@ class Admin extends Page {
 				}
 			}
 			$form .= '<td><input type="text" name="meeting-'.$userid.'-comment" value="'.$user->comment.'" /></td>';
+			$form .= '<td class="modified">'.$this->fullTimestamp($user->modified).'</td>';
 			$form .= '</tr>';
 		}
 		$form .= '</table>';

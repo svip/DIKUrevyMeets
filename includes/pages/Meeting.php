@@ -66,12 +66,12 @@ class Meeting extends Page {
 		$nav = '';
 		$prevMeeting = $this->database->getMeetingBefore($date);
 		if ( $prevMeeting!==false )
-			$nav .= '<a href="./?meeting='.$prevMeeting['date'].($this->onlyUniques($prevMeeting['date'])?'&amp;subid=0':'').'">&lt; '.$prevMeeting['date'].': '.$prevMeeting['title'].'</a>';
+			$nav .= '<a href="./?meeting='.$prevMeeting['date'].($this->onlyUniques($prevMeeting['date'])?'&amp;subid=0':'').'">&lt; <b>'.$this->readableDate($prevMeeting['date']).'</b>: '.$prevMeeting['title'].'</a>';
 		$nextMeeting = $this->database->getMeetingAfter($date);
 		if ( $nextMeeting!==false ) {
 			if ( $prevMeeting!==false )
 				$nav .= ' &middot; ';
-			$nav .= '<a href="./?meeting='.$nextMeeting['date'].($this->onlyUniques($nextMeeting['date'])?'&amp;subid=0':'').'">'.$nextMeeting['date'].': '.$nextMeeting['title'].' &gt;</a>';
+			$nav .= '<a href="./?meeting='.$nextMeeting['date'].($this->onlyUniques($nextMeeting['date'])?'&amp;subid=0':'').'"><b>'.$this->readableDate($nextMeeting['date']).'</b>: '.$nextMeeting['title'].' &gt;</a>';
 		}
 		return $nav;
 	}
