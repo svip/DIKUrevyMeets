@@ -64,7 +64,7 @@ class Database {
 	}
 	
 	private function isBeforeToday ( $date ) {
-		return strtotime($date) < time()+24*60*60;
+		return strtotime($date) < time()-24*60*60;
 	}
 	
 	function getMeeting ( $date ) {
