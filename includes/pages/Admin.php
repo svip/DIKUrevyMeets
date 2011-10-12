@@ -61,6 +61,19 @@ class Admin extends Page {
 		</fieldset>
 		</form>';
 		$this->content = '<p><a href="./?admin=userlist">Tilbage</a></p>'.$form;
+		$meetings = $this->database->getMeetings();
+		$list = '<p class="left">Møder <b>'.$user->name.'</b> har indbrettet omkring:</p>';
+		$list .= '<ul>';
+		foreach ( $meetings as $date => $meeting ) {
+			foreach ( $meeting->users as $itemid => $user ) {
+				if ( $userid == $itemid ) {
+					$list .= '<li><a href="./?admin=meeting&amp;date='.$date.'">'.$meeting->title.'</a></li>';
+					break;
+				}
+			}
+		}
+		$list .= '</ul>';
+		$this->content .= $list;
 	}
 	
 	private function userListPage ( ) {

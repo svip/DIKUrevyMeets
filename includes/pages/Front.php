@@ -36,7 +36,7 @@ class Front extends Page {
 		$this->content = '<h1>DIKUrevy-møder</h1>';
 		$this->content .= $list;
 		if ( $this->auth->loggedIn() )
-			$this->content .= '<p>* = dage du er tilmeldt.</p>';
+			$this->content .= '<p>* = dage du har indbrettet omkring.</p>';
 		// Munters kalendersystem virker ikke lige endnu p.g.a. autoritetsproblemer
 		// lader koden ligge her indtil da.
 		/*
