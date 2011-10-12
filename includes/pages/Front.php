@@ -22,8 +22,8 @@ class Front extends Page {
 						$renderSelf = true;
 				}
 			}
-			$list .= '<tr><td rowspan="'.($uniques+1).'">'.$this->weekDay($date, true).$this->loggedInUserInDate($date).'</td>
-				<td class="date" rowspan="'.($uniques+1).'">'.$this->readableDate($date).'</td>
+			$list .= '<tr><td rowspan="'.($uniques+1).'">'.$this->weekDay($date, true).(is_numeric(@$meeting->days)?'<br />&mdash;<br />'.$this->weekDay($this->getEndDate($date, $meeting->days), true):'').$this->loggedInUserInDate($date).'</td>
+				<td class="date" rowspan="'.($uniques+1).'">'.$this->readableDate($date).(is_numeric(@$meeting->days)?'<br />&mdash;<br />'.$this->readableDate($this->getEndDate($date, $meeting->days)):'').'</td>
 				<td'.($uniques > 0?' class="title"':'').'>'.($nonuniques > 0?'<a href="?meeting='.$date.'">'.$meeting->{'title'}.'</a>':$meeting->title).'</td>
 				<td>'.$start."</td></tr>\n";
 			foreach ( $meeting->schedule as $id => $item ) {

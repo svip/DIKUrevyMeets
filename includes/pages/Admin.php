@@ -103,6 +103,7 @@ class Admin extends Page {
 			$title = $_POST['newmeeting-title'];
 			$comment = $_POST['newmeeting-comment'];
 			$date = $_POST['newmeeting-date'];
+			$days = is_numeric($_POST['newmeeting-days'])?$_POST['newmeeting-days']:false;
 			$tags = explode(',', $_POST['newmeeting-tags']);
 			foreach ( $tags as $k => $tag )
 				$tags[$k] = trim($tag);
@@ -160,7 +161,7 @@ class Admin extends Page {
 				$schedule[$id]['end'] = $this->findNextStartTime($schedule[$id]['start'], $times);
 			}
 			$this->database->insertMeeting($date, $title, $schedule, 
-				$comment, $tags);
+				$comment, $days, $tags);
 			header ( 'Location: ./?admin=front' );
 		}
 		$list = "<ul>\n";
@@ -177,6 +178,8 @@ class Admin extends Page {
 <textarea cols="52" rows="5" id="newmeeting-comment" name="newmeeting-comment"></textarea>
 <label for="newmeeting-date">Dato (format: <tt>ÅÅÅÅ-MM-DD</tt>):</label>
 <input type="text" id="newmeeting-date" name="newmeeting-date" />
+<label for="newmeeting-days">Antal dage (blankt for ikke heldagsbegivenhed):</label>
+<input type="text" id="newmeeting-days" name="newmeeting-days" />
 <label for="newmeeting-tags">Etiketter (adskil med komma):</label>
 <input type="text" id="newmeeting-tags" name="newmeeting-tags" />
 <div id="schedule">
@@ -233,6 +236,7 @@ class Admin extends Page {
 			$locked = isset($_POST['meeting-locked']);
 			$hidden = isset($_POST['meeting-hidden']);
 			$tags = explode(',', $_POST['meeting-tags']);
+			$days = is_numeric($_POST['meeting-days'])?$_POST['meeting-days']:false;
 			foreach ( $tags as $k => $tag )
 				$tags[$k] = trim($tag);
 			
@@ -301,7 +305,7 @@ class Admin extends Page {
 					$this->database->removeUserFromDate ( $date, $userid, true );
 				}
 			}
-			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $tags, $locked, $hidden, true);
+			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $days, $tags, $locked, $hidden, true);
 			header('Location: ./?admin=meeting&date='.$date);
 			#return;
 		}
@@ -321,6 +325,8 @@ class Admin extends Page {
 <legend>Information</legend>
 <label for="meeting-date">Dato:</label>
 <input type="text" name="meeting-date" id="meeting-date" value="'.$date.'" />
+<label for="meeting-days">Antal dage:</label>
+<input type="text" name="meeting-days" id="meeting-days" value="'.(is_numeric(@$meeting->days)?$meeting->days:'').'" />
 <input type="checkbox" name="meeting-locked" id="meeting-locked" '.((isset($meeting->locked) && $meeting->locked)?'checked="true"':'').' />
 <label for="meeting-locked">Låst?</label>
 <input type="checkbox" name="meeting-hidden" id="meeting-hidden" '.((isset($meeting->hidden) && $meeting->hidden)?'checked="true"':'').' /><br />

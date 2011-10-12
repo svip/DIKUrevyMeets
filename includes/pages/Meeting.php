@@ -104,7 +104,11 @@ class Meeting extends Page {
 				break;
 			}
 		}
-		$content .= '<h1>'.$meeting->{'title'}.(!is_null($itemid)?': '.$item->title:'').'</h1><h3>'.nl2br($meeting->{'comment'}).'</h3><h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
+		$content .= '<h1>'.$meeting->{'title'}.(!is_null($itemid)?': '.$item->title:'').'</h1><h3>'.nl2br($meeting->{'comment'}).'</h3>';
+		if ( is_numeric(@$meeting->days) )
+			$content .= '<h2>Fra '.$this->weekDay($date).' den '.$this->readableDate($date).' til '.$this->weekDay($this->getEndDate($date, $meeting->days)).' den '.$this->readableDate($this->getEndDate($date, $meeting->days)).'</h2>';
+		else
+			$content .= '<h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
 		$content .= $this->seeAlso($date, $meeting, $itemid);
 		if ( !$this->isJoinableEvent($schedule) ) {
 			$content .= '<h3>Program:</h3>';
