@@ -34,15 +34,13 @@ class Database {
 		switch ( $file ) {
 			case 'meetings':
 				ftruncate ( $this->meetingsFile, 0 );
-				//$str = str_replace ( ',', ",\n", json_encode ( $this->meetings, JSON_FORCE_OBJECT ) );
-				$str = json_encode ( $this->meetings, JSON_FORCE_OBJECT );
+				$str = str_replace ( '},', "},\n", json_encode ( $this->meetings, JSON_FORCE_OBJECT ) );
 				fwrite ( $this->meetingsFile, $str );
 				rewind( $this->meetingsFile );
 				break;
 			case 'users':
 				ftruncate ( $this->usersFile, 0 );
-				//$str = str_replace ( ',', ",\n", json_encode ( $this->users, JSON_FORCE_OBJECT ) );
-				$str = json_encode ( $this->users, JSON_FORCE_OBJECT );
+				$str = str_replace ( '},', "},\n", json_encode ( $this->users, JSON_FORCE_OBJECT ) );
 				fwrite ( $this->usersFile, $str );
 				rewind( $this->usersFile );
 				break;
@@ -64,7 +62,7 @@ class Database {
 	}
 	
 	private function isBeforeToday ( $date ) {
-		return strtotime($date) < time()+24*60*60;
+		return strtotime($date) < time()-24*60*60;
 	}
 	
 	function getMeeting ( $date ) {
@@ -147,7 +145,7 @@ class Database {
 			'end'=>'19:00','open'=>true,'spend'=>0.0,'costperperson'=>0.0,
 			'unique'=>false),
 			array('title'=>'Møde','type'=>'meet','start'=>'19:00','end'=>'23:00',
-			'unique'=>false)), $comment='', $tags=array() ) {
+			'unique'=>false)), $comment='', $days=false, $tags=array() ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 			return $this->meetings;
 		if ( !empty( $this->meetings->{$date} ) )
@@ -166,6 +164,7 @@ class Database {
 			'hidden'		=> false,
 			'locked'		=> false,
 			'tags'			=> $tags,
+			'days'			=> $days,
 		);
 		$this->writeData ( 'meetings' );
 		return $this->meetings;
@@ -177,8 +176,8 @@ class Database {
 		return true;
 	}
 	
-	function updateMeeting ( $date, $title, $comment, $schedule, $tags=array(),
-		$locked=null, $hidden=null, $ignoreConstraints=false ) {
+	function updateMeeting ( $date, $title, $comment, $schedule, $days=false,
+		$tags=array(), $locked=null, $hidden=null, $ignoreConstraints=false ) {
 		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $date ) )
 			return false;
 		if ( empty( $this->meetings->{$date} ) )
@@ -198,6 +197,10 @@ class Database {
 		if ( !is_null($hidden) )
 			$this->meetings->{$date}->hidden = $hidden;
 		$this->meetings->{$date}->tags = $tags;
+		if ( $days!==false )
+			$this->meetings->{$date}->days = $days;
+		else
+			$this->meetings->{$date}->days = false;
 		$this->calculateSpend($date);
 		$this->writeData ( 'meetings' );
 		return true;

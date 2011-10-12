@@ -78,4 +78,10 @@ abstract class Page {
 	protected function fullTimestamp ( $time ) {
 		return date ( 'd/m/Y H:i:s', $time );
 	}
+	
+	protected function getEndDate ( $date, $days ) {
+		$t = DateTime::createFromFormat ( "Y-m-d", $date );
+		$t->add(new DateInterval("P{$days}D"));
+		return $t->format('Y-m-d');
+	}
 }
