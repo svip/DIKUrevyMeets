@@ -206,6 +206,19 @@ class Database {
 		return true;
 	}
 	
+	function moveMeeting ( $olddate, $newdate ) {
+		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $olddate ) )
+			return false;
+		if ( !preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $newdate ) )
+			return false;
+		if ( empty( $this->meetings->{$olddate} ) )
+			return false;
+		$this->meetings->{$newdate} = $this->meetings->{$olddate};
+		unset($this->meetings->{$olddate});
+		$this->writeData ( 'meetings' );
+		return true;
+	}
+	
 	function insertUser ( $name, $service, $uid, $signature ) {
 		if ( isset($this->users->{$uid}) )
 			return false;

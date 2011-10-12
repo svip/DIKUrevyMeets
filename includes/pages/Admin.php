@@ -243,7 +243,7 @@ class Admin extends Page {
 			header( 'Location: ./?admin=front' );
 		}
 		if ( isset($_POST['meeting-submit']) ) {
-			$date = $_POST['meeting-date'];
+			$newdate = $_POST['meeting-date'];
 			$title = $_POST['meeting-title'];
 			$meetComment = $_POST['meeting-comment'];
 			$locked = isset($_POST['meeting-locked']);
@@ -319,8 +319,14 @@ class Admin extends Page {
 				}
 			}
 			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $days, $tags, $locked, $hidden, true);
+			if ( $newdate != $date ) {
+				if ( $this->database->moveMeeting ( $date, $newdate ) ) {
+					header('Location: ./?admin=meeting&date='.$newdate);
+					return;
+				}
+			}
 			header('Location: ./?admin=meeting&date='.$date);
-			#return;
+			return;
 		}
 		$schedule = $this->sortSchedule($meeting->schedule);
 		foreach ( $meeting->schedule as $id => $item ) {
