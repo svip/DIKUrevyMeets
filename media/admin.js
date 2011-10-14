@@ -51,7 +51,7 @@ window.onload = function() {
 			dateFormat: "%Y-%m-%d",
 			target: 'newmeeting-date',
 			limitToToday: false,
-			imgPath:"/media/img",
+			imgPath:'/media/img',
 			cellColorScheme: 'beige'
 		});
 	}
@@ -59,10 +59,10 @@ window.onload = function() {
 		new JsDatePick({
 			useMode: 2,
 			dateFormat: "%Y-%m-%d",
-			target: 'newmeeting-date',
+			target: 'meeting-date',
 			limitToToday: false,
-			imgPath:"/media/img",
-			cellColorScheme: 'beige'
+			imgPath:'/media/img',
+			cellColorScheme: 'ocean_blue'
 		});
 	}
 };
