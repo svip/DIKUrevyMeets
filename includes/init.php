@@ -2,13 +2,24 @@
 
 require ( 'page.php' );
 
+$page = 'Front';
+
 if ( isset ( $_GET['meeting'] ) 
 	&& preg_match ( '@[0-9]{4}-[0-9]{2}-[0-9]{2}@', $_GET['meeting'] ) ) {
-	require ( 'includes/pages/Meeting.php' );
+	$page = 'Meeting';
 } elseif ( isset ( $_GET['do'] ) ) {
-	require ( 'includes/pages/Actions.php' );
+	$page = 'Actions';
 } elseif ( isset ( $_GET['admin'] ) ) {
-	require ( 'includes/pages/Admin.php' );
-} else {
-	require ( 'includes/pages/Front.php' );
+	$page = 'Admin';
+} elseif ( isset ( $_GET['page'] ) ) {
+	switch ( $_GET['page'] ) {
+		case 'ical':
+			$page = 'Ical';
+			break;
+		default:
+			$page = 'Front';
+			break;
+	}
 }
+
+require ( "includes/pages/$page.php" );

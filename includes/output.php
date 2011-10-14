@@ -45,7 +45,7 @@ class Output {
 			}
 			$menu[] = array ( './?do=logout', 'Log ud' );
 		}
-		$menu[] = array ( 'http://xn--mder-gra.dikurevy.dk/?do=ical', 'ical' );
+		$menu[] = array ( './?page=ical', 'ical' );
 		$menu[] = array ( './', 'Forside' );
 		$menu[] = array ( 'http://dikurevy.dk/', 'dikurevy.dk' );
 		$str = '';

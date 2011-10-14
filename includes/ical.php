@@ -22,6 +22,11 @@ class Ical {
 	
 	private function render ( ) {
 		$meetings = $this->database->getMeetings();
+		if ( isset($_GET['tags']) ) {
+			$tags = explode ( ',', $_GET['tags'] );
+		} else {
+			$tags = null;
+		}
 		$content = <<<EOF
 BEGIN:VCALENDAR
 PRODID:-//DIKUrevy//Møder//DA
@@ -52,14 +57,25 @@ END:VTIMEZONE
 
 EOF;
 		foreach ( $meetings as $date => $meeting ) {
+			if ( !is_null($tags) ) {
+				$fitsSearch = false;
+				foreach ( $meeting->tags as $mtag ) {
+					if ( in_array($mtag, $tags) ) {
+						$fitsSearch = true;
+						break;
+					}
+				}
+				if ( !$fitsSearch )
+					continue;
+			}
 			if ( is_numeric(@$meeting->days) ) {
-				$startDate = str_replace('-', '', $date);
-				$endDate = str_replace('-', '', $this->getEndDate($date, $meeting->days));
+				$startDate = $this->icalTime($date, $meeting->schedule->{0}->start);
+				$endDate = str_replace('-', '', $this->getEndDate($date, $meeting->days+1));
 				$uid = "dikurevy{$this->uid($date, $startDate, -1, $meeting->title)}";
 				$content .= <<<EOF
 BEGIN:VEVENT
 SUMMARY:{$meeting->title}
-DTSTART;TZID=Europe/Copenhagen;VALUE=DATE:$startDate
+DTSTART;TZID=Europe/Copenhagen;VALUE=DATE-TIME:$startDate
 DTEND;TZID=Europe/Copenhagen;VALUE=DATE:$endDate
 DTSTAMP;TZID=Europe/Copenhagen;VALUE=DATE:$startDate
 TRANSP:OPAQUE

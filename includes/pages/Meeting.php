@@ -394,6 +394,16 @@ class Meeting extends Page {
 							$form .= (!$item->open?' <span>(Kokkene har lukket for madtilmeldingen)</span>':'');
 							$form .= '<br />';
 						}
+					} else {
+						if ( $item->type == 'meet' ) {
+							if ( $userSchedule[$subuserid][$item->id]['attending'] )
+								$form .= '<input type="hidden" name="meeting-'.$item->id.'-attending" value="1" />';
+						} elseif ( $item->type == 'eat' ) {	
+							if ( $userSchedule[$subuserid][$item->id]['eating'] )
+								$form .= '<input type="hidden" name="meeting-'.$item->id.'-eating" value="1" />';
+							if ( $userSchedule[$subuserid][$item->id]['cooking'] )
+								$form .= '<input type="hidden" name="meeting-'.$item->id.'-cooking" value="1" />';
+						}
 					}
 				}
 			}
