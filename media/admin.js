@@ -52,7 +52,7 @@ window.onload = function() {
 			target: 'newmeeting-date',
 			limitToToday: false,
 			imgPath:'/media/img',
-			cellColorScheme: 'beige'
+			cellColorScheme: 'ocean_blue'
 		});
 	}
 	if ( document.getElementById('meeting-date') ) {
