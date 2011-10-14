@@ -127,6 +127,19 @@ class Database {
 		return $this->meetings;
 	}
 	
+	function getTags ( ) {
+		$tags = array();
+		foreach ( $this->meetings as $meeting ) {
+			foreach ( $meeting->tags as $tag ) {
+				if ( trim($tag)=='' )
+					continue;
+				if ( !in_array($tag, $tags) )
+					$tags[] = $tag;
+			}
+		}
+		return $tags;
+	}
+	
 	function getSortedMeetings ( $includeHidden=false ) {
 		$tmp = array();
 		foreach ( $this->meetings as $date => $meeting )
