@@ -271,5 +271,5 @@
 "days":"2"},
 "2011-10-13":{"title":"DIKUrevy bossm\u00f8de","schedule":{"0":{"id":0,"title":"M\u00f8de","type":"meet","start":"15:30","end":"17:30","unique":false,"icalunique":false,"nojoin":true}},
 "comment":"Skriv til revyboss@diku.dk hvis du har noget du gerne vil have vi dr\u00f8fter","users":{},
-"hidden":false,"locked":true,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
