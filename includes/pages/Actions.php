@@ -14,6 +14,9 @@ class Actions extends Page {
 			case 'ical':
 				$this->icalendar();
 				break;
+			case 'gettags':
+				$this->getTags();
+				break;
 			default:
 				header ( 'Location: ' . $_SERVER['HTTP_REFERER'] );
 				break;
@@ -28,6 +31,19 @@ class Actions extends Page {
 	
 	private function logout ( ) {
 		header ( 'Location: /logout' );
+	}
+	
+	private function getTags ( ) {
+		$this->contentType = 'application/json';
+		$search = isset($_GET['search'])?$_GET['search']:'';
+		$tags = $this->database->getTags();
+		$fTags = array();
+		foreach ( $tags as $tag ) {
+			if ( substr($tag, 0, strlen($search) ) == $search
+				|| $search == '' )
+				$fTags[] = $tag;
+		}
+		$this->content = json_encode ( $fTags );
 	}
 }
 
