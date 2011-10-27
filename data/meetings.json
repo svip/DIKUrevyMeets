@@ -165,7 +165,7 @@
 "57":{"schedule":{"0":{"attending":true},
 "1":{"eating":false,"cooking":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1319643335}},
-"locked":false,"hidden":false,"tags":{"0":"revy"},
+"locked":true,"hidden":true,"tags":{"0":"revy"},
 "days":false},
 "2011-11-26":{"title":"Legedag inden BIOrevy","schedule":{"0":{"id":0,"title":"Diverse lege","type":"meet","start":"12:00","end":"18:00","unique":true,"icalunique":false,"nojoin":false},
 "1":{"id":1,"title":"Brunch","type":"eat","start":"11:00","end":"12:00","open":true,"spend":0,"costperperson":0,"unique":true,"icalunique":false,"nojoin":false}},
