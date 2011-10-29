@@ -340,9 +340,9 @@
 "usertype":"normal","comment":"","modified":1319292222,"name":"Sarah Vang N\u00f8hr"},
 "11":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1319458005,"name":"Caroline Miller"},
-"7":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1319464539,"name":"Troels Henriksen"},
+"7":{"schedule":{"0":{"attending":false}},
+"usertype":"normal","comment":"","modified":1319898468},
 "33":{"schedule":{"0":{"attending":false}},
-"usertype":"normal","comment":"","modified":1319551833}},
+"usertype":"normal","comment":"","modified":1319551833,"name":"Markus Lund Wittorf"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
