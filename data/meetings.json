@@ -295,7 +295,7 @@
 "33":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1320676826}},
-"locked":false,"hidden":false,"tags":{"0":"intro"},
+"locked":true,"hidden":true,"tags":{"0":"intro"},
 "days":false},
 "2011-12-07":{"title":"Introm\u00f8de","schedule":{"0":{"id":0,"title":"M\u00f8de","type":"meet","start":"17:00","end":"20:00","unique":false,"icalunique":false,"nojoin":false},
 "1":{"id":1,"title":"Aftensmad","type":"eat","start":"18:00","end":"19:00","open":true,"spend":0,"costperperson":0,"unique":false,"icalunique":false,"nojoin":false}},
