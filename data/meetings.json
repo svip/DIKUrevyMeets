@@ -439,7 +439,7 @@
 "usertype":"normal","comment":"","modified":1319551833,"name":"Markus Lund Wittorf"}},
 "hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
-"2011-12-21":{"title":"PR-dag","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"14:00","end":"17:00","unique":false,"icalunique":false,"nojoin":false,"id":"0"}},
+"2011-12-21":{"title":"PR-dag","schedule":{"0":{"id":0,"title":"M\u00f8de","type":"meet","start":"19:00","end":"21:00","unique":false,"icalunique":false,"nojoin":false}},
 "comment":"Vi skal v\u00e6re AWESOME!!!","users":{"8":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"Og laver kage :D","modified":1323208999}},
 "hidden":false,"locked":false,"tags":{"0":""},
