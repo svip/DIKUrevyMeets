@@ -390,7 +390,7 @@
 "42":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":true,"paid":0}},
 "usertype":"normal","comment":"Kan sagtens hj\u00e6lpe til med at lave mad, men kan ikke organisere det alene","modified":1326224709}},
-"locked":false,"hidden":false,"tags":{"0":"intro"},
+"locked":true,"hidden":true,"tags":{"0":"intro"},
 "days":false},
 "2011-11-18":{"title":"Hyttetur","schedule":{"0":{"id":0,"title":"Deltager","type":"meet","start":"17:00","end":"24:00","unique":false,"icalunique":false,"nojoin":false}},
 "comment":"Programmet er endnu ikke fastlagt - meld dig til at hj\u00e6lpe med at fastl\u00e6gge programmet ved at skrive til revybosserne p\u00e5 revyboss@diku.dk.","users":{"3":{"schedule":{"0":{"attending":true}},
