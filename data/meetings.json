@@ -639,7 +639,7 @@
 "8-28e5":{"name":"Sarah","usertype":"extra","schedule":{"0":{"attending":true},
 "1":{"eating":false,"cooking":false,"paid":0}},
 "comment":"","modified":1330621615}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2012-03-10":{"title":"Legedag","schedule":{"0":{"id":"0","title":"M\u00f8de","type":"meet","start":"10:00","end":"17:00","unique":false,"icalunique":false,"nojoin":false},
 "1":{"id":"1","title":"Aftensmad","type":"eat","start":"17:30","end":"18:30","open":true,"spend":0,"costperperson":0,"unique":false,"icalunique":false,"nojoin":false},
