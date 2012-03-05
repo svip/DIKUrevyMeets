@@ -1114,5 +1114,5 @@
 "21":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1330841628}},
-"hidden":false,"locked":false,"tags":{"0":"revy","1":"pr"},
+"hidden":true,"locked":true,"tags":{"0":"revy","1":"pr"},
 "days":false}}
