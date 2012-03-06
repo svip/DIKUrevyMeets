@@ -40,6 +40,9 @@ function fixIds ( fieldset ) {
 	}
 	var kids = fieldset.getElementsByTagName('label');
 	for ( var i = 0; i < kids.length; i++ ) {
+		if ( !kids[i].getAttribute('for') ) {
+			continue;
+		}
 		kids[i].setAttribute('for', kids[i].getAttribute('for').replace(/[0-9]+/, currentId) );
 	}
 }
