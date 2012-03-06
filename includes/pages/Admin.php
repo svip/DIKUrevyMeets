@@ -382,7 +382,7 @@ class Admin extends Page {
 <label for="newmeeting-'.$id.'-title">Titel:</label>
 <input type="text" id="newmeeting-'.$id.'-title" name="newmeeting-'.$id.'-title" value="'.$item->title.'" />
 <label for="newmeeting-'.$id.'-start">Spisetid:</label>
-<span class="time"><input type="text" id="newmeeting-'.$id.'-start" name="newmeeting-1-start" value="'.$item->start.'" /><span> - </span><input type="text" id="newmeeting-'.$id.'-end" name="newmeeting-'.$id.'-end" value="'.$item->end.'" /></span>
+<span class="time"><input type="text" id="newmeeting-'.$id.'-start" name="newmeeting-'.$id.'-start" value="'.$item->start.'" /><span> - </span><input type="text" id="newmeeting-'.$id.'-end" name="newmeeting-'.$id.'-end" value="'.$item->end.'" /></span>
 <label for="newmeeting-'.$id.'-spend">Indkøbspris (i hele kroner):</label>
 <input type="text" id="newmeeting-'.$id.'-spend" name="newmeeting-'.$id.'-spend" value="'.$item->spend.'" />
 <label>Pris per person:</label>
