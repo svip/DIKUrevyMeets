@@ -765,7 +765,7 @@
 "2":{"eating":true,"cooking":false,"paid":0},
 "3":{"attending":true}},
 "usertype":"normal","comment":"kommer ret sent","modified":1331223554,"name":"Rune Perstrup"}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2012-03-14":{"title":"Forfatterm\u00f8de","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"19:00","end":"23:00","unique":false,"icalunique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"18:00","end":"19:00","open":true,"spend":0,"costperperson":0,"unique":false,"icalunique":false,"nojoin":false,"id":"1"}},
