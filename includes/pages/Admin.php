@@ -177,11 +177,22 @@ class Admin extends Page {
 				$comment, $days, $tags);
 			header ( 'Location: ./?admin=front' );
 		}
-		$list = "<ul>\n";
-		foreach ( $this->database->getSortedMeetings(true) as $date => $meeting ) {
-			$list .= '<li><a href="./?admin=meeting&amp;date='.$date.'">'.$date.': '.$meeting->{'title'}.'</a> (<a href="./?admin=deletemeeting&amp;date='.$date.'">Slet</a>) ('.((isset($meeting->locked) && $meeting->locked)?'Låst':'Åben').")</li>\n";
+		$meetings = $this->database->getSortedMeetings(true);
+		$openMeetings = array();
+		$closedMeetings = array();
+		foreach ( $meetings as $date => $meeting ) {
+			if ( $meeting->locked )
+				$closedMeetings[$date] = $meeting;
+			else
+				$openMeetings[$date] = $meeting;
 		}
-		$list .= "</ul>\n";
+		krsort($closedMeetings);
+		ksort($openMeetings);
+		$openList = "<ul>\n";
+		foreach ( $openMeetings as $date => $meeting ) {
+			$openList .= '<li><a href="./?admin=meeting&amp;date='.$date.'">'.$date.': '.$meeting->{'title'}.'</a> (<a href="./?admin=deletemeeting&amp;date='.$date.'">Slet</a>) ('.((isset($meeting->locked) && $meeting->locked)?'Låst':'Åben').")</li>\n";
+		}
+		$openList .= "</ul>\n";
 		$form = '<form method="post">
 <fieldset>
 <legend>Nyt program</legend>
@@ -233,7 +244,12 @@ class Admin extends Page {
 </fieldset>
 </form>';
 		$menu = '<p><a href="./">Forside</a> &middot; <a href="./?admin=userlist">Brugerliste</a></p>';
-		$this->content = $menu.$list.$form;
+		$closedList = "<p>Gamle møder:</p><ul>\n";
+		foreach ( $closedMeetings as $date => $meeting ) {
+			$closedList .= '<li><a href="./?admin=meeting&amp;date='.$date.'">'.$date.': '.$meeting->{'title'}.'</a> (<a href="./?admin=deletemeeting&amp;date='.$date.'">Slet</a>) ('.((isset($meeting->locked) && $meeting->locked)?'Låst':'Åben').")</li>\n";
+		}
+		$closedList .= "</ul>\n";
+		$this->content = $menu.$openList.$form.$closedList;
 	}
 	
 	private function meetingPage ( ) {
