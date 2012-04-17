@@ -1236,7 +1236,7 @@
 "days":false},
 "2012-04-16":{"title":"Materialedeadline","schedule":{},
 "comment":"Denne dag er fristen for materiale. Alt materiale, man \u00f8nsker med i overvejelserne til dette \u00e5rs revy, skal i dag ligge i revymappen. ","users":{},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2012-04-18":{"title":"Frist for tilmelding til roller, aktfordeling og rollefordeling","schedule":{},
 "comment":"\u00d8nsker man at st\u00e5 p\u00e5 scenen til dette \u00e5rs revy, skal man inden idag have skrevet dette til bosserne. Dagen i dag bliver ogs\u00e5 brugt p\u00e5 aktfordeling og rollefordeling. ","users":{},
