@@ -1347,7 +1347,7 @@
 "1":{"id":1,"title":"Forestilling 20\/4","type":"meet","start":"20:00","end":"22:00","unique":false,"icalunique":false,"nojoin":false},
 "2":{"id":2,"title":"Forestilling 21\/4","type":"meet","start":"20:00","end":"22:00","unique":false,"icalunique":false,"nojoin":false}},
 "comment":"","users":{},
-"hidden":false,"locked":false,"tags":{"0":"revyrelateret"},
+"hidden":true,"locked":true,"tags":{"0":"revyrelateret"},
 "days":"2"},
 "2012-05-11":{"title":"Smedierevy","schedule":{"0":{"title":"Forestilling 11\/5","type":"meet","start":"20:00","end":"22:00","unique":false,"icalunique":false,"nojoin":false},
 "1":{"title":"Forestilling 12\/5","type":"meet","start":"20:00","end":"22:00","unique":false,"icalunique":false,"nojoin":false}},
