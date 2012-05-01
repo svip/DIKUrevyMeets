@@ -4,6 +4,8 @@ class Ical {
 	
 	private $database = null;
 	private $content = '';
+	private $icalTimeStamp = '%Y%m%dT%H%M00Z';
+	private $icalTimeStampN = 'Ymd\THi00\Z';
 	
 	function __construct ( $database ) {
 		$this->database = $database;
@@ -70,6 +72,7 @@ EOF;
 			}
 			if ( is_numeric(@$meeting->days) ) {
 				$startDate = $this->icalTime($date, $meeting->schedule->{0}->start);
+				$dtStamp = $this->dtStamp($date, $meeting->schedule->{0}->start);
 				$endDate = str_replace('-', '', $this->getEndDate($date, $meeting->days+1));
 				$uid = "dikurevy{$this->uid($date, $startDate, -1, $meeting->title)}";
 				$content .= <<<EOF
@@ -77,7 +80,7 @@ BEGIN:VEVENT
 SUMMARY:{$meeting->title}
 DTSTART;TZID=Europe/Copenhagen;VALUE=DATE-TIME:$startDate
 DTEND;TZID=Europe/Copenhagen;VALUE=DATE:$endDate
-DTSTAMP;TZID=Europe/Copenhagen;VALUE=DATE:$startDate
+DTSTAMP:$dtStamp
 TRANSP:OPAQUE
 SEQUENCE:0
 STATUS:CONFIRMED
@@ -97,7 +100,7 @@ EOF;
 								'title'		=>	"{$meeting->title}: {$item->title}",
 								'dtstart'	=>	$this->icalTime($date, $item->start),
 								'dtend'		=>	$this->icalTime($date, $item->end),
-								'dtstamp'	=>	$this->icalTime($date, $item->start),
+								'dtstamp'	=>	$this->dtStamp($date, $item->start),
 								'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
 							);
 						else
@@ -105,7 +108,7 @@ EOF;
 								'title'		=>	"{$meeting->title}: {$item->title}",
 								'dtstart'	=>	$this->icalTime($date, $item->start),
 								'dtend'		=>	$this->icalTime($date, $item->end),
-								'dtstamp'	=>	$this->icalTime($date, $item->start),
+								'dtstamp'	=>	$this->dtStamp($date, $item->start),
 								'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
 							);
 					} else {
@@ -119,7 +122,7 @@ EOF;
 								'title'		=>	"{$meeting->title}",
 								'dtstart'	=>	$this->icalTime($date, $item->start),
 								'dtend'		=>	$this->icalTime($date, $item->end),
-								'dtstamp'	=>	$this->icalTime($date, $item->start),
+								'dtstamp'	=>	$this->dtStamp($date, $item->start),
 								'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
 							);
 						}
@@ -132,7 +135,7 @@ BEGIN:VEVENT
 SUMMARY:{$item['title']}
 DTSTART;TZID=Europe/Copenhagen;VALUE=DATE-TIME:{$item['dtstart']}
 DTEND;TZID=Europe/Copenhagen;VALUE=DATE-TIME:{$item['dtend']}
-DTSTAMP;TZID=Europe/Copenhagen;VALUE=DATE-TIME:{$item['dtstamp']}
+DTSTAMP:{$item['dtstamp']}
 TRANSP:OPAQUE
 SEQUENCE:0
 STATUS:CONFIRMED
@@ -155,12 +158,19 @@ EOF;
 	}
 	
 	private function icalTime ( $date, $time ) {
-		return str_replace('-', '', $date).'T'.str_replace(':', '', $time).'00';
+		return str_replace('-', '', $date).'T'.str_replace(':', '', $time).'00Z';
+	}
+	
+	private function dtStamp ( $date, $time ) {
+		$datetime = DateTime::createFromFormat('Y-m-d H:i', 
+			$date . ' ' . $time, new DateTimeZone('Europe/Copenhagen'));
+		$datetime->setTimezone(new DateTimeZone('UTC'));
+		return $datetime->format($this->icalTimeStampN);
 	}
 	
 	private function isNewer ( $test, $against ) {
-		$test = strptime($test, "%Y%m%dT%H%M00");
-		$against = strptime($against, "%Y%m%dT%H%M00");
+		$test = strptime($test, $this->icalTimeStamp);
+		$against = strptime($against, $this->icalTimeStamp);
 		return $test > $against;
 	}
 	
