@@ -134,7 +134,6 @@ class Admin extends Page {
 							'start'		=> $this->parsePostedTime($_POST['newmeeting-'.$i.'-start']),
 							'end'		=> $this->parsePostedTime($_POST['newmeeting-'.$i.'-end']),
 							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
-							'icalunique'	=> isset($_POST['newmeeting-'.$i.'-icalunique']),
 							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
 						);
 					} elseif ( $type == 'eat' ) {
@@ -150,7 +149,6 @@ class Admin extends Page {
 							'spend'		=> $spend,
 							'costperperson'	=> $spend,
 							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
-							'icalunique'	=> isset($_POST['newmeeting-'.$i.'-icalunique']),
 							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
 						);
 					}
@@ -215,8 +213,6 @@ class Admin extends Page {
 <span class="time"><input type="text" id="newmeeting-0-start" name="newmeeting-0-start" value="19:00" /><span> - </span><input type="text" id="newmeeting-0-end" name="newmeeting-0-end" value="23:00" /></span>
 <input type="checkbox" name="newmeeting-0-unique" id="newmeeting-0-unique" />
 <label for="newmeeting-0-unique">Vis separat fra resten af dagen?</label>
-<input type="checkbox" name="newmeeting-0-icalunique" id="newmeeting-0-icalunique" />
-<label for="newmeeting-0-icalunique">Vis separat på ical?</label>
 <input type="hidden" name="newmeeting-0-type" value="meet" />
 <input type="checkbox" name="newmeeting-0-nojoin" id="newmeeting-0-nojoin" />
 <label for="newmeeting-0-nojoin">Ingen tilmelding</label>
@@ -232,8 +228,6 @@ class Admin extends Page {
 <input type="text" id="newmeeting-1-spend" name="newmeeting-1-spend" />
 <input type="checkbox" name="newmeeting-1-unique" id="newmeeting-1-unique" />
 <label for="newmeeting-1-unique">Vis separat fra resten af dagen?</label>
-<input type="checkbox" name="newmeeting-1-icalunique" id="newmeeting-1-icalunique" />
-<label for="newmeeting-1-icalunique">Vis separat på ical?</label>
 <input type="hidden" name="newmeeting-1-type" value="eat" />
 <input type="checkbox" name="newmeeting-1-nojoin" id="newmeeting-1-nojoin" />
 <label for="newmeeting-1-nojoin">Ingen tilmelding</label>
@@ -284,7 +278,6 @@ class Admin extends Page {
 							'start'		=> $_POST['newmeeting-'.$i.'-start'],
 							'end'		=> $_POST['newmeeting-'.$i.'-end'],
 							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
-							'icalunique'	=> isset($_POST['newmeeting-'.$i.'-icalunique']),
 							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
 						);
 					} elseif ( $type == 'eat' ) {
@@ -301,7 +294,6 @@ class Admin extends Page {
 							'spend'		=> $spend,
 							'costperperson'	=> 0.0, // let the database calc
 							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
-							'icalunique'	=> isset($_POST['newmeeting-'.$i.'-icalunique']),
 							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
 						);
 					}
@@ -384,8 +376,6 @@ class Admin extends Page {
 <span class="time"><input type="text" id="newmeeting-'.$id.'-start" name="newmeeting-'.$id.'-start" value="'.$item->start.'" /><span> - </span><input type="text" id="newmeeting-'.$id.'-end" name="newmeeting-'.$id.'-end" value="'.$item->end.'" /></span>
 <input type="checkbox" name="newmeeting-'.$id.'-unique" id="newmeeting-'.$id.'-unique"'.($item->unique?' checked="true"':'').' />
 <label for="newmeeting-'.$id.'-unique">Separat fra resten af dagen?</label>
-<input type="checkbox" name="newmeeting-'.$id.'-icalunique" id="newmeeting-'.$id.'-icalunique"'.(@$item->icalunique?' checked="true"':'').' />
-<label for="newmeeting-'.$id.'-icalunique">Vis separat på ical?</label>
 <input type="hidden" name="newmeeting-'.$id.'-type" value="meet" />
 <input type="checkbox" name="newmeeting-'.$id.'-nojoin" id="newmeeting-'.$id.'-nojoin"'.($item->nojoin?' checked="true"':'').' />
 <label for="newmeeting-'.$id.'-nojoin">Ingen tilmelding</label>
@@ -405,8 +395,6 @@ class Admin extends Page {
 <span>'.$item->costperperson.'</span>
 <input type="checkbox" name="newmeeting-'.$id.'-unique" id="newmeeting-'.$id.'-unique"'.($item->unique?' checked="true"':'').' />
 <label for="newmeeting-'.$id.'-unique">Separat fra resten af dagen?</label>
-<input type="checkbox" name="newmeeting-'.$id.'-icalunique" id="newmeeting-'.$id.'-icalunique"'.(@$item->icalunique?' checked="true"':'').' />
-<label for="newmeeting-'.$id.'-icalunique">Vis separat på ical?</label>
 <input type="hidden" name="newmeeting-'.$id.'-type" value="eat" />
 <input type="checkbox" name="newmeeting-'.$id.'-nojoin" id="newmeeting-'.$id.'-nojoin"'.($item->nojoin?' checked="true"':'').' />
 <label for="newmeeting-'.$id.'-nojoin">Ingen tilmelding</label>
