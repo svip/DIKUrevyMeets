@@ -1515,6 +1515,8 @@
 "43":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1335859772,"name":"Rune Perstrup"},
 "25":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1335863838}},
+"usertype":"normal","comment":"","modified":1335863838,"name":"Sune Petterson"},
+"64":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1335902850}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
