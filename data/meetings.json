@@ -1490,6 +1490,10 @@
 "24":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1335810528,"name":"Mikkel Kj\u00e6r Jensen"},
 "17":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1335828445}},
+"usertype":"normal","comment":"","modified":1335828445,"name":"Klaes Rasmussen"},
+"43":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1335859772,"name":"Rune Perstrup"},
+"25":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1335863838}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
