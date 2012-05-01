@@ -71,9 +71,10 @@ EOF;
 					continue;
 			}
 			if ( is_numeric(@$meeting->days) ) {
+				// multi day event
 				$startDate = $this->icalTime($date, $meeting->schedule->{0}->start);
 				$dtStamp = $this->dtStamp($date, $meeting->schedule->{0}->start);
-				$endDate = str_replace('-', '', $this->getEndDate($date, $meeting->days+1));
+				$endDate = $this->icalTime($this->getEndDate($date, $meeting->days+1), '00:00');
 				$uid = "dikurevy{$this->uid($date, $startDate, -1, $meeting->title)}";
 				$content .= <<<EOF
 BEGIN:VEVENT
@@ -88,49 +89,36 @@ UID:$uid
 END:VEVENT
 
 EOF;
-			} else {
-				$schedule = $this->sortSchedule($meeting->schedule);
-				$day = array();
-				foreach ( $schedule as $i => $item ) {
-					if ( @$item->hidden )
-						continue;
-					if ( @$item->icalunique ) {
-						if ( !isset($day[0]) )
-							$day[1] = array (
-								'title'		=>	"{$meeting->title}: {$item->title}",
-								'dtstart'	=>	$this->icalTime($date, $item->start),
-								'dtend'		=>	$this->icalTime($date, $item->end),
-								'dtstamp'	=>	$this->dtStamp($date, $item->start),
-								'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
-							);
-						else
-							$day[] = array (
-								'title'		=>	"{$meeting->title}: {$item->title}",
-								'dtstart'	=>	$this->icalTime($date, $item->start),
-								'dtend'		=>	$this->icalTime($date, $item->end),
-								'dtstamp'	=>	$this->dtStamp($date, $item->start),
-								'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
-							);
-					} else {
-						if ( isset($day[0]) ) {
-							if ( $this->isNewer($this->icalTime($date, $item->end), $day[0]['dtend']) )
-								$day[0]['dtend'] = $this->icalTime($date, $item->end);
-							if ( $this->isNewer($day[0]['dtstart'], $this->icalTime($date, $item->start)) )
-								$day[0]['dtstart'] = $this->icalTime($date, $item->start);
-						} else {
-							$day[0] = array (
-								'title'		=>	"{$meeting->title}",
-								'dtstart'	=>	$this->icalTime($date, $item->start),
-								'dtend'		=>	$this->icalTime($date, $item->end),
-								'dtstamp'	=>	$this->dtStamp($date, $item->start),
-								'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
-							);
-						}
-					}
-				}
-				ksort($day);
-				foreach ( $day as $item ) {
-					$content .= <<<EOF
+			}
+			// On multi day events, each sub event will still appear
+			// invidually.  One might consider not doing that if there is
+			// only *one* subevent for the multi day event.
+			$schedule = $this->sortSchedule($meeting->schedule);
+			$day = array();
+			foreach ( $schedule as $i => $item ) {
+				if ( @$item->hidden )
+					continue;
+				// all events are now unique
+				if ( !isset($day[0]) )
+					$day[1] = array (
+						'title'		=>	"{$meeting->title}: {$item->title}",
+						'dtstart'	=>	$this->icalTime($date, $item->start),
+						'dtend'		=>	$this->icalTime($date, $item->end),
+						'dtstamp'	=>	$this->dtStamp($date, $item->start),
+						'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
+					);
+				else
+					$day[] = array (
+						'title'		=>	"{$meeting->title}: {$item->title}",
+						'dtstart'	=>	$this->icalTime($date, $item->start),
+						'dtend'		=>	$this->icalTime($date, $item->end),
+						'dtstamp'	=>	$this->dtStamp($date, $item->start),
+						'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
+					);
+			}
+			ksort($day);
+			foreach ( $day as $item ) {
+				$content .= <<<EOF
 BEGIN:VEVENT
 SUMMARY:{$item['title']}
 DTSTART;TZID=Europe/Copenhagen;VALUE=DATE-TIME:{$item['dtstart']}
@@ -143,7 +131,6 @@ UID:{$item['uid']}
 END:VEVENT
 
 EOF;
-				}
 			}
 		}
 		$content .= <<<EOF
