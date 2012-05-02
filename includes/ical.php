@@ -72,14 +72,14 @@ EOF;
 			}
 			if ( is_numeric(@$meeting->days) ) {
 				// multi day event
-				$startDate = $this->icalTime($date, $meeting->schedule->{0}->start);
-				$dtStamp = $this->dtStamp($date, $meeting->schedule->{0}->start);
-				$endDate = $this->icalTime($this->getEndDate($date, $meeting->days+1), '00:00');
+				$startDate = str_replace('-', '', $date);
+				$dtStamp = $this->dtStamp($date, '00:00');
+				$endDate = str_replace('-', '', $this->getEndDate($date, $meeting->days+1));
 				$uid = "dikurevy{$this->uid($date, $startDate, -1, $meeting->title)}";
 				$content .= <<<EOF
 BEGIN:VEVENT
 SUMMARY:{$meeting->title}
-DTSTART;TZID=Europe/Copenhagen;VALUE=DATE-TIME:$startDate
+DTSTART;TZID=Europe/Copenhagen;VALUE=DATE:$startDate
 DTEND;TZID=Europe/Copenhagen;VALUE=DATE:$endDate
 DTSTAMP:$dtStamp
 TRANSP:OPAQUE
