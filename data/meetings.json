@@ -1494,7 +1494,7 @@
 "20":{"schedule":{"0":{"attending":false}},
 "usertype":"normal","comment":"\u00d8del\u00e6gger Fysikrevy","modified":1335792676,"name":"Claus Appel (Spectrum)"},
 "38":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1335792875,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
+"usertype":"normal","comment":"\u00d8del\u00e6gger Spectrum","modified":1335990448},
 "22":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1335792956,"name":"Sebastian Paaske T\u00f8rholm"},
 "22-7582":{"name":"Mini-Kirstejn","usertype":"extra","schedule":{"0":{"attending":true}},
@@ -1522,6 +1522,6 @@
 "64":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1335902850,"name":"Simon V."},
 "42":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1335959383}},
+"usertype":"normal","comment":"","modified":1335959383,"name":"Niels Serup"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
