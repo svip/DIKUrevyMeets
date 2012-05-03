@@ -99,15 +99,45 @@ EOF;
 				if ( @$item->hidden )
 					continue;
 				// all events are now unique
+				$summary = '';
+				if ( !$item->nojoin ) {
+					$modified = 0;
+					$participants = array(
+						'attending'  => 0,
+						'cooking'    => 0, // useless for meets
+					);
+					foreach ( $meeting->users as $user ) {
+						if ( $user->modified > $modified )
+							$modified = $user->modified;
+						foreach ( $user->schedule as $j => $userSchedule ) {
+							if ( $j == $item->id ) {
+								if ( @$userSchedule->attending
+									|| @$userSchedule->eating )
+									$participants['attending']++;
+								if ( @$userSchedule->eating )
+									$participants['cooking']++;
+								break;
+							}
+						}
+					}
+				
+					if ( $item->type == 'meet' ) {
+						$summary = " ({$participants['attending']} deltager(e))";
+					} else {
+						$summary = " ({$participants['attending']} deltager(e), {$participants['cooking']} kok(ke))";
+					}
+					$dtstamp = date($this->icalTimeStamp, $modified);
+				} else {
+					$dtstamp = $this->dtStamp($date, $item->start);
+				}
 				$day[] = array (
-					'title'		=>	"{$meeting->title}: {$item->title}",
-					'dtstart'	=>	$this->icalTime($date, $item->start),
-					'dtend'		=>	$this->icalTime($date, $item->end),
-					'dtstamp'	=>	$this->dtStamp($date, $item->start),
-					'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
+					'title'     => "{$meeting->title}: {$item->title}{$summary}",
+					'dtstart'   => $this->icalTime($date, $item->start),
+					'dtend'     => $this->icalTime($date, $item->end),
+					'dtstamp'   => $dtstamp,
+					'uid'       => "dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
 				);
 			}
-			//ksort($day);
 			foreach ( $day as $item ) {
 				$content .= <<<EOF
 BEGIN:VEVENT
