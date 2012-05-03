@@ -99,24 +99,15 @@ EOF;
 				if ( @$item->hidden )
 					continue;
 				// all events are now unique
-				if ( !isset($day[0]) )
-					$day[1] = array (
-						'title'		=>	"{$meeting->title}: {$item->title}",
-						'dtstart'	=>	$this->icalTime($date, $item->start),
-						'dtend'		=>	$this->icalTime($date, $item->end),
-						'dtstamp'	=>	$this->dtStamp($date, $item->start),
-						'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
-					);
-				else
-					$day[] = array (
-						'title'		=>	"{$meeting->title}: {$item->title}",
-						'dtstart'	=>	$this->icalTime($date, $item->start),
-						'dtend'		=>	$this->icalTime($date, $item->end),
-						'dtstamp'	=>	$this->dtStamp($date, $item->start),
-						'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
-					);
+				$day[] = array (
+					'title'		=>	"{$meeting->title}: {$item->title}",
+					'dtstart'	=>	$this->icalTime($date, $item->start),
+					'dtend'		=>	$this->icalTime($date, $item->end),
+					'dtstamp'	=>	$this->dtStamp($date, $item->start),
+					'uid'		=>	"dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
+				);
 			}
-			ksort($day);
+			//ksort($day);
 			foreach ( $day as $item ) {
 				$content .= <<<EOF
 BEGIN:VEVENT
