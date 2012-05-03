@@ -6,6 +6,7 @@ class Ical {
 	private $content = '';
 	private $icalTimeStamp = '%Y%m%dT%H%M00Z';
 	private $icalTimeStampN = 'Ymd\THi00\Z';
+	private $icalTimeStampM = 'Ymd\THis\Z';
 	
 	function __construct ( $database ) {
 		$this->database = $database;
@@ -126,7 +127,7 @@ EOF;
 					} else {
 						$summary = " ({$participants['attending']} deltager(e), {$participants['cooking']} kok(ke))";
 					}
-					$dtstamp = date($this->icalTimeStamp, $modified);
+					$dtstamp = date($this->icalTimeStampM, $modified);
 				} else {
 					$dtstamp = $this->dtStamp($date, $item->start);
 				}
