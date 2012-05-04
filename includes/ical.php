@@ -101,31 +101,50 @@ EOF;
 					continue;
 				// all events are now unique
 				$summary = '';
+				$description = '';
 				if ( !$item->nojoin ) {
 					$modified = 0;
 					$participants = array(
 						'attending'  => 0,
 						'cooking'    => 0, // useless for meets
 					);
-					foreach ( $meeting->users as $user ) {
+					$names = array (
+						'attending'  => array(),
+						'cooking'    => array(),
+					);
+					foreach ( $meeting->users as $userid => $user ) {
 						if ( $user->modified > $modified )
 							$modified = $user->modified;
 						foreach ( $user->schedule as $j => $userSchedule ) {
 							if ( $j == $item->id ) {
+								if ( $user->usertype == 'extra' ) {
+									$name = $user->name;
+								} else {
+									$userObj = $this->database->getUserById(intval($userid));
+									$name = $userObj->name;
+								}
 								if ( @$userSchedule->attending
-									|| @$userSchedule->eating )
+									|| @$userSchedule->eating ) {
 									$participants['attending']++;
-								if ( @$userSchedule->eating )
+									$names['attending'][] = $name;
+								}
+								if ( @$userSchedule->cooking ) {
 									$participants['cooking']++;
+									$names['cooking'][] = $name;
+								}
 								break;
 							}
 						}
 					}
-				
+					
+					$attendingList = $this->naturalLanguageList($names['attending']);
 					if ( $item->type == 'meet' ) {
 						$summary = " ({$participants['attending']} deltager(e))";
+						$description = "Folk der kommer: $attendingList";
 					} else {
 						$summary = " ({$participants['attending']} deltager(e), {$participants['cooking']} kok(ke))";
+						$cookingList = $this->naturalLanguageList($names['cooking']);
+						$description = "Folk der kommer: $attendingList\\nKokke: $cookingList";
 					}
 					$dtstamp = date($this->icalTimeStampM, $modified);
 				} else {
@@ -133,6 +152,7 @@ EOF;
 				}
 				$day[] = array (
 					'title'     => "{$meeting->title}: {$item->title}{$summary}",
+					'description' => $description,
 					'dtstart'   => $this->icalTime($date, $item->start),
 					'dtend'     => $this->icalTime($date, $item->end),
 					'dtstamp'   => $dtstamp,
@@ -143,6 +163,7 @@ EOF;
 				$content .= <<<EOF
 BEGIN:VEVENT
 SUMMARY:{$item['title']}
+DESCRIPTION:{$item['description']}
 DTSTART;TZID=Europe/Copenhagen;VALUE=DATE-TIME:{$item['dtstart']}
 DTEND;TZID=Europe/Copenhagen;VALUE=DATE-TIME:{$item['dtend']}
 DTSTAMP:{$item['dtstamp']}
@@ -160,6 +181,26 @@ END:VCALENDAR
 
 EOF;
 		$this->content = $content;
+		$this->content = str_replace("\r", '', $this->content);
+		$this->content = str_replace("\n", "\r\n", $this->content);
+	}
+	
+	private function naturalLanguageList ( $list ) {
+		$output = '';
+		$count = count($list);
+		
+		foreach ( $list as $i => $item ) {
+			if ( $output != '' ) {
+				if ( $i == $count-1 ) {
+					$output .= ' og ';
+				} else {
+					$output .= ', ';
+				}
+			}
+			$output .= $item;
+		}
+		
+		return $output;
 	}
 	
 	private function uid ( $date, $time, $id, $title ) {
@@ -167,7 +208,9 @@ EOF;
 	}
 	
 	private function icalTime ( $date, $time ) {
-		return str_replace('-', '', $date).'T'.str_replace(':', '', $time).'00Z';
+		$datetime = DateTime::createFromFormat('Y-m-d H:i',
+			$date . ' ' . $time, new DateTimeZone('Europe/Copenhagen'));
+		return $datetime->format($this->icalTimeStampN);
 	}
 	
 	private function dtStamp ( $date, $time ) {
