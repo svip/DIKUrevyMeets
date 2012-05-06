@@ -71,27 +71,29 @@ class Database {
 		return $this->meetings->{$date};
 	}
 	
-	function getMeetingBefore ( $checkDate ) {
+	function getMeetingBefore ( $checkDate, $onlyWithSchedule=true ) {
 		$testDate = false;
 		foreach ( $this->getSortedMeetings() as $date => $meeting ) {
 			if ( $date == $checkDate )
 				return $testDate;
-			$testDate = array (
-				'date'	=>	$date,
-				'title'	=>	$meeting->title
-			);
+			if ( $onlyWithSchedule && isset($meeting->schedule->{0}) )
+				$testDate = array (
+					'date'  => $date,
+					'title' => $meeting->title
+				);
 		}
 		return $testDate;
 	}
 	
-	function getMeetingAfter ( $checkDate ) {
+	function getMeetingAfter ( $checkDate, $onlyWithSchedule=true ) {
 		$returnNext = false;
 		foreach ( $this->getSortedMeetings() as $date => $meeting ) {
 			$testDate = array (
-				'date'	=>	$date,
-				'title'	=>	$meeting->title
+				'date'  => $date,
+				'title' => $meeting->title
 			);
-			if ( $returnNext )
+			if ( $returnNext
+				&& ( $onlyWithSchedule && isset($meeting->schedule->{0}) ) )
 				return $testDate;
 			if ( $date == $checkDate )
 				$returnNext = true;

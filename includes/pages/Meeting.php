@@ -194,7 +194,7 @@ class Meeting extends Page {
 				if ( $item->type == 'meet' ) {
 					if (!isset($user->schedule->{$id})
 						|| ($item->nojoin) )
-						$table .= '<td class="centre">?</td>';					
+						$table .= '<td class="centre">?</td>';
 					else {
 						if ( $user->schedule->{$id}->attending ) $stats['schedule'][$id]['attending']++;
 						$table .= '<td class="centre '.($user->schedule->{$id}->attending?'yes':'no').'">'.$this->tick($user->schedule->{$id}->attending).'</td>';
