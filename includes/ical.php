@@ -71,11 +71,15 @@ EOF;
 				if ( !$fitsSearch )
 					continue;
 			}
-			if ( is_numeric(@$meeting->days) ) {
+			if ( is_numeric(@$meeting->days)
+				|| !isset($meeting->schedule->{0}) ) {
 				// multi day event
 				$startDate = str_replace('-', '', $date);
 				$dtStamp = $this->dtStamp($date, '00:00');
-				$endDate = str_replace('-', '', $this->getEndDate($date, $meeting->days+1));
+				if ( is_numeric(@$meeting->days) )
+					$endDate = str_replace('-', '', $this->getEndDate($date, $meeting->days+1));
+				else
+					$endDate = str_replace('-', '', $this->getEndDate($date, 1));
 				$uid = "dikurevy{$this->uid($date, $startDate, -1, $meeting->title)}";
 				$content .= <<<EOF
 BEGIN:VEVENT
