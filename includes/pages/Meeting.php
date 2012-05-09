@@ -201,9 +201,10 @@ class Meeting extends Page {
 					}
 				} elseif ( $item->type == 'eat' ) {
 					if (!isset($user->schedule->{$id})
-						|| ($item->nojoin) )
+						|| ($item->nojoin) ) {
 						$table .= '<td class="centre">?</td>';
-					else {
+						$table .= '<td class="centre">?</td>';
+					} else {
 						if ( $user->schedule->{$id}->eating ) $stats['schedule'][$id]['eating']++;
 						if ( $user->schedule->{$id}->cooking ) $stats['schedule'][$id]['cooking']++;
 						$table .= '<td class="centre '.($user->schedule->{$id}->eating?'yes':'no').'">'.$this->tick($user->schedule->{$id}->eating).'</td>';
@@ -320,7 +321,7 @@ class Meeting extends Page {
 				} elseif ( $item->type == 'meet' ) {
 					$userSchedule[$subuserid][$id] = array ( 'attending' => true );
 					if ( !is_null($currentInfo[$subuserid]) ) {
-						$userSchedule[$subuserid][$id]['attending'] = $currentInfo[$subuserid]->schedule->{$id}->attending;
+						$userSchedule[$subuserid][$id]['attending'] = @$currentInfo[$subuserid]->schedule->{$id}->attending;
 					}
 					$canJoin = true;
 				} elseif ( $item->type == 'eat' ) {
@@ -329,8 +330,8 @@ class Meeting extends Page {
 					else
 						$userSchedule[$subuserid][$id] = array ( 'eating' => false, 'cooking' => false );
 					if ( !is_null($currentInfo[$subuserid]) ) {
-						$userSchedule[$subuserid][$id]['eating'] = $currentInfo[$subuserid]->schedule->{$id}->eating;
-						$userSchedule[$subuserid][$id]['cooking'] = $currentInfo[$subuserid]->schedule->{$id}->cooking;
+						$userSchedule[$subuserid][$id]['eating'] = @$currentInfo[$subuserid]->schedule->{$id}->eating;
+						$userSchedule[$subuserid][$id]['cooking'] = @$currentInfo[$subuserid]->schedule->{$id}->cooking;
 					}		
 					$canJoin = true;	
 				}
