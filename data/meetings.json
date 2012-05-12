@@ -1556,7 +1556,7 @@
 "2012-05-11":{"title":"Smedierevy","schedule":{"0":{"title":"Forestilling 11\/5","type":"meet","start":"20:00","end":"22:00","unique":false,"icalunique":false,"nojoin":false},
 "1":{"title":"Forestilling 12\/5","type":"meet","start":"20:00","end":"22:00","unique":false,"icalunique":false,"nojoin":false}},
 "comment":"","users":{},
-"hidden":false,"locked":false,"tags":{"0":"revyrelateret"},
+"hidden":true,"locked":true,"tags":{"0":"revyrelateret"},
 "days":"1"},
 "2012-03-04":{"title":"PR-legedag","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"12:00","end":"24:00","unique":false,"icalunique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"11:00","end":"12:00","open":true,"spend":0,"costperperson":0,"unique":false,"icalunique":false,"nojoin":false,"id":"1"}},
