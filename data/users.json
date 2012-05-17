@@ -1,4 +1,4 @@
-{"4":{"name":"Brainfuck","register":1316805316,"admin":true,"identity":"4"},
+{"4":{"name":"David","register":1316805316,"admin":true,"identity":"4"},
 "3":{"name":"Ronni Elken Lindsgaard","register":1316807433,"admin":true,"identity":"3"},
 "5":{"name":"Ahmed","register":1316811751,"admin":true,"identity":"5"},
 "6":{"name":"Phillip Alexander Roschnowski","register":1316861488,"admin":false,"identity":"6"},
@@ -60,4 +60,5 @@
 "72":{"name":"Thomas Lund","register":1334923372,"admin":false,"identity":"72"},
 "73":{"name":"Maria Schi\u00f8tt Eckhausen","register":1335279275,"admin":false,"identity":"73"},
 "69":{"name":"Laust Sander M\u00f8lgaard Tams","register":1336041168,"admin":false,"identity":"69"},
-"77":{"name":"Daisy","register":1337092102,"admin":false,"identity":"77"}}
+"77":{"name":"Daisy","register":1337092102,"admin":false,"identity":"77"},
+"1":{"name":"revyboss","register":1337238033,"admin":false,"identity":"1"}}
