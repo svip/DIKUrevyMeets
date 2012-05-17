@@ -302,7 +302,7 @@ class Meeting extends Page {
 	}
 	
 	private function tick ( $value ) {
-		if ( $value ) return 'X';
+		if ( $value ) return '✔';
 		return '-';
 	}
 	
