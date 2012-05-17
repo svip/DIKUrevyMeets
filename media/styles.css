@@ -1,37 +1,44 @@
 body {
 	font-family: tahoma, sans, sans-serif;
+	background: #eee;
+	color: #000;
 }
 h1, h2, h3, h4, h5, h6, p { text-align: center; }
 h2 { margin-top: 0; }
 h1 { margin-bottom: 0; }
 h3 { margin: 0; }
-a { color: #2a8; }
-a:visited { color: #486; }
-a:hover { color: #4ca; }
-a:active { color: #4ac; }
+a { color: #3385e4; }
+a:visited { color: #3368e4; }
+a:hover { color: #33b7e4; }
+a:active { color: #18b7ca; }
 table, form {
 	margin: 0 auto;
 }
 table { background: #eee; margin-bottom: 15px; }
-table th { background: #ddd; padding: 1px 5px; vertical-align: bottom; }
-table td { background: #fafafa; padding: 1px 4px; }
+table th { background: #3385e4; color: #fff; font-weight: normal; padding: 1px 5px; vertical-align: bottom; }
+table td { background: #fff; padding: 1px 4px; }
 table td.centre { text-align: center; }
 table .date { text-align: right; }
 table .title { font-weight: bold; }
-td.yes { background: #0a0; color: #fff; font-weight: bold; }
-td.no { background: #a00; color: #fff; font-weight: bold; }
+td.yes { background: #d1f3d1; color: #82de81; font-weight: bold; }
+td.no { background: #ffccca; color: #ffccca; font-weight: bold; }
 td.nomatter { background: #daa; color: #fff; font-weight: bold; }
-form { width: 80%; background: #f0f0f0; padding: 15px 10px; }
+form { width: 80%; background: none; padding: 15px 10px; }
 form#login > fieldset { display: none; }
-fieldset { border: 1px solid #999; }
-fieldset, form {
-	border-radius: 15px; -moz-border-radius: 15px; -webkit-border-radius: 15px;
+fieldset { border: solid 1px #aaa; border-left-width: 10px; margin-bottom: 10px; background: #ccc; }
+legend { font-weight: bold; }
+legend b { font-size: 125%; text-decoration: underline; }
+input, label, textarea { width: 99%; }
+input, textarea {
+	background: #eee; border: 1px solid #aaa;
+	padding: 1px 4px;
 }
-table th, table td, input, textarea {
-	border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+input:focus, textarea:focus {
+	background: #fff;
 }
-legend b { font-size: 125%; }
-input, label, textarea { width: 100%; }
+input[type=submit] {
+	background: #3385e4; color: #fff; border: 1px solid #3385e4;
+}
 input[type=submit], input[type=checkbox] { width: auto; }
 .clear { clear: both; }
 .total td { text-align: center; }
