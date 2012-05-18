@@ -356,8 +356,8 @@ class Admin extends Page {
 <input type="text" name="meeting-days" id="meeting-days" value="'.(is_numeric(@$meeting->days)?$meeting->days:'').'" />
 <input type="checkbox" name="meeting-locked" id="meeting-locked" '.((isset($meeting->locked) && $meeting->locked)?'checked="true"':'').' />
 <label for="meeting-locked">Låst?</label>
-<input type="checkbox" name="meeting-hidden" id="meeting-hidden" '.((isset($meeting->hidden) && $meeting->hidden)?'checked="true"':'').' /><br />
-<label for="meeting-hidden">Skjult?</label>
+<input type="checkbox" name="meeting-hidden" id="meeting-hidden" '.((isset($meeting->hidden) && $meeting->hidden)?'checked="true"':'').' />
+<label for="meeting-hidden">Skjult?</label><br />
 <label for="meeting-title">Overskrift:</label>
 <input type="text" name="meeting-title" id="meeting-title" value="'.$meeting->title.'" />
 <label for="meeting-comment">Kommentar:</label>
