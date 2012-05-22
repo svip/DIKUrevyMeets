@@ -48,5 +48,3 @@ class Front extends Page {
 		return '';
 	}
 }
-
-$page = new Front($database, $auth);

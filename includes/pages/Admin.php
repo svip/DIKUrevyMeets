@@ -490,5 +490,3 @@ class Admin extends Page {
 		$this->content .= '<pre>'.print_r($meeting, true).'</pre>';
 	}
 }
-
-$page = new Admin($database, $auth);

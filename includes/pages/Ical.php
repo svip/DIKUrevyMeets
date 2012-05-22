@@ -28,5 +28,3 @@ class Ical extends Page {
 		$this->content = $content;
 	}
 }
-
-$page = new Ical($database, $auth);

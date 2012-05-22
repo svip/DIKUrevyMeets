@@ -1,6 +1,6 @@
 <?php
 
-require ( 'includes/ical.php' );
+require ( 'includes/Ical.php' );
 
 class Actions extends Page {
 
@@ -30,7 +30,7 @@ class Actions extends Page {
 	}
 	
 	private function logout ( ) {
-		header ( 'Location: /logout' );
+		header ( 'Location: ./' );
 	}
 	
 	private function getTags ( ) {
@@ -46,5 +46,3 @@ class Actions extends Page {
 		$this->content = json_encode ( $fTags );
 	}
 }
-
-$page = new Actions($database, $auth);

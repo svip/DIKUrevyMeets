@@ -481,5 +481,3 @@ class Meeting extends Page {
 		return $form;
 	}
 }
-
-$page = new Meeting($database, $auth);

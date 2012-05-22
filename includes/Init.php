@@ -1,6 +1,14 @@
 <?php
 
-require ( 'page.php' );
+require_once ( 'config.php' );
+
+require_once ( 'includes/Database.php' );
+
+require_once ( 'includes/GlobalFunctions.php' );
+
+require_once ( 'includes/Authentication.php' );
+
+require_once ( 'includes/Page.php' );
 
 $page = 'Front';
 
@@ -22,4 +30,8 @@ if ( isset ( $_GET['meeting'] )
 	}
 }
 
-require ( "includes/pages/$page.php" );
+require_once ( "includes/pages/$page.php" );
+
+$page = new $page($database, $auth);
+
+require_once ( 'includes/Output.php' );
