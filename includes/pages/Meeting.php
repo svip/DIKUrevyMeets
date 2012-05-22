@@ -338,8 +338,8 @@ class Meeting extends Page {
 	}
 	
 	private function tick ( $value ) {
-		if ( $value ) return '✔';
-		return '✘';
+		if ( $value ) return gfMsg('tick-yes');
+		return gfMsg('tick-no');
 	}
 	
 	private function meetingForm ( $meeting, $currentInfo, $itemid ) {
