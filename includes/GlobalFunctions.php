@@ -1,14 +1,20 @@
 <?php
 
 function gfMsg ( ) {
-	global $messages;
+	global $messages, $backupmessages;
 	$args = func_get_args();
 	if ( !isset($messages[$args[0]]) ) {
-		return "&lt;{$args[0]}&gt;";
+		if ( !isset($backupmessages[$args[0]]) ) {
+			return "&lt;{$args[0]}&gt;";
+		}
+		$msg = $backupmessages[$args[0]];
+	} else {
+		$msg = $messages[$args[0]];
 	}
-	$msg = $messages[$args[0]];
 	foreach ( $args as $i => $arg ) {
-		$msg = str_replace( "\$$i", $arg, $msg );
+		if ( $i == 0 ) continue;
+		while ( preg_match('@\$'.$i.'([^0-9]|$)@s', $msg) )
+			$msg = preg_replace( '@\$'.$i.'([^0-9]|$)@s', "$arg$1", $msg );
 	}
 	return $msg;
 }
@@ -17,7 +23,9 @@ function gfRawMsg ( ) {
 	$args = func_get_args();
 	$msg = $args[0];
 	foreach ( $args as $i => $arg ) {
-		$msg = str_replace( "\$$i", $arg, $msg );
+		if ( $i == 0 ) continue;
+		while ( preg_match('@\$'.$i.'([^0-9]|$)@s', $msg) )
+			$msg = preg_replace( '@\$'.$i.'([^0-9]|$)@s', "$arg$1", $msg );
 	}
 	return $msg;
 }
