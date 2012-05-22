@@ -155,15 +155,20 @@ class Meeting extends Page {
 		$table .= '<th rowspan="3" class="comment">Kommentar</th></tr>
 		<tr>';
 		foreach ( $schedule as $item ) {
+			$extra = '';
+			if ( $item->nojoin )
+				$extra = ' rowspan="2"';
 			if ( $item->type == 'meet' ) {
-				$table .= '<th>'.$item->start.'</th>';
+				$table .= gfRawMsg('<th$2>$1</th>', $item->start, $extra);
 			} elseif ( $item->type == 'eat' ) {
-				$table .= '<th colspan="2">'.$item->start.'</th>';
+				$table .= gfRawMsg('<th colspan="2"$2>$1</th>', $item->start, $extra);
 			}
 		}
 		$table .= '</tr><tr>';
 		$table .= '<th>Bruger</th>';
 		foreach ( $schedule as $item ) {
+			if ( $item->nojoin )
+				continue;
 			if ( $item->type == 'meet' ) {
 				$table .= '<th>Kommer</th>';
 			} elseif ( $item->type == 'eat' ) {
@@ -172,8 +177,8 @@ class Meeting extends Page {
 		}
 		$table .= '</tr>';
 		$stats = array (
-			'users'		=> 0,
-			'schedule'	=> array()
+			'users'    => 0,
+			'schedule' => array()
 		);
 		foreach ( $schedule as $item ) {
 			if ( $item->type == 'meet' ) {
@@ -182,7 +187,9 @@ class Meeting extends Page {
 				$stats['schedule'][$item->id] = array ( 'eating' => 0, 'cooking' => 0 );
 			}
 		}
+		
 		$tmp = array();
+		
 		foreach ( $meeting->users as $userid => $user ) {
 			$tmp[$userid] = $user;
 			$dbuser = $this->database->getUserById($userid);
@@ -191,9 +198,11 @@ class Meeting extends Page {
 			else
 				$tmp[$userid]->name = $user->name;
 		}
+		
 		uasort($tmp, array(__CLASS__, 'userSort'));
 		$users = $tmp;
 		$currentInfo = array ( 0 => null );
+		
 		foreach ( $users as $userid => $user ) {
 			if ( $user->name == 'N/A' )
 				// this is a bug, do not display it for general use
@@ -211,7 +220,9 @@ class Meeting extends Page {
 			$table .= '<tr><td class="user">'.$user->name.'</td>';
 			foreach ( $schedule as $item ) {
 				$id = $item->id;
-				if ( $item->type == 'meet' ) {
+				if ( $item->nojoin ) {
+					$table .= '<td class="centre nojoin">-</td>';
+				} elseif ( $item->type == 'meet' ) {
 					if (!isset($user->schedule->{$id})
 						|| ($item->nojoin) )
 						$table .= '<td class="centre">?</td>';
@@ -238,7 +249,9 @@ class Meeting extends Page {
 		$table .= '<tr>
 		<th>Bruger</th>';
 		foreach ( $schedule as $item ) {
-			if ( $item->type == 'meet' ) {
+			if ( $item->nojoin ) {
+				$table .= gfRawMsg('<th>$1</th>', $item->title);
+			} elseif ( $item->type == 'meet' ) {
 				$table .= '<th>Kommer</th>';
 			} elseif ( $item->type == 'eat' ) {
 				$table .= '<th>Spiser med</th><th>Laver mad</th>';
@@ -248,10 +261,13 @@ class Meeting extends Page {
 		$table .= '<tr class="total">
 		<td>'.$stats['users'].'</td>';
 		foreach ( $stats['schedule'] as $id => $item ) {
-			if ( $meeting->schedule->{$id}->type == 'meet' ) {
-				$table .= '<td>'.$item['attending'].'</td>';
+			if ( $meeting->schedule->{$id}->nojoin ) {
+				$table .= gfRawMsg('<td class="nojoin">$1</td>', '-');
+			} elseif ( $meeting->schedule->{$id}->type == 'meet' ) {
+				$table .= gfRawMsg('<td>$1</td>', $item['attending']);
 			} elseif ( $meeting->schedule->{$id}->type == 'eat' ) {
-				$table .= '<td>'.$item['eating'].'</td><td>'.$item['cooking'].'</td>';
+				$table .= gfRawMsg('<td>$1</td><td>$2</td>',
+					$item['eating'], $item['cooking']);
 			}
 		}
 		$table .= '<td>&nbsp;</td></tr>';
@@ -346,9 +362,15 @@ class Meeting extends Page {
 					$canJoin = true;
 				} elseif ( $item->type == 'eat' ) {
 					if ( $item->open )
-						$userSchedule[$subuserid][$id] = array ( 'eating' => true, 'cooking' => false );
+						$userSchedule[$subuserid][$id] = array (
+							'eating' => true,
+							'cooking' => false
+						);
 					else
-						$userSchedule[$subuserid][$id] = array ( 'eating' => false, 'cooking' => false );
+						$userSchedule[$subuserid][$id] = array (
+							'eating' => false,
+							'cooking' => false
+						);
 					if ( !is_null($currentInfo[$subuserid]) ) {
 						$userSchedule[$subuserid][$id]['eating'] = @$currentInfo[$subuserid]->schedule->{$id}->eating;
 						$userSchedule[$subuserid][$id]['cooking'] = @$currentInfo[$subuserid]->schedule->{$id}->cooking;
@@ -361,7 +383,9 @@ class Meeting extends Page {
 			else
 				$userSchedule[$subuserid]['comment'] = '';
 		}
+		
 		if ( !$canJoin ) return '';
+		
 		foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
 			if ( $item->nojoin
 				|| (!is_null($itemid) && $item->id != $itemid)
@@ -370,16 +394,24 @@ class Meeting extends Page {
 			} elseif ( $item->type == 'eat' 
 				&& $userSchedule[0][$item->id]['cooking']
 				&& $item->open ) {
-				$form .= '<form method="post">
+				$form .= gfRawMsg('<form method="post">
 <fieldset>
-<legend>Luk for flere spisetilmeldinger til <b>'.$item->title.'</b></legend>
-<label for="closeeasting-'.$item->id.'-spend">Indkøbt for (i danske kroner):</label>
-<input type="text" name="closeeating-'.$item->id.'-spend" id="closeeating-'.$item->id.'-spend" value="'.$item->spend.'" />
-<input type="submit" name="closeeating-'.$item->id.'-submit" value="Luk nu" />
+<legend>$1</legend>
+<label for="closeeating-$2-spend">$3:</label>
+<input type="text" name="closeeating-$2-spend" id="closeeating-$2-spend" value="$4" />
+<input type="submit" name="closeeating-$2-submit" value="$5" />
 </fieldset>
-</form>';
+</form>',
+					gfRawMsg('Luk for flere spisetilmeldinger til <b>$1</b>',
+						$item->title),
+					$item->id,
+					'Indkøbt for (i danske kroner)',
+					$item->spend,
+					'Luk nu'
+				);
 			}
 		}
+		
 		foreach ( $currentInfo as $subuserid => $user ) {
 			$form .= '<form method="post">
 	<fieldset>
