@@ -24,6 +24,12 @@ td.user { white-space: nowrap; }
 td.yes { background: #d1f3d1; color: #77cc77; font-weight: bold; }
 td.no { background: #ffccca; color: #8b5352; font-weight: bold; }
 td.nomatter { background: #daa; color: #fff; font-weight: bold; }
+.scheduleform-item {
+	width: 200px;
+	display: block;
+	font-weight: bold;
+	float: left;
+}
 input[type=checkbox] { display: none; }
 input[type=checkbox] + label { 
 	background: #ffccca; 
