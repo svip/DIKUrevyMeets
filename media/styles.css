@@ -21,8 +21,8 @@ table td.centre { text-align: center; }
 table .date { text-align: right; }
 table .title { font-weight: bold; }
 td.user { white-space: nowrap; }
-td.yes { background: #d1f3d1; color: #82de81; font-weight: bold; }
-td.no { background: #ffccca; color: #ffccca; font-weight: bold; }
+td.yes { background: #d1f3d1; color: #77cc77; font-weight: bold; }
+td.no { background: #ffccca; color: #8b5352; font-weight: bold; }
 td.nomatter { background: #daa; color: #fff; font-weight: bold; }
 input[type=checkbox] { display: none; }
 input[type=checkbox] + label { 
@@ -63,6 +63,9 @@ fieldset p { margin: 0; text-align: left; font-size: 90%; margin-bottom: 3px; }
 .distanceitself { margin-bottom: 20px; }
 .modified { font-size: 80%; }
 .left { text-align: left !important; margin-top: 25px; }
+td.nojoin {
+	color: #eee;
+}
 #topmenu { position: absolute; top: 0; right: 0; padding: 5px; font-size: 90%; }
 #footer { width: 70%; margin: 0 auto; padding: 0 30px; border-top: 1px solid #ddd; font-size: 90%; }
 iframe { margin: 0 auto; width: 600px; }

@@ -339,7 +339,7 @@ class Meeting extends Page {
 	
 	private function tick ( $value ) {
 		if ( $value ) return '✔';
-		return '-';
+		return '✘';
 	}
 	
 	private function meetingForm ( $meeting, $currentInfo, $itemid ) {
