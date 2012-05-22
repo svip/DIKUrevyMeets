@@ -11,7 +11,9 @@ class MessageHandler {
 				? $auth->getInformation('language')
 				: $DefaultLanguage);
 		
-		echo $language;
+		$language = is_null($language)
+			? $DefaultLanguage
+			: $language;
 		
 		$this->getMessages( strtolower($language) );
 	}
