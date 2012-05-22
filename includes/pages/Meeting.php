@@ -238,26 +238,43 @@ class Meeting extends Page {
 					} else {
 						if ( $user->schedule->{$id}->eating ) $stats['schedule'][$id]['eating']++;
 						if ( $user->schedule->{$id}->cooking ) $stats['schedule'][$id]['cooking']++;
-						$table .= '<td class="centre '.($user->schedule->{$id}->eating?'yes':'no').'">'.$this->tick($user->schedule->{$id}->eating).'</td>';
-						$table .= '<td class="centre '.($user->schedule->{$id}->cooking?'yes':'no').'">'.$this->tick($user->schedule->{$id}->cooking).'</td>';
+						$table .= gfRawMsg('<td class="centre $1">$2</td>',
+							($user->schedule->{$id}->eating?'yes':'no'),
+							$this->tick($user->schedule->{$id}->eating)
+						);
+						$table .= gfRawMsg('<td class="centre $1">$2</td>',
+							($user->schedule->{$id}->cooking?'yes':'no'),
+							$this->tick($user->schedule->{$id}->cooking)
+						);
 					}
 				}
 			}
-			$table .= '<td class="comment">'.$user->comment.'</td></tr>';
+			$table .= gfRawMsg('<td class="comment">$1</td></tr>',
+				$user->comment
+			);
 			$stats['users']++;
 		}
-		$table .= '<tr>
-		<th>Bruger</th>';
+		$table .= gfRawMsg('<tr>
+		<th>$1</th>',
+			gfMsg('datatable-header-user')
+		);
 		foreach ( $schedule as $item ) {
 			if ( $item->nojoin ) {
 				$table .= gfRawMsg('<th>$1</th>', $item->title);
 			} elseif ( $item->type == 'meet' ) {
-				$table .= '<th>Kommer</th>';
+				$table .= gfRawMsg('<th>$1</th>',
+					gfMsg('datatable-header-attending')
+				);
 			} elseif ( $item->type == 'eat' ) {
-				$table .= '<th>Spiser med</th><th>Laver mad</th>';
+				$table .= gfRawMsg('<th>$1</th><th>$2</th>',
+					gfMsg('datatable-header-eating'),
+					gfMsg('datatable-header-cooking')
+				);
 			}
 		}
-		$table .= '<th>Kommentar</th></tr>';
+		$table .= gfRawMsg('<th>$1</th></tr>',
+			gfMsg('datatable-header-comment')
+		);
 		$table .= '<tr class="total">
 		<td>'.$stats['users'].'</td>';
 		foreach ( $stats['schedule'] as $id => $item ) {
@@ -308,7 +325,9 @@ class Meeting extends Page {
 	}
 	
 	private function handleMeetingSubmit ( $date, $meeting, $itemid ) {
+		
 		$userSchedule = array();
+		
 		foreach ( $meeting->schedule as $id => $item ) {
 			$id = (isset($item->id)?$item->id:$id);
 			if ( $item->type == 'meet' ) {
@@ -323,7 +342,9 @@ class Meeting extends Page {
 				);
 			}
 		}
+		
 		$comment = $this->database->stripHtml($_POST['meeting-comment']);
+		
 		if ( $_POST['meeting-usertype'] == 'extra' ) {
 			$name = $_POST['meeting-name'];
 			$this->database->addNonUserToDate ( $date, $this->auth->userinfo->{'identity'}, $name, $userSchedule, $comment );
@@ -331,10 +352,11 @@ class Meeting extends Page {
 			$this->database->addUserToDate ( $date, $this->auth->userinfo->{'name'},
 				$userSchedule, $comment );
 		}
+		
 		if ( is_null($itemid) )
 			header ( 'Location: ./?meeting='.$date );
 		else
-			header ( 'Location: ./?meeting='.$date.'&subid='.$itemid );			
+			header ( 'Location: ./?meeting='.$date.'&subid='.$itemid );
 	}
 	
 	private function tick ( $value ) {
@@ -346,7 +368,7 @@ class Meeting extends Page {
 		$userSchedule = array();
 		$canJoin = false;
 		if ( @$meeting->locked ) {
-			return '<p>Tilmeldingen er lukket.</p>';
+			return gfRawMsg('<p>$1</p>', gfMsg('joinform-closed'));
 		}
 		$form = '';
 		foreach ( $currentInfo as $subuserid => $a ) {
@@ -402,82 +424,127 @@ class Meeting extends Page {
 <input type="submit" name="closeeating-$2-submit" value="$5" />
 </fieldset>
 </form>',
-					gfRawMsg('Luk for flere spisetilmeldinger til <b>$1</b>',
-						$item->title),
+					gfMsg('closeform-title', $item->title),
 					$item->id,
-					'Indkøbt for (i danske kroner)',
+					gfMsg('closeform-spend'),
 					$item->spend,
-					'Luk nu'
+					gfMsg('closeform-submit')
 				);
 			}
 		}
 		
 		foreach ( $currentInfo as $subuserid => $user ) {
-			$form .= '<form method="post">
+			$form .= gfRawMsg('<form method="post">
 	<fieldset>
-	<legend>'.($user!=null?'Ændre <b>'.$user->{'name'}.'</b>s tilmelding':'Tilmeld <b>'.$this->auth->userinfo->{'name'}.'</b> møde').'</legend>';
+	<legend>$1</legend>',
+				(is_null($user)
+					? gfMsg('joinform-title-join',
+						$this->auth->userinfo->{'name'})
+					: gfMsg('joinform-title-change',
+						$user->{'name'}))
+			);
 			if ( $subuserid === 0 )
 				$form .= '
 <input type="hidden" name="meeting-usertype" value="self" />';
 			else
-				$form .= '
+				$form .= gfRawMsg('
 <input type="hidden" name="meeting-usertype" value="extra" />
-<input type="hidden" name="meeting-name" value="'.$this->safeString($user->name).'" />';
-
+<input type="hidden" name="meeting-name" value="$1" />',
+					$this->safeString($user->name)
+				);
+			
 			foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
 				if ( $item->nojoin ) {
 					continue;
 				} else {
 					if ( (!is_null($itemid) && $item->id == $itemid)
 						|| (is_null($itemid) && !$item->unique) ) {
-						 if ( $item->type == 'meet' ) {
-							$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
-							$form .= '
-			<input type="checkbox" name="meeting-'.$item->id.'-attending" id="meeting-'.$item->id.'-'.$subuserid.'-attending" '.($userSchedule[$subuserid][$item->id]['attending']?'checked="true"':'').' />
-			<label for="meeting-'.$item->id.'-'.$subuserid.'-attending">Kommer</label>';
+						if ( $item->type == 'meet' ) {
+							$form .= gfRawMsg('<span class="scheduleform-item">$1:</span>', $item->title);
+							$form .= gfRawMsg('
+			<input type="checkbox" name="meeting-$1-attending" id="meeting-$1-$2-attending" $3 />
+			<label for="meeting-$1-$2-attending">$4</label>',
+								$item->id, $subuserid,
+								($userSchedule[$subuserid]
+									[$item->id]['attending']
+									? 'checked="true"' : ''),
+								gfMsg('joinform-attending')
+							);
 							$form .= '<br />';
 						} elseif ( $item->type == 'eat' ) {
-							$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
-							$form .= '
-			<input type="checkbox" name="meeting-'.$item->id.'-eating" id="meeting-'.$item->id.'-'.$subuserid.'-eating" '.($userSchedule[$subuserid][$item->id]['eating']?'checked="true"':'').' '.(!$item->open?'disabled="true"':'').' />
-			<label for="meeting-'.$item->id.'-'.$subuserid.'-eating">Spiser med</label>';
-							$form .= '
-			<input type="checkbox" name="meeting-'.$item->id.'-cooking" id="meeting-'.$item->id.'-'.$subuserid.'-cooking" '.($userSchedule[$subuserid][$item->id]['cooking']?'checked="true"':'').' '.(!$item->open?'disabled="true"':'').' />
-			<label for="meeting-'.$item->id.'-'.$subuserid.'-cooking">Laver mad</label>';
-							$form .= (!$item->open?' <span>(Kokkene har lukket for madtilmeldingen)</span>':'');
+							$form .= gfRawMsg('<span class="scheduleform-item">$1:</span>', $item->title);
+							$form .= gfRawMsg('
+			<input type="checkbox" name="meeting-$1-eating" id="meeting-$1-$2-eating" $3 $4 />
+			<label for="meeting-$1-$2-eating">$5</label>',
+								$item->id, $subuserid,
+								($userSchedule[$subuserid]
+									[$item->id]['eating']
+									? 'checked="true"' : ''),
+								(!$item->open?'disabled="true"':''),
+								gfMsg('joinform-eating')
+							);
+							$form .= gfRawMsg('
+			<input type="checkbox" name="meeting-$1-cooking" id="meeting-$1-$2-cooking" $3 $4 />
+			<label for="meeting-$1-$2-cooking">$5</label>',
+								$item->id, $subuserid,
+								($userSchedule[$subuserid]
+									[$item->id]['cooking']
+									? 'checked="true"' : ''),
+								(!$item->open?'disabled="true"':''),
+								gfMsg('joinform-cooking')
+							);
+							$form .= (!$item->open
+								? gfRawMsg(' <span>$1</span>',
+									gfMsg('joinform-eatingisclosed'))
+								: '' );
 							$form .= '<br />';
 						}
 					} else {
 						if ( $item->type == 'meet' ) {
 							if ( $userSchedule[$subuserid][$item->id]['attending'] )
-								$form .= '<input type="hidden" name="meeting-'.$item->id.'-attending" value="1" />';
-						} elseif ( $item->type == 'eat' ) {	
+								$form .= gfRawMsg('<input type="hidden" name="meeting-$1-attending" value="1" />', $item->id);
+						} elseif ( $item->type == 'eat' ) {
 							if ( $userSchedule[$subuserid][$item->id]['eating'] )
-								$form .= '<input type="hidden" name="meeting-'.$item->id.'-eating" value="1" />';
+								$form .= gfRawMsg('<input type="hidden" name="meeting-$1-eating" value="1" />', $item->id);
 							if ( $userSchedule[$subuserid][$item->id]['cooking'] )
-								$form .= '<input type="hidden" name="meeting-'.$item->id.'-cooking" value="1" />';
+								
+								$form .= gfRawMsg('<input type="hidden" name="meeting-$1-cooking" value="1" />', $item->id);
 						}
 					}
 				}
 			}
-			$form .= '<br />
-<label for="meeting-'.$subuserid.'-comment">Eventuelle kommentarer:</label>
-<input type="text" name="meeting-comment" id="meeting-'.$subuserid.'-comment" value="'.$userSchedule[$subuserid]['comment'].'" />
-<input type="submit" name="meeting-submit" value="'.($currentInfo[$subuserid]!=null?'Ændr':'Tilmeld').'" />';
+			$form .= gfRawMsg('<br />
+<label for="meeting-$1-comment">$2:</label>
+<input type="text" name="meeting-comment" id="meeting-$1-comment" value="$3" />
+<input type="submit" name="meeting-submit" value="$4" />',
+				$subuserid,
+				gfMsg('joinform-comment'),
+				$userSchedule[$subuserid]['comment'],
+				(is_null($currentInfo[$subuserid])
+					? gfMsg('joinform-submit-join')
+					: gfMsg('joinform-submit-change'))
+			);
 			if ( $subuserid !== 0 )
-				$form .= '<input type="submit" name="meeting-remove" value="Fjern" />';
+				$form .= gfRawMsg('<input type="submit" name="meeting-remove" value="$1" />', gfMsg('joinform-submit-remove'));
 			$form .= '
 </fieldset>
 </form>';
 		}
-		$form .= '<form method="post">
+		
+		$subuserid++;
+		
+		$form .= gfRawMsg('<form method="post">
 <fieldset>
-<legend>Tilmeld en <b>ekstra person</b></legend>
-<p>I stedet for at tilmelde mere end én person per linje, så tilmeld derimod en ekstra person (du kan altid ændre deres tilmelding senere, da deres tilmelding vil blive bundet til din konto).</p>
+<legend>$1</legend>
+<p>$2</p>
 <input type="hidden" name="meeting-usertype" value="extra" />
-<label for="meeting-name">Navn på person:</label>
+<label for="meeting-name">$3:</label>
 <input type="text" name="meeting-name" id="meeting-name" class="distanceitself" />
-';
+',
+			gfMsg('joinform-title-extraperson'),
+			gfMsg('joinform-extrapersontext'),
+			gfMsg('joinform-extrapersonname')
+		);
 		foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
 			if ( $item->nojoin ) {
 				continue;
@@ -485,31 +552,45 @@ class Meeting extends Page {
 				if ( (!is_null($itemid) && $item->id == $itemid)
 					|| (is_null($itemid) && !$item->unique) ) {
 					if ( $item->type == 'meet' ) {
-						$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
-						$form .= '
-		<input type="checkbox" name="meeting-'.$item->id.'-attending" id="meeting-'.$item->id.'-attending" checked="true" />
-		<label for="meeting-'.$item->id.'-attending">Kommer</label>';
+						$form .= gfRawMsg('<span class="scheduleform-item">$1:</span>', $item->title);
+						$form .= gfRawMsg('
+		<input type="checkbox" name="meeting-$1-attending" id="meeting-$1-$2-attending" $3 />
+		<label for="meeting-$1-$2-attending">$4</label>',
+							$item->id, $subuserid,
+							'checked="true"',
+							gfMsg('joinform-attending')
+						);
 						$form .= '<br />';
 					} elseif ( $item->type == 'eat' ) {
-						$form .= '<span style="width: 150px; display: block; float: left;"><b>'.$item->title.'</b>:</span> ';
-						$form .= '
-		<input type="checkbox" name="meeting-'.$item->id.'-eating" id="meeting-'.$item->id.'-eating" '.(!$item->open?'disabled="true"':'checked="true"').' />
-		<label for="meeting-'.$item->id.'-eating">Spiser med</label>';
-						$form .= '
-		<input type="checkbox" name="meeting-'.$item->id.'-cooking" id="meeting-'.$item->id.'-cooking" '.(!$item->open?'disabled="true"':'').' />
-		<label for="meeting-'.$item->id.'-cooking">Laver mad</label>';
-						$form .= (!$item->open?' <span>(Kokkene har lukket for madtilmeldingen)</span>':'');
+						$form .= gfRawMsg('<span class="scheduleform-item">$1:</span>', $item->title);
+						$form .= gfRawMsg('
+		<input type="checkbox" name="meeting-$1-eating" id="meeting-$1-$2-eating" $3 />
+		<label for="meeting-$1-$2-eating">$4</label>',
+							$item->id, $subuserid,
+							'checked="true"',
+							gfMsg('joinform-eating')
+						);
+						$form .= gfRawMsg('
+		<input type="checkbox" name="meeting-$1-cooking" id="meeting-$1-$2-cooking" $3 />
+		<label for="meeting-$1-$2-cooking">$4</label>',
+							$item->id, $subuserid,
+							'',
+							gfMsg('joinform-cooking')
+						);
 						$form .= '<br />';
 					}
 				}
 			}
 		}
-		$form .= '<br />
-<label for="meeting-comment">Eventuelle kommentarer:</label>
+		$form .= gfRawMsg('<br />
+<label for="meeting-comment">$1:</label>
 <input type="text" name="meeting-comment" id="meeting-comment" />
-<input type="submit" name="meeting-submit" value="Tilmeld" />
+<input type="submit" name="meeting-submit" value="$2" />
 </fieldset>
-</form>';
+</form>',
+			gfMsg('joinform-comment'),
+			gfMsg('joinform-submit-join')
+		);
 		return $form;
 	}
 }
