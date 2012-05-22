@@ -83,9 +83,29 @@ class Meeting extends Page {
 		return false;
 	}
 	
+	private function topNav ( $date ) {
+		$menu = array(
+			array ('./', 'Tilbage')
+		);
+		if ( $this->auth->isAdmin() ) {
+			$menu[] = array ("./?admin=meeting&amp;date=$date", 'Behandle dette møde');
+		}
+		
+		$nav = '';
+		
+		foreach ( $menu as $item ) {
+			if ( $nav != '' )
+				$nav .= ' &middot; ';
+			$nav .= '<a href="'.$item[0].'">'.$item[1].'</a>';
+		}
+		
+		return $nav;
+	}
+	
 	private function makePage ( $date, $meeting, $itemid ) {
+		$topNav = $this->topNav($date);
 		$nav = $this->navigation($date);
-		$content = '<p><a href="./">Tilbage</a></p>';
+		$content = "<p>$topNav</p>\n";
 		$content .= "<p>$nav</p>\n";
 		if ( is_null($itemid) ) {
 			$schedule = $this->sortSchedule($meeting->schedule);
@@ -188,7 +208,7 @@ class Meeting extends Page {
 				if (intval($split[0]) == $this->auth->userinfo->{'identity'})
 					$currentInfo[] = $user;
 			}
-			$table .= '<tr><td>'.$user->name.'</td>';
+			$table .= '<tr><td class="user">'.$user->name.'</td>';
 			foreach ( $schedule as $item ) {
 				$id = $item->id;
 				if ( $item->type == 'meet' ) {
