@@ -111,6 +111,12 @@ class Authentication {
 		return $this->userinfo->{'admin'};
 	}
 	
+	public function getInformation ( $information ) {
+		if ( isset($this->userinfo[$information]) )
+			return $this->userinfo[$information];
+		return null;
+	}
+	
 	public function logInFunction ( ) {
 		$form = '<form><h5>For at kunne tilmelde dig dette revymøde, skal du logge ind via vores nye <a href="http://dikurevy.dk/">Drupal system</a>.  Returnér her når du har logget ind der.</h5></form>';
 		return $form;
