@@ -112,8 +112,8 @@ class Authentication {
 	}
 	
 	public function getInformation ( $information ) {
-		if ( isset($this->userinfo[$information]) )
-			return $this->userinfo[$information];
+		if ( isset($this->userinfo->{$information}) )
+			return $this->userinfo->{$information};
 		return null;
 	}
 	
