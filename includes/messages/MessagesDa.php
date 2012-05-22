@@ -1,6 +1,12 @@
 <?php
 
 $messages = array (
+	'datatable-header-user'       => 'Revyt',
+	'datatable-header-eating'     => 'Spiser med',
+	'datatable-header-cooking'    => 'Laver mad',
+	'datatable-header-attending'  => 'Kommer',
+	'datatable-header-comment'    => 'Kommentar',
+	
 	'joinform-title-change'       => 'Ændre <b>$1</b>s tilmelding',
 	'joinform-title-join'         => 'Tilmeld <b>$1</b>',
 	'joinform-eating'             => 'Spiser med',
