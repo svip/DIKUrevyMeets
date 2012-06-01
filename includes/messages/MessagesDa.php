@@ -1,12 +1,22 @@
 <?php
 
 $messages = array (
+	'topnav-back'                 => 'Tilbage',
+	'topnav-managemeeting'        => 'Behandle dette møde',
+	
+	'meeting-nomeetingfor'        => 'Intet møde $1 den $2.',
+	'meeting-tofrontpage'         => 'Til forsiden',
+	'meeting-multiday-period'     => 'Fra $1 den $2 til $3 den $4',
+	
+	'datatable-header-schedule'   => 'Program',
 	'datatable-header-user'       => 'Revyt',
 	'datatable-header-eating'     => 'Spiser med',
 	'datatable-header-cooking'    => 'Laver mad',
 	'datatable-header-attending'  => 'Kommer',
 	'datatable-header-comment'    => 'Kommentar',
+	'datatable-header-day'        => 'Dag',
 	
+	'joinform-closed'             => 'Der er lukket for tilmeldingen.',
 	'joinform-title-change'       => 'Ændre <b>$1</b>s tilmelding',
 	'joinform-title-join'         => 'Tilmeld <b>$1</b>',
 	'joinform-eating'             => 'Spiser med',
@@ -23,4 +33,5 @@ $messages = array (
 	
 	'tick-yes'                    => '✔',
 	'tick-no'                     => '✘',
+	'tick-unknown'                => '?',
 );

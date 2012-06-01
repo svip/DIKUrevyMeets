@@ -106,6 +106,7 @@ EOF;
 				// all events are now unique
 				$summary = '';
 				$description = '';
+				$nowDate = $this->getEndDate($date, $this->getDayCount($item->start));
 				if ( !$item->nojoin ) {
 					$modified = 0;
 					$participants = array(
@@ -152,15 +153,15 @@ EOF;
 					}
 					$dtstamp = date($this->icalTimeStampM, $modified);
 				} else {
-					$dtstamp = $this->dtStamp($date, $item->start);
+					$dtstamp = $this->dtStamp($nowDate, $item->start);
 				}
 				$day[] = array (
 					'title'     => "{$meeting->title}: {$item->title}{$summary}",
 					'description' => $description,
-					'dtstart'   => $this->icalTime($date, $item->start),
-					'dtend'     => $this->icalTime($date, $item->end),
+					'dtstart'   => $this->icalTime($nowDate, $item->start),
+					'dtend'     => $this->icalTime($nowDate, $item->end),
 					'dtstamp'   => $dtstamp,
-					'uid'       => "dikurevy{$this->uid($date, $item->start, $i, $meeting->title . $item->title)}"
+					'uid'       => "dikurevy{$this->uid($nowDate, $item->start, $i, $meeting->title . $item->title)}"
 				);
 			}
 			foreach ( $day as $item ) {
@@ -212,12 +213,14 @@ EOF;
 	}
 	
 	private function icalTime ( $date, $time ) {
+		$time = $this->showTime($time);
 		$datetime = DateTime::createFromFormat('Y-m-d H:i',
 			$date . ' ' . $time, new DateTimeZone('Europe/Copenhagen'));
 		return $datetime->format($this->icalTimeStampN);
 	}
 	
 	private function dtStamp ( $date, $time ) {
+		$time = $this->showTime($time);
 		$datetime = DateTime::createFromFormat('Y-m-d H:i', 
 			$date . ' ' . $time, new DateTimeZone('Europe/Copenhagen'));
 		$datetime->setTimezone(new DateTimeZone('UTC'));
@@ -230,11 +233,34 @@ EOF;
 		return $test > $against;
 	}
 	
+	private function fixItemTime ( $time ) {
+		if ( preg_match('@^[0-9]{2}:[0-9]{2}@', $time) )
+			$time = '0 '.$time;
+		return $time;
+	}
+	
+	private function showTime ( $time ) {
+		$split = explode(' ', $time);
+		
+		if ( count($split) > 1 )
+			return $split[1];
+		
+		return $split[0];
+	}
+	
+	private function getDayCount ( $time ) {
+		$split = explode(' ', $time);
+		
+		return intval($split[0]);
+	}
+	
 	private function sortSchedule ( $schedule ) {
 		$tmp = array();
 		foreach ( $schedule as $i => $item ) {
-			$tmp[intval(str_replace(':', '', $item->start))] = $item;
-			$tmp[intval(str_replace(':', '', $item->start))]->id = $i;
+			$item->start = $this->fixItemTime($item->start);
+			$item->end = $this->fixItemTime($item->end);
+			$tmp[intval(str_replace(array(':', ''), '', $item->start))] = $item;
+			$tmp[intval(str_replace(array(':', ''), '', $item->start))]->id = $i;
 		}
 		ksort($tmp);
 		return $tmp;

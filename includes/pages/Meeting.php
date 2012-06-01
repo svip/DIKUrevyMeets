@@ -1,12 +1,21 @@
 <?php
 
 class Meeting extends Page {
-
+	
+	private $thisdate = '';
+	
 	protected function render() {
 		$m = $_GET['meeting'];
 		if ( empty ( $this->database->getMeetings()->{$m} ) ) {
-			$this->content = '<p>Intet møde på '.$this->weekDay($m).' den '.$this->readableDate($m).'</p>';
-			$this->content .= '<p><a href="./">Til forsiden</a>.</p>';
+			$this->content = gfRawMsg('<p>$1</p>',
+				gfMsg('meeting-nomeetingfor',
+					$this->weekDay($m),
+					$this->readableDate($m)
+				)
+			);
+			$this->content .= gfRawMsg('<p><a href="./">$1</a>.</p>',
+				gfMsg('meeting-tofrontpage')
+			);
 			return;
 		}
 		$itemid = isset($_GET['subid'])?$_GET['subid']:null;
@@ -16,6 +25,18 @@ class Meeting extends Page {
 	
 	function userSort ( $a, $b ) {
 		return strncasecmp($a->name, $b->name, 4);
+	}
+	
+	protected function showTime ( $time ) {
+		$split = explode(' ', $time);
+		
+		if ( $split[0] == '0' && !$this->multidayEvent )
+			return $split[1];
+		
+		$date = $this->getEndDate($this->thisdate, intval($split[0]));
+		
+		return gfRawMsg('<b>$1</b><br />$2', $this->readableDate($date), 
+			$split[1]);
 	}
 	
 	private function seeAlso ( $date, $meeting, $itemid ) {
@@ -39,15 +60,19 @@ class Meeting extends Page {
 		if (count($seeAlso) == 0)
 			return '';
 		ksort($seeAlso);
-		$content = '<p>Se også for denne dato: ';
+		$content = gfRawMsg('<p>$1', gfMsg('meeting-alsoforthisdate'));
 		$i = 0;
 		foreach ($seeAlso as $id => $item) {
 			if ( $i != 0 )
 				$content .= ' &middot; ';
 			if ( $id === -1 )
-				$content .= '<a href="./?meeting='.$date.'">'.$item->title.'</a>';
+				$content .= gfRawMsg('<a href="./?meeting=$1">$2</a>',
+					$date, $item->title
+				);
 			else
-				$content .= '<a href="./?meeting='.$date.'&amp;subid='.$item->id.'">'.$item->title.'</a>';
+				$content .= gfRawMsg('<a href="./?meeting=$1&amp;subid=$3">$2</a>',
+					$date, $item->title, $item->id
+				);
 			$i++;
 		}
 		$content .= '</p>';
@@ -66,12 +91,22 @@ class Meeting extends Page {
 		$nav = '';
 		$prevMeeting = $this->database->getMeetingBefore($date);
 		if ( $prevMeeting!==false )
-			$nav .= '<a href="./?meeting='.$prevMeeting['date'].($this->onlyUniques($prevMeeting['date'])?'&amp;subid=0':'').'">&lt; <b>'.$this->readableDate($prevMeeting['date']).'</b>: '.$prevMeeting['title'].'</a>';
+			$nav .= gfRawMsg('<a href="./?meeting=$1$2">&lt; <b>$3</b>: $4</a>',
+				$prevMeeting['date'],
+				($this->onlyUniques($prevMeeting['date'])?'&amp;subid=0':''),
+				$this->readableDate($prevMeeting['date']),
+				$prevMeeting['title']
+			);
 		$nextMeeting = $this->database->getMeetingAfter($date);
 		if ( $nextMeeting!==false ) {
 			if ( $prevMeeting!==false )
 				$nav .= ' &middot; ';
-			$nav .= '<a href="./?meeting='.$nextMeeting['date'].($this->onlyUniques($nextMeeting['date'])?'&amp;subid=0':'').'"><b>'.$this->readableDate($nextMeeting['date']).'</b>: '.$nextMeeting['title'].' &gt;</a>';
+			$nav .= gfRawMsg('<a href="./?meeting=$1$2"><b>$3</b>: $4 &gt;</a>',
+				$nextMeeting['date'],
+				($this->onlyUniques($nextMeeting['date'])?'&amp;subid=0':''),
+				$this->readableDate($nextMeeting['date']),
+				$nextMeeting['title']
+			);
 		}
 		return $nav;
 	}
@@ -85,10 +120,10 @@ class Meeting extends Page {
 	
 	private function topNav ( $date ) {
 		$menu = array(
-			array ('./', 'Tilbage')
+			array ('./', gfMsg('topnav-back'))
 		);
 		if ( $this->auth->isAdmin() ) {
-			$menu[] = array ("./?admin=meeting&amp;date=$date", 'Behandle dette møde');
+			$menu[] = array ("./?admin=meeting&amp;date=$date", gfMsg('topnav-managemeeting'));
 		}
 		
 		$nav = '';
@@ -96,7 +131,9 @@ class Meeting extends Page {
 		foreach ( $menu as $item ) {
 			if ( $nav != '' )
 				$nav .= ' &middot; ';
-			$nav .= '<a href="'.$item[0].'">'.$item[1].'</a>';
+			$nav .= gfRawMsg('<a href="$1">$2</a>',
+				$item[0], $item[1]
+			);
 		}
 		
 		return $nav;
@@ -124,55 +161,90 @@ class Meeting extends Page {
 				break;
 			}
 		}
-		$content .= '<h1>'.$meeting->{'title'}.(!is_null($itemid)?': '.$item->title:'').'</h1><h3>'.nl2br($meeting->{'comment'}).'</h3>';
-		if ( is_numeric(@$meeting->days) )
-			$content .= '<h2>Fra '.$this->weekDay($date).' den '.$this->readableDate($date).' til '.$this->weekDay($this->getEndDate($date, $meeting->days)).' den '.$this->readableDate($this->getEndDate($date, $meeting->days)).'</h2>';
-		else
+		$content .= gfRawMsg('<h1>$1$2</h1><h3>$3</h3>',
+			$meeting->{'title'},
+			(!is_null($itemid)?': '.$item->title:''),
+			nl2br($meeting->{'comment'})
+		);
+		if ( is_numeric(@$meeting->days) ) {
+			$this->multidayEvent = true;
+			$this->thisdate = $date;
+			$content .= gfRawMsg('<h2>$1</h2>',
+				gfMsg('meeting-multiday-period', 
+					$this->weekDay($date),
+					$this->readableDate($date),
+					$this->weekDay($this->getEndDate($date, $meeting->days)),
+					$this->readableDate($this->getEndDate($date, $meeting->days))
+				)
+			);
+		} else
 			$content .= '<h2>'.$this->weekDay($date, true).' den '.$this->readableDate($date).'</h2>';
 		$content .= $this->seeAlso($date, $meeting, $itemid);
 		if ( !$this->isJoinableEvent($schedule) ) {
-			$content .= '<h3>Program:</h3>';
+			$content .= gfRawMsg('<h3>$1:</h3>',
+				gfMsg('meeting-schedule')
+			);
 			foreach ( $schedule as $item ) {
-				$content .= '<h4>'.$item->title.': '.$item->start.'-'.$item->end.'</h4>';
+				$content .= gfRawMsg('<h4>$1: $2-$3</h4>',
+					$item->title, $this->showTime($item->start),
+					$this->showTime($item->end)
+				);
 			}
 			$this->content = $content;
 			return;
 		}
 		$meets = 0;
 		$eats = 0;
-		$table = '<table>
-		<tr>
-		<th rowspan="2">Program</th>';
+		$table = gfRawMsg('<table>
+<tr>
+<th rowspan="2">$1</th>',
+			gfMsg('datatable-header-schedule')
+		);
 		foreach ( $schedule as $item ) {
 			if ( $item->type == 'meet' ) {
-				$table .= '<th>'.$item->title.'</th>';
+				$table .= gfRawMsg('<th>$1</th>', $item->title);
 				$meets++;
 			} elseif ( $item->type == 'eat' ) {
-				$table .= '<th colspan="2">'.$item->title.(!$item->open?' (lukket)':'').'</th>';
+				$table .= gfRawMsg('<th colspan="2">$1$2</th>', 
+					$item->title,
+					( !$item->open
+						? gfMsg('datatable-header-eatingclosed')
+						: ''
+					)
+				);
 				$eats++;
 			}
 		}
-		$table .= '<th rowspan="3" class="comment">Kommentar</th></tr>
-		<tr>';
+		$table .= gfRawMsg('<th rowspan="3" class="comment">$1</th></tr>
+<tr>',
+			gfMsg('datatable-header-comment')
+		);
 		foreach ( $schedule as $item ) {
 			$extra = '';
 			if ( $item->nojoin )
 				$extra = ' rowspan="2"';
 			if ( $item->type == 'meet' ) {
-				$table .= gfRawMsg('<th$2>$1</th>', $item->start, $extra);
+				$table .= gfRawMsg('<th$2>$1</th>',
+					$this->showTime($item->start), $extra);
 			} elseif ( $item->type == 'eat' ) {
-				$table .= gfRawMsg('<th colspan="2"$2>$1</th>', $item->start, $extra);
+				$table .= gfRawMsg('<th colspan="2"$2>$1</th>',
+					$this->showTime($item->start), $extra);
 			}
 		}
 		$table .= '</tr><tr>';
-		$table .= '<th>Bruger</th>';
+		$table .= gfRawMsg('<th>$1</th>', gfMsg('datatable-header-user'));
 		foreach ( $schedule as $item ) {
 			if ( $item->nojoin )
 				continue;
 			if ( $item->type == 'meet' ) {
-				$table .= '<th>Kommer</th>';
+				$table .= gfRawMsg('<th>$1</th>',
+					gfMsg('datatable-header-attending')
+				);
 			} elseif ( $item->type == 'eat' ) {
-				$table .= '<th>Spiser med</th><th>Laver mad</th>';
+				$table .= gfRawMsg('<th>$1</th><th>$2</th>',
+					gfMsg('datatable-header-eating'),
+					gfMsg('datatable-header-cooking')
+				);
 			}
 		}
 		$table .= '</tr>';
@@ -225,7 +297,9 @@ class Meeting extends Page {
 				} elseif ( $item->type == 'meet' ) {
 					if (!isset($user->schedule->{$id})
 						|| ($item->nojoin) )
-						$table .= '<td class="centre">?</td>';
+						$table .= gfRawMsg('<td class="centre">$1</td>',
+							gfMsg('tick-unknown')
+						);
 					else {
 						if ( $user->schedule->{$id}->attending ) $stats['schedule'][$id]['attending']++;
 						$table .= '<td class="centre '.($user->schedule->{$id}->attending?'yes':'no').'">'.$this->tick($user->schedule->{$id}->attending).'</td>';
@@ -233,8 +307,12 @@ class Meeting extends Page {
 				} elseif ( $item->type == 'eat' ) {
 					if (!isset($user->schedule->{$id})
 						|| ($item->nojoin) ) {
-						$table .= '<td class="centre">?</td>';
-						$table .= '<td class="centre">?</td>';
+						$table .= gfRawMsg('<td class="centre">$1</td>',
+							gfMsg('tick-unknown')
+						);
+						$table .= gfRawMsg('<td class="centre">$1</td>',
+							gfMsg('tick-unknown')
+						);
 					} else {
 						if ( $user->schedule->{$id}->eating ) $stats['schedule'][$id]['eating']++;
 						if ( $user->schedule->{$id}->cooking ) $stats['schedule'][$id]['cooking']++;
