@@ -87,7 +87,7 @@ abstract class Page {
 	}
 	
 	protected function timeval ( $time ) {
-		return intval ( str_replace ( ':', '', $time ) );
+		return intval ( str_replace ( array(':', ' '), '', $time ) );
 	}
 	
 	protected function fullTimestamp ( $time ) {
