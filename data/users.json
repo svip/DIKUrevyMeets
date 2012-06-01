@@ -12,7 +12,7 @@
 "14":{"name":"Martin Nicklas J\u00f8rgensen","register":1317039241,"admin":false,"identity":"14"},
 "16":{"name":"Davy Eskildsen","register":1317040774,"admin":false,"identity":"16"},
 "17":{"name":"Klaes Rasmussen","register":1317041719,"admin":false,"identity":"17"},
-"18":{"name":"Bj\u00f8rn Jespersen-Kaaw","register":1317041991,"admin":false,"identity":"18"},
+"18":{"name":"Bj\u00f8rn Jespersen","register":1317041991,"admin":false,"identity":"18"},
 "19":{"name":"Pia S\u00e6rmark","register":1317042030,"admin":false,"identity":"19"},
 "20":{"name":"Claus Appel (Spectrum)","register":1317042030,"admin":true,"identity":"20"},
 "21":{"name":"Sarah Vang N\u00f8hr","register":1317045741,"admin":false,"identity":"21"},
@@ -64,4 +64,10 @@
 "1":{"name":"revyboss","register":1337238033,"admin":false,"identity":"1"},
 "79":{"name":"Morten Br\u00f8ns-Pedersen","register":1337331573,"admin":false,"identity":"79"},
 "82":{"name":"Michael Andersen","register":1337343227,"admin":false,"identity":"82"},
-"75":{"name":"Christina Heltoft","register":1337641899,"admin":false,"identity":"75"}}
+"75":{"name":"Christina Heltoft","register":1337641899,"admin":false,"identity":"75"},
+"87":{"name":"Daniel Egeberg","register":1337766832,"admin":false,"identity":"87"},
+"85":{"name":"Toke Lyn\u00e6s Larsen","register":1337766854,"admin":false,"identity":"85"},
+"88":{"name":"Ulrik Rasmussen","register":1337767673,"admin":false,"identity":"88"},
+"91":{"name":"Ludvig Schr\u00f8der","register":1337778201,"admin":false,"identity":"91"},
+"86":{"name":"Ida Hedal","register":1337839191,"admin":false,"identity":"86"},
+"92":{"name":"Asser V","register":1337850895,"admin":false,"identity":"92"}}
