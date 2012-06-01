@@ -9,7 +9,7 @@ class Authentication {
 
 	function __construct ( $database ) {
 		$this->database = $database;
-		$this->checkLoginAttempt();
+		//$this->checkLoginAttempt();
 	}
 	
 	public function setCookie ( $name, $value ) {
@@ -21,6 +21,7 @@ class Authentication {
 	}
 	
 	private function checkLoginAttempt ( ) {
+		/*
 		if ( isset ( $_POST['login-openid-submit'] ) ) {
 			$this->openIdLogin();
 		}
@@ -32,7 +33,7 @@ class Authentication {
 		}
 		if ( isset ( $_POST['register-google-submit'] ) ) {
 			$this->googleRegister();
-		}
+		}*/
 	}
 	
 	private function getSignature ( $identity, $service ) {
@@ -108,6 +109,12 @@ class Authentication {
 		if ( !isset ( $this->userinfo->admin ) )
 			return false;
 		return $this->userinfo->{'admin'};
+	}
+	
+	public function getInformation ( $information ) {
+		if ( isset($this->userinfo->{$information}) )
+			return $this->userinfo->{$information};
+		return null;
 	}
 	
 	public function logInFunction ( ) {

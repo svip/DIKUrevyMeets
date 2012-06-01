@@ -11,7 +11,7 @@ class Front extends Page {
 			$start = null;
 			foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
 				if ( is_null($start) )
-					$start = $item->start;
+					$start = $this->showTime($item->start);
 				if ( $item->unique ) {
 					$uniques++;
 					if ( is_null($renderSelf) )

@@ -1,5 +1,7 @@
 <?php
 
+require_once ( 'includes/GlobalVariables.php' );
+
 require_once ( 'config.php' );
 
 require_once ( 'includes/Database.php' );
@@ -7,6 +9,8 @@ require_once ( 'includes/Database.php' );
 require_once ( 'includes/GlobalFunctions.php' );
 
 require_once ( 'includes/Authentication.php' );
+
+require_once ( 'includes/MessageHandler.php' );
 
 require_once ( 'includes/Page.php' );
 

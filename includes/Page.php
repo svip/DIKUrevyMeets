@@ -5,6 +5,7 @@ abstract class Page {
 	protected $weekdays = array ( null,
 		'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag', 'søndag'
 	);
+	protected $multidayEvent = false;
 
 	protected $content = '';
 	protected $database = null;
@@ -60,9 +61,23 @@ abstract class Page {
 			$str );
 	}
 	
+	protected function fixItemTime ( $time ) {
+		if ( preg_match('@^[0-9]{2}:[0-9]{2}@', $time) )
+			$time = '0 '.$time;
+		return $time;
+	}
+	
+	protected function showTime ( $time ) {
+		$split = explode(' ', $time);
+		
+		return $split[1];
+	}
+	
 	protected function sortSchedule ( $schedule ) {
 		$tmp = array();
 		foreach ( $schedule as $i => $item ) {
+			$item->start = $this->fixItemTime($item->start);
+			$item->end = $this->fixItemTime($item->end);
 			$time = $this->timeval($item->start.$item->end);
 			$tmp[$time] = $item;
 			$tmp[$time]->id = $i;

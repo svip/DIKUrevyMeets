@@ -246,6 +246,15 @@ class Admin extends Page {
 		$this->content = $menu.$openList.$form.$closedList;
 	}
 	
+	protected function showTime ( $time ) {
+		$split = explode(' ', $time);
+		
+		if ( $split[0] == '0' )
+			return $split[1];
+		
+		return $time;
+	}
+	
 	private function meetingPage ( ) {
 		$date = $_GET['date'];
 		$meeting = $this->database->getMeeting($date);
@@ -373,7 +382,7 @@ class Admin extends Page {
 <label for="newmeeting-'.$id.'">Titel:</label>
 <input type="text" id="newmeeting-'.$id.'-title" name="newmeeting-'.$id.'-title" value="'.$item->title.'" />
 <label for="newmeeting-'.$id.'-start">Mødetid:</label>
-<span class="time"><input type="text" id="newmeeting-'.$id.'-start" name="newmeeting-'.$id.'-start" value="'.$item->start.'" /><span> - </span><input type="text" id="newmeeting-'.$id.'-end" name="newmeeting-'.$id.'-end" value="'.$item->end.'" /></span>
+<span class="time"><input type="text" id="newmeeting-'.$id.'-start" name="newmeeting-'.$id.'-start" value="'.$this->showTime($item->start).'" /><span> - </span><input type="text" id="newmeeting-'.$id.'-end" name="newmeeting-'.$id.'-end" value="'.$this->showTime($item->end).'" /></span>
 <input type="checkbox" name="newmeeting-'.$id.'-unique" id="newmeeting-'.$id.'-unique"'.($item->unique?' checked="true"':'').' />
 <label for="newmeeting-'.$id.'-unique">Separat fra resten af dagen?</label>
 <input type="hidden" name="newmeeting-'.$id.'-type" value="meet" />
@@ -388,7 +397,7 @@ class Admin extends Page {
 <label for="newmeeting-'.$id.'-title">Titel:</label>
 <input type="text" id="newmeeting-'.$id.'-title" name="newmeeting-'.$id.'-title" value="'.$item->title.'" />
 <label for="newmeeting-'.$id.'-start">Spisetid:</label>
-<span class="time"><input type="text" id="newmeeting-'.$id.'-start" name="newmeeting-'.$id.'-start" value="'.$item->start.'" /><span> - </span><input type="text" id="newmeeting-'.$id.'-end" name="newmeeting-'.$id.'-end" value="'.$item->end.'" /></span>
+<span class="time"><input type="text" id="newmeeting-'.$id.'-start" name="newmeeting-'.$id.'-start" value="'.$this->showTime($item->start).'" /><span> - </span><input type="text" id="newmeeting-'.$id.'-end" name="newmeeting-'.$id.'-end" value="'.$this->showTime($item->end).'" /></span>
 <label for="newmeeting-'.$id.'-spend">Indkøbspris (i hele kroner):</label>
 <input type="text" id="newmeeting-'.$id.'-spend" name="newmeeting-'.$id.'-spend" value="'.$item->spend.'" />
 <label>Pris per person:</label>
