@@ -76,11 +76,11 @@ class MailTask(object):
 		else:
 			msg = MIMEText(s.encode('utf-8'))
 			msg['Subject'] = subject
-			msg['From'] = 'revyboss@diku.dk'
-			msg['Reply-To'] = 'revy@diku.dk'
-			msg['To'] = 'revy@diku.dk'
+			msg['From'] = 'boss@dikurevy.dk'
+			msg['Reply-To'] = 'revy@dikurevy.dk'
+			msg['To'] = 'revy@dikurevy.dk'
 			t = smtplib.SMTP('localhost')
-			t.sendmail('revyboss@diku.dk', 'revy@diku.dk', msg.as_string())
+			t.sendmail('boss@dikurevy.dk', 'revy@dikurevy.dk', msg.as_string())
 			t.quit()
 
 class GitCommit(object):
