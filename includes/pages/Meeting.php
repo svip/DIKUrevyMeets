@@ -502,11 +502,11 @@ class Meeting extends Page {
 <input type="submit" name="closeeating-$2-submit" value="$5" />
 </fieldset>
 </form>',
-					gfMsg('closeform-title', $item->title),
+					gfMsg('closeeatingform-title', $item->title),
 					$item->id,
-					gfMsg('closeform-spend'),
+					gfMsg('closeeatingform-spend'),
 					$item->spend,
-					gfMsg('closeform-submit')
+					gfMsg('closeeatingform-submit')
 				);
 			}
 		}
