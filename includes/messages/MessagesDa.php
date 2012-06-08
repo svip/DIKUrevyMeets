@@ -31,6 +31,10 @@ $messages = array (
 	'joinform-extrapersontext'    => 'I stedet for at tilmelde mere end én person per linje, så tilmeld derimod en ekstra person (du kan altid ændre deres tilmelding senere, da deres tilmelding vil blive bundet til din konto).',
 	'joinform-extrapersonname'    => 'Navn på person',
 	
+	'closeeatingform-title'       => 'Luk madtilmelding',
+	'closeeatingform-spend'       => 'Beløb brugt på mad i antal kroner (efterlad som 0 hvis ukendt):',
+	'closeeatingform-submit'      => 'Luk',
+	
 	'tick-yes'                    => '✔',
 	'tick-no'                     => '✘',
 	'tick-unknown'                => '?',
