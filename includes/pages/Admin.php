@@ -320,6 +320,7 @@ class Admin extends Page {
 					} elseif ( $item->type == 'eat' ) {
 						$userSchedule->{$id}->eating = isset($_POST['meeting-'.$userid.'-'.$id.'-eating']);
 						$userSchedule->{$id}->cooking = isset($_POST['meeting-'.$userid.'-'.$id.'-cooking']);
+						$userSchedule->{$id}->foodhelp = isset($_POST['meeting-'.$userid.'-'.$id.'-foodhelp']);
 						$userSchedule->{$id}->paid = isset($_POST['meeting-'.$userid.'-'.$id.'-paid'])?$item->costperperson:0.0;
 					}
 				}
@@ -421,7 +422,7 @@ class Admin extends Page {
 			if ( $item->type == 'meet' ) {
 				$form .= '<th>'.$item->title.'</th>';
 			} elseif ( $item->type == 'eat' ) {
-				$form .= '<th colspan="3">'.$item->title.'<br />'.($item->open?'<input type="submit" name="meeting-'.$item->id.'-close" value="Luk" />':'<input type="submit" name="meeting-'.$item->id.'-open" value="Åben" />').'</th>';
+				$form .= '<th colspan="4">'.$item->title.'<br />'.($item->open?'<input type="submit" name="meeting-'.$item->id.'-close" value="Luk" />':'<input type="submit" name="meeting-'.$item->id.'-open" value="Åben" />').'</th>';
 			}
 		}
 		$form .= '<th rowspan="2">Kommentar</th><th rowspan="2">Ændret</th></tr><tr>';
@@ -429,7 +430,7 @@ class Admin extends Page {
 			if ( $item->type == 'meet' ) {
 				$form .= '<th>Kommer</th>';
 			} elseif ( $item->type == 'eat' ) {
-				$form .= '<th>Spiser med</th><th>Laver mad</th><th>Betalt?</th>';
+				$form .= '<th>Spiser med</th><th>Herre</th><th>Neger</th><th>Betalt?</th>';
 			}
 		}
 		$form .= '</tr>';
@@ -454,6 +455,7 @@ class Admin extends Page {
 				} elseif ( $item->type == 'eat' ) {
 					$form .= '<td class="centre '.($useritem->eating?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-eating" '.($useritem->eating?'checked="true"':'').' id="meeting-'.$userid.'-'.$id.'-eating" '.($useritem->eating?'checked="true"':'').'" /><label for="meeting-'.$userid.'-'.$id.'-eating" '.($useritem->eating?'checked="true"':'').'"></label></td>';
 					$form .= '<td class="centre '.($useritem->cooking?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-cooking" '.($useritem->cooking?'checked="true"':'').' id="meeting-'.$userid.'-'.$id.'-cooking" '.($useritem->cooking?'checked="true"':'').'" /><label for="meeting-'.$userid.'-'.$id.'-cooking" '.($useritem->cooking?'checked="true"':'').'"></td>';
+					$form .= '<td class="centre '.(@$useritem->foodhelp?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-foodhelp" '.(@$useritem->foodhelp?'checked="true"':'').' id="meeting-'.$userid.'-'.$id.'-foodhelp" '.(@$useritem->foodhelp?'checked="true"':'').'" /><label for="meeting-'.$userid.'-'.$id.'-foodhelp" '.(@$useritem->foodhelp?'checked="true"':'').'"></td>';
 					$form .= '<td class="centre '.($useritem->paid?'yes':($useritem->eating?'no':'nomatter')).'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-paid" '.($useritem->paid?'checked="true"':'').' id="meeting-'.$userid.'-'.$id.'-paid" '.($useritem->paid?'checked="true"':'').'" /><label for="meeting-'.$userid.'-'.$id.'-paid" '.($useritem->paid?'checked="true"':'').'"></label></td>';
 				}
 			}
