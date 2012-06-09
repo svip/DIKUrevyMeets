@@ -16,6 +16,7 @@ $messages = array (
 	'datatable-header-attending'  => 'Kommer',
 	'datatable-header-comment'    => 'Kommentar',
 	'datatable-header-day'        => 'Dag',
+	'datatable-header-eatingclosed' => ' (Lukket)',
 	
 	'joinform-closed'             => 'Der er lukket for tilmeldingen.',
 	'joinform-title-change'       => 'Ændre <b>$1</b>s tilmelding',
