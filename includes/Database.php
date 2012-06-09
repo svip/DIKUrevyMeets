@@ -285,9 +285,11 @@ class Database {
 						if ( !empty($this->meetings->{$date}->{'users'}->{$userid}) ) {
 							$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->eating;
 							$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->cooking;
+							$userSchedule[$id]['foodhelp'] = @$this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->foodhelp;
 						} else {
 							$userSchedule[$id]['eating'] = false;
 							$userSchedule[$id]['cooking'] = false;
+							$userSchedule[$id]['foodhelp'] = false;
 						}
 					}
 				}
@@ -331,9 +333,11 @@ class Database {
 						if ( !empty($this->meetings->{$date}->{'users'}->{$userid}) ) {
 							$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->eating;
 							$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->cooking;
+							$userSchedule[$id]['foodhelp'] = @$this->meetings->{$data}->{'users'}->{$name}->schedule->{$userid}->foodhelp;
 						} else {
 							$userSchedule[$id]['eating'] = false;
 							$userSchedule[$id]['cooking'] = false;
+							$userSchedule[$id]['foodhelp'] = false;
 						}
 					}
 				}

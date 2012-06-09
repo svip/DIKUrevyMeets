@@ -205,7 +205,7 @@ class Meeting extends Page {
 				$table .= gfRawMsg('<th>$1</th>', $item->title);
 				$meets++;
 			} elseif ( $item->type == 'eat' ) {
-				$table .= gfRawMsg('<th colspan="2">$1$2</th>', 
+				$table .= gfRawMsg('<th colspan="3">$1$2</th>', 
 					$item->title,
 					( !$item->open
 						? gfMsg('datatable-header-eatingclosed')
@@ -227,7 +227,7 @@ class Meeting extends Page {
 				$table .= gfRawMsg('<th$2>$1</th>',
 					$this->showTime($item->start), $extra);
 			} elseif ( $item->type == 'eat' ) {
-				$table .= gfRawMsg('<th colspan="2"$2>$1</th>',
+				$table .= gfRawMsg('<th colspan="3"$2>$1</th>',
 					$this->showTime($item->start), $extra);
 			}
 		}
@@ -241,9 +241,10 @@ class Meeting extends Page {
 					gfMsg('datatable-header-attending')
 				);
 			} elseif ( $item->type == 'eat' ) {
-				$table .= gfRawMsg('<th>$1</th><th>$2</th>',
+				$table .= gfRawMsg('<th>$1</th><th>$2</th><th>$3</th>',
 					gfMsg('datatable-header-eating'),
-					gfMsg('datatable-header-cooking')
+					gfMsg('datatable-header-cooking'),
+					gfMsg('datatable-header-foodhelp')
 				);
 			}
 		}
@@ -256,7 +257,7 @@ class Meeting extends Page {
 			if ( $item->type == 'meet' ) {
 				$stats['schedule'][$item->id] = array ( 'attending' => 0 );
 			} elseif ( $item->type == 'eat' ) {
-				$stats['schedule'][$item->id] = array ( 'eating' => 0, 'cooking' => 0 );
+				$stats['schedule'][$item->id] = array ( 'eating' => 0, 'cooking' => 0, 'foodhelp' => 0 );
 			}
 		}
 		
@@ -316,6 +317,7 @@ class Meeting extends Page {
 					} else {
 						if ( $user->schedule->{$id}->eating ) $stats['schedule'][$id]['eating']++;
 						if ( $user->schedule->{$id}->cooking ) $stats['schedule'][$id]['cooking']++;
+						if ( @$user->schedule->{$id}->foodhelp ) $stats['schedule'][$id]['foodhelp']++;
 						$table .= gfRawMsg('<td class="centre $1">$2</td>',
 							($user->schedule->{$id}->eating?'yes':'no'),
 							$this->tick($user->schedule->{$id}->eating)
@@ -323,6 +325,10 @@ class Meeting extends Page {
 						$table .= gfRawMsg('<td class="centre $1">$2</td>',
 							($user->schedule->{$id}->cooking?'yes':'no'),
 							$this->tick($user->schedule->{$id}->cooking)
+						);
+						$table .= gfRawMsg('<td class="centre $1">$2</td>',
+							(@$user->schedule->{$id}->foodhelp?'yes':'no'),
+							$this->tick(@$user->schedule->{$id}->foodhelp)
 						);
 					}
 				}
@@ -344,9 +350,10 @@ class Meeting extends Page {
 					gfMsg('datatable-header-attending')
 				);
 			} elseif ( $item->type == 'eat' ) {
-				$table .= gfRawMsg('<th>$1</th><th>$2</th>',
+				$table .= gfRawMsg('<th>$1</th><th>$2</th><th>$3</th>',
 					gfMsg('datatable-header-eating'),
-					gfMsg('datatable-header-cooking')
+					gfMsg('datatable-header-cooking'),
+					gfMsg('datatable-header-foodhelp')
 				);
 			}
 		}
@@ -361,8 +368,8 @@ class Meeting extends Page {
 			} elseif ( $meeting->schedule->{$id}->type == 'meet' ) {
 				$table .= gfRawMsg('<td>$1</td>', $item['attending']);
 			} elseif ( $meeting->schedule->{$id}->type == 'eat' ) {
-				$table .= gfRawMsg('<td>$1</td><td>$2</td>',
-					$item['eating'], $item['cooking']);
+				$table .= gfRawMsg('<td>$1</td><td>$2</td><td>$3</td>',
+					$item['eating'], $item['cooking'], $item['foodhelp']);
 			}
 		}
 		$table .= '<td>&nbsp;</td></tr>';
@@ -416,6 +423,7 @@ class Meeting extends Page {
 				$userSchedule[$id] = array (
 					'eating' => isset($_POST['meeting-'.$id.'-eating']),
 					'cooking' => isset($_POST['meeting-'.$id.'-cooking']),
+					'foodhelp' => isset($_POST['meeting-'.$id.'-foodhelp']),
 					'paid' => 0.0
 				);
 			}
@@ -464,16 +472,19 @@ class Meeting extends Page {
 					if ( $item->open )
 						$userSchedule[$subuserid][$id] = array (
 							'eating' => true,
-							'cooking' => false
+							'cooking' => false,
+							'foodhelp' => false
 						);
 					else
 						$userSchedule[$subuserid][$id] = array (
 							'eating' => false,
-							'cooking' => false
+							'cooking' => false,
+							'foodhelp' => false
 						);
 					if ( !is_null($currentInfo[$subuserid]) ) {
 						$userSchedule[$subuserid][$id]['eating'] = @$currentInfo[$subuserid]->schedule->{$id}->eating;
 						$userSchedule[$subuserid][$id]['cooking'] = @$currentInfo[$subuserid]->schedule->{$id}->cooking;
+						$userSchedule[$subuserid][$id]['foodhelp'] = @$currentInfo[$subuserid]->schedule->{$id}->foodhelp;
 					}		
 					$canJoin = true;	
 				}
@@ -571,6 +582,16 @@ class Meeting extends Page {
 								(!$item->open?'disabled="true"':''),
 								gfMsg('joinform-cooking')
 							);
+							$form .= gfRawMsg('
+			<input type="checkbox" name="meeting-$1-foodhelp" id="meeting-$1-$2-foodhelp" $3 $4 />
+			<label for="meeting-$1-$2-foodhelp">$5</label>',
+								$item->id, $subuserid,
+								($userSchedule[$subuserid]
+									[$item->id]['foodhelp']
+									? 'checked="true"' : ''),
+								(!$item->open?'disabled="true"':''),
+								gfMsg('joinform-foodhelp')
+							);
 							$form .= (!$item->open
 								? gfRawMsg(' <span>$1</span>',
 									gfMsg('joinform-eatingisclosed'))
@@ -587,6 +608,9 @@ class Meeting extends Page {
 							if ( $userSchedule[$subuserid][$item->id]['cooking'] )
 								
 								$form .= gfRawMsg('<input type="hidden" name="meeting-$1-cooking" value="1" />', $item->id);
+							if ( $userSchedule[$subuserid][$item->id]['foodhelp'] )
+								
+								$form .= gfRawMsg('<input type="hidden" name="meeting-$1-foodhelp" value="1" />', $item->id);
 						}
 					}
 				}
@@ -654,6 +678,13 @@ class Meeting extends Page {
 							$item->id, $subuserid,
 							'',
 							gfMsg('joinform-cooking')
+						);
+						$form .= gfRawMsg('
+		<input type="checkbox" name="meeting-$1-foodhelp" id="meeting-$1-$2-foodhelp" $3 />
+		<label for="meeting-$1-$2-foodhelp">$4</label>',
+							$item->id, $subuserid,
+							'',
+							gfMsg('joinform-foodhelp')
 						);
 						$form .= '<br />';
 					}
