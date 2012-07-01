@@ -2666,6 +2666,8 @@
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1341056796,"name":"Nana Girotti"},
 "22":{"schedule":{"0":{"attending":false}},
-"usertype":"normal","comment":"P\u00e5 Kreta. :\/","modified":1341136015}},
+"usertype":"normal","comment":"P\u00e5 Kreta. :\/","modified":1341136015,"name":"Sebastian Paaske T\u00f8rholm"},
+"14":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"Agter at \u00f8ge Introens indtag af GT gennem \u00e5ret med 400% !","modified":1341149278}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
