@@ -2670,5 +2670,5 @@
 "usertype":"normal","comment":"Agter at \u00f8ge Introens indtag af GT gennem \u00e5ret med 400% !","modified":1341149278,"name":"Martin Nicklas J\u00f8rgensen"},
 "14-28e5":{"name":"Sarah","usertype":"extra","schedule":{"0":{"attending":true}},
 "comment":"Er der noget af tiden, har sommerkurser","modified":1341344905}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
