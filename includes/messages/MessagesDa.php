@@ -39,6 +39,12 @@ $messages = array (
 	'closeeatingform-spend'       => 'Beløb brugt på mad i antal kroner (efterlad som 0 hvis ukendt)',
 	'closeeatingform-submit'      => 'Luk',
 	
+	'ical-linktofull'             => 'Henvisning til det fulde ical-kalender-abonnement',
+	'ical-instructions'           => 'højreklik og gem selve henvisningen, indsæt den derefter i Deres kalenderprogram',
+	'ical-filtercalendar-header'  => 'Filtér Deres ical-kalender',
+	'ical-filtercalendar-intro'   => 'Vælg en etiket at filtere Deres kalender på:',
+	'ical-filtercalendar-notags'  => 'Der er ingen etiketter defineret.  Det er derfor ikke muligt at filtere på dem.',
+	
 	'tick-yes'                    => '✔',
 	'tick-no'                     => '✘',
 	'tick-unknown'                => '?',
