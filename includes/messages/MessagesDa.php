@@ -31,8 +31,9 @@ $messages = array (
 	'joinform-submit-remove'      => 'Fjern',
 	'joinform-eatingisclosed'     => '(Kokkene har lukket for madtilmeldingen)',
 	'joinform-title-extraperson'  => 'Tilmeld en <b>extra person</b>',
-	'joinform-extrapersontext'    => 'I stedet for at tilmelde mere end én person per linje, så tilmeld derimod en ekstra person (du kan altid ændre deres tilmelding senere, da deres tilmelding vil blive bundet til din konto).',
+	'joinform-extrapersontext'    => 'I stedet for at tilmelde mere end én person per linje, så tilmeld derimod en ekstra person (De kan altid ændre denne tilmelding senere, da tilmeldingen vil blive bundet til Deres konto).',
 	'joinform-extrapersonname'    => 'Navn på person',
+	'joinform-needslogin'         => 'For at kunne tilmelde Dem dette og andre revymøder, skal De først logge ind igennem vor <a href="$1">$2</a>.  Vend her tilbage når De har logget ind.',
 	
 	'closeeatingform-title'       => 'Luk madtilmelding',
 	'closeeatingform-spend'       => 'Beløb brugt på mad i antal kroner (efterlad som 0 hvis ukendt)',

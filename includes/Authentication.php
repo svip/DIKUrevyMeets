@@ -9,31 +9,16 @@ class Authentication {
 
 	function __construct ( $database ) {
 		$this->database = $database;
-		//$this->checkLoginAttempt();
 	}
 	
 	public function setCookie ( $name, $value ) {
-		setcookie ( $name, $value, time() + 365*24*60*60, '/', '.dikurevy.dk' );
+		global $CookieDomain
+		setcookie ( $name, $value, time() + 365*24*60*60, '/', $CookieDomain );
 	}
 	
 	public function unsetCookie ( $name ) {
-		setcookie ( $name, '', 0, '/', '.dikurevy.dk' );
-	}
-	
-	private function checkLoginAttempt ( ) {
-		/*
-		if ( isset ( $_POST['login-openid-submit'] ) ) {
-			$this->openIdLogin();
-		}
-		if ( isset ( $_POST['register-openid-submit'] ) ) {
-			$this->openIdRegister();
-		}
-		if ( isset ( $_POST['login-google-submit'] ) ) {
-			$this->googleLogin();
-		}
-		if ( isset ( $_POST['register-google-submit'] ) ) {
-			$this->googleRegister();
-		}*/
+		global $CookieDomain;
+		setcookie ( $name, '', 0, '/', $CookieDomain );
 	}
 	
 	private function getSignature ( $identity, $service ) {
@@ -118,7 +103,9 @@ class Authentication {
 	}
 	
 	public function logInFunction ( ) {
-		$form = '<form><h5>For at kunne tilmelde dig dette revymøde, skal du logge ind via vores nye <a href="http://dikurevy.dk/">Drupal system</a>.  Returnér her når du har logget ind der.</h5></form>';
+		$form = gfRawMsg('<form><h5>$1</h5></form>',
+			gfMsg('joinform-needslogin', 'http://dikurevy.dk/', 'Drupal system')
+		);
 		return $form;
 	}
 }
