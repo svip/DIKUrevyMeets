@@ -9,6 +9,7 @@ class Ical extends Page {
 	protected function render() {
 		global $Debug;
 		
+		// Make this more standardised to allow global set value.
 		$url = 'http://moeder.dikurevy.dk/?do=ical';
 		if ( $Debug )
 			$url = './?do=ical';
