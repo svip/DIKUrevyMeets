@@ -12,7 +12,7 @@ class Authentication {
 	}
 	
 	public function setCookie ( $name, $value ) {
-		global $CookieDomain
+		global $CookieDomain;
 		setcookie ( $name, $value, time() + 365*24*60*60, '/', $CookieDomain );
 	}
 	
@@ -32,9 +32,9 @@ class Authentication {
 	}
 	
 	private function drupalRegister ( $uid, $name ) {
-		global $debug;
+		global $Debug;
 		if ( $this->database->insertUser ( $name, 'drupal', $uid, null ) ) {
-			if ( !$debug ) // Never redirect in debug mode.
+			if ( !$Debug ) // Never redirect in debug mode.
 				if ( !empty($_SERVER['HTTP_REFERER']) )
 					header('Location: '.$_SERVER['HTTP_REFERER']);
 				else
