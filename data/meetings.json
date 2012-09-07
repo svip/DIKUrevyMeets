@@ -2748,6 +2748,9 @@
 "usertype":"normal","comment":"","modified":1346880374,"name":"Sune Petterson"},
 "37":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"","modified":1346945175}},
+"usertype":"normal","comment":"","modified":1346945175,"name":"Mark Schor"},
+"20":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":true,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1346999629}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
