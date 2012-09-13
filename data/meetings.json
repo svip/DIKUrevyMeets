@@ -2710,7 +2710,7 @@
 "usertype":"normal","comment":"","modified":1347358373,"name":"#Brainfuck"},
 "22":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1347429182}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2012-10-24":{"title":"Forfatterm\u00f8de","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 19:00","end":"0 23:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"0 18:00","end":"0 19:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
