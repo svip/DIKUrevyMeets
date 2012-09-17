@@ -9,7 +9,7 @@
 "11":{"name":"Caroline Miller","register":1317038185,"admin":false,"identity":"11"},
 "13":{"name":"Kim Lundsteen Juncher","register":1317038374,"admin":false,"identity":"13"},
 "12":{"name":"Ejnar H\u00e5konsen","register":1317038386,"admin":false,"identity":"12"},
-"14":{"name":"Martin Nicklas J\u00f8rgensen","register":1317039241,"admin":false,"identity":"14"},
+"14":{"name":"Martin Nicklas J\u00f8rgensen","register":1317039241,"admin":true,"identity":"14"},
 "16":{"name":"Davy Eskildsen","register":1317040774,"admin":false,"identity":"16"},
 "17":{"name":"Klaes Rasmussen","register":1317041719,"admin":false,"identity":"17"},
 "18":{"name":"Bj\u00f8rn Jespersen","register":1317041991,"admin":false,"identity":"18"},
@@ -75,4 +75,5 @@
 "94":{"name":"Simon Shine","register":1345650034,"admin":false,"identity":"94"},
 "112":{"name":"Rasmus Bruun J\u00f8rgensen","register":1347400284,"admin":false,"identity":"112"},
 "114":{"name":"Simon Skjerning Linneberg","register":1347401767,"admin":false,"identity":"114"},
-"115":{"name":"Camilla Maach Br\u00f8nnum Olsen","register":1347472254,"admin":false,"identity":"115"}}
+"115":{"name":"Camilla Maach Br\u00f8nnum Olsen","register":1347472254,"admin":false,"identity":"115"},
+"116":{"name":"Maya Saietz","register":1347879155,"admin":false,"identity":"116"}}
