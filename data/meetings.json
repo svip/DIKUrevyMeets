@@ -2820,7 +2820,7 @@
 "usertype":"normal","comment":"","modified":1347859689,"name":"Ronni Elken Lindsgaard"},
 "7":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"Er f\u00f8rst til r\u00e5dighed fra klokken 17:00","modified":1347860039,"name":"Troels Henriksen"},
+"usertype":"normal","comment":"Ej vegetar, s\u00e5 jeg skal nok h\u00e6lde bacon i!","modified":1348063014},
 "24":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1347862386,"name":"Mikkel Kj\u00e6r Jensen"},
@@ -2856,6 +2856,6 @@
 "usertype":"normal","comment":"\u00d8ver SATYR, men deltager i eventuelle frisegmenter.","modified":1347922000,"name":"Ejnar H\u00e5konsen"},
 "114":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1347960112}},
+"usertype":"normal","comment":"","modified":1347960112,"name":"Simon Skjerning Linneberg"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
