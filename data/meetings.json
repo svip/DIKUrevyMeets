@@ -2861,6 +2861,9 @@
 "usertype":"normal","comment":"","modified":1347960112,"name":"Simon Skjerning Linneberg"},
 "115":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1348098941}},
+"usertype":"normal","comment":"","modified":1348098941,"name":"Camilla Maach Br\u00f8nnum Olsen"},
+"35-7112":{"name":"Sofie Dix\u00f8","usertype":"extra","schedule":{"0":{"attending":true},
+"1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
+"comment":"Nanas s\u00f8ster","modified":1348137997}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
