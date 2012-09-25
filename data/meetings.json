@@ -2943,6 +2943,9 @@
 "usertype":"normal","comment":"Holder f\u00f8dselsdagsfest","modified":1348426371,"name":"Claus Appel (Spectrum)"},
 "12":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Allerede booket.","modified":1348434271}},
+"usertype":"normal","comment":"Allerede booket.","modified":1348434271,"name":"Ejnar H\u00e5konsen"},
+"6":{"schedule":{"0":{"attending":false},
+"1":{"eating":true,"cooking":true,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"&lt;!-- ??? --&gt;","modified":1348581827}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
