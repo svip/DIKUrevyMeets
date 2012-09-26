@@ -664,26 +664,33 @@ class Meeting extends Page {
 					} elseif ( $item->type == 'eat' ) {
 						$form .= gfRawMsg('<span class="scheduleform-item">$1:</span>', $item->title);
 						$form .= gfRawMsg('
-		<input type="checkbox" name="meeting-$1-eating" id="meeting-$1-$2-eating" $3 />
-		<label for="meeting-$1-$2-eating">$4</label>',
+		<input type="checkbox" name="meeting-$1-eating" id="meeting-$1-$2-eating" $3 $4 />
+		<label for="meeting-$1-$2-eating">$5</label>',
 							$item->id, $subuserid,
-							'checked="true"',
+							(!$item->open?'disabled="true"':'checked="true"'),
+							(!$item->open?'disabled="true"':''),
 							gfMsg('joinform-eating')
 						);
 						$form .= gfRawMsg('
-		<input type="checkbox" name="meeting-$1-cooking" id="meeting-$1-$2-cooking" $3 />
-		<label for="meeting-$1-$2-cooking">$4</label>',
+		<input type="checkbox" name="meeting-$1-cooking" id="meeting-$1-$2-cooking" $3 $4 />
+		<label for="meeting-$1-$2-cooking">$5</label>',
 							$item->id, $subuserid,
 							'',
+							(!$item->open?'disabled="true"':''),
 							gfMsg('joinform-cooking')
 						);
 						$form .= gfRawMsg('
-		<input type="checkbox" name="meeting-$1-foodhelp" id="meeting-$1-$2-foodhelp" $3 />
-		<label for="meeting-$1-$2-foodhelp">$4</label>',
+		<input type="checkbox" name="meeting-$1-foodhelp" id="meeting-$1-$2-foodhelp" $3 $4 />
+		<label for="meeting-$1-$2-foodhelp">$5</label>',
 							$item->id, $subuserid,
 							'',
+							(!$item->open?'disabled="true"':''),
 							gfMsg('joinform-foodhelp')
 						);
+						$form .= (!$item->open
+							? gfRawMsg(' <span>$1</span>',
+								gfMsg('joinform-eatingisclosed'))
+							: '' );
 						$form .= '<br />';
 					}
 				}
