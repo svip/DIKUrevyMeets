@@ -7,23 +7,38 @@
 class Ical extends Page {
 
 	protected function render() {
-		global $debug;
+		global $Debug;
 		
+		// Make this more standardised to allow global set value.
 		$url = 'http://moeder.dikurevy.dk/?do=ical';
-		if ( $debug )
+		if ( $Debug )
 			$url = './?do=ical';
-		$content = '<p><a href="'.$url.'">Link til den fulde ical-kalender</a><br />(højreklik og gem linket, indsæt det derefter i dit kalenderprogram)</p>';
-		$content .= '<h2>Filtér din ical-kalender</h2>';
+		$content = gfRawMsg('<p><a href="$1">$2</a><br />($3)</p>',
+			$url,
+			gfMsg('ical-linktofull'),
+			gfMsg('ical-instructions')
+		);
+		$content .= gfRawMsg(
+			'<h2>$1</h2>',
+			gfMsg('ical-filtercalendar-header')
+		);
 		$tags = $this->database->getTags();
 		if ( count($tags) > 0 ) {
-			$content .= '<p class="left">Vælg en etikette at filtere din kalender på:<br />(højreklik og gem linket, indsæt det derefter i dit kalenderprogram)</p>';
+			$content .= gfRawMsg('<p class="left">$1<br />($2)</p>',
+				gfMsg('ical-filtercalendar-intro'),
+				gfMsg('ical-instructions')
+			);
 			$content .= '<ul>';
 			foreach ( $tags as $tag ) {
-				$content .= '<li><a href="'.$url.'&amp;tags='.$tag.'">'.$tag.'</a></li>';
+				$content .= gfRawMsg('<li><a href="$1&amp;tags=$2">$2</a></li>',
+					$url, $tag
+				);
 			}
 			$content .= '</ul>';
 		} else {
-			$content .= '<p>Der er ingen etiketter defineret.  Det er derfor ikke muligt at filtere på dem.</p>';
+			$content .= gfRawMsg('<p>$1</p>',
+				gfMsg('ical-filtercalendar-notags')
+			);
 		}
 		$this->content = $content;
 	}

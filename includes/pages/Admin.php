@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * TODO: FIXME: THIS NEEDS A SERIOUS CLEAN UP.
+ * Bleh, but I am le tired. :(
+ */
+
 class Admin extends Page {
 
 	protected function render ( ) {
