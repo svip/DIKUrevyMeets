@@ -418,9 +418,10 @@ class Database {
 		}
 	}
 	
-	function closeForEating ( $date, $id, $spend=false ) {
+	function closeForEating ( $date, $id, $user, $spend=false ) {
 		if ( empty ( $this->meetings->{$date} ) )
 			return false;
+		$this->meetings->{$date}->schedule->{$id}->closedby = $user;
 		$this->meetings->{$date}->schedule->{$id}->open = false;
 		if ( is_numeric($spend) )
 			$this->meetings->{$date}->schedule->{$id}->spend = $spend;

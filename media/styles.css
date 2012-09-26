@@ -44,6 +44,10 @@ input[type=checkbox]:checked + label {
 	font-weight: bold; 
 }
 input[type=checkbox]:checked + label:before { content: "☑ "; }
+input[type=checkbox]:disabled + label {
+	background: #bbb;
+	color: #888;
+}
 form { width: 80%; background: none; padding: 15px 10px; }
 form#login > fieldset { display: none; }
 fieldset { border: solid 1px #aaa; border-left-width: 10px; margin-bottom: 10px; background: #ccc; }

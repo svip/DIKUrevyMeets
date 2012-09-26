@@ -260,6 +260,12 @@ class Admin extends Page {
 		return $time;
 	}
 	
+	private function closedBy ( $userid ) {
+		if ( empty($userid) )
+			return 'Systemet';
+		return $this->database->getUserById($userid)->name;
+	}
+	
 	private function meetingPage ( ) {
 		$date = $_GET['date'];
 		$meeting = $this->database->getMeeting($date);
@@ -358,7 +364,7 @@ class Admin extends Page {
 				header('Location: ./?admin=meeting&date='.$date);
 			}
 			if ( isset ( $_POST['meeting-'.$id.'-close'] ) ) {
-				$this->database->closeForEating($date, $id);
+				$this->database->closeForEating($date, $id, $this->auth->userinfo->{'identity'});
 				header('Location: ./?admin=meeting&date='.$date);
 			}
 		}
@@ -427,7 +433,7 @@ class Admin extends Page {
 			if ( $item->type == 'meet' ) {
 				$form .= '<th>'.$item->title.'</th>';
 			} elseif ( $item->type == 'eat' ) {
-				$form .= '<th colspan="4">'.$item->title.'<br />'.($item->open?'<input type="submit" name="meeting-'.$item->id.'-close" value="Luk" />':'<input type="submit" name="meeting-'.$item->id.'-open" value="Åben" />').'</th>';
+				$form .= '<th colspan="4">'.$item->title.'<br />'.($item->open?'<input type="submit" name="meeting-'.$item->id.'-close" value="Luk" />':'<input type="submit" name="meeting-'.$item->id.'-open" value="Åben" /><br />(Lukket af '.$this->closedBy(@$item->closedby).')').'</th>';
 			}
 		}
 		$form .= '<th rowspan="2">Kommentar</th><th rowspan="2">Ændret</th></tr><tr>';

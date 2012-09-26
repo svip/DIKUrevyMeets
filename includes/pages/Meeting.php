@@ -384,9 +384,8 @@ class Meeting extends Page {
 			}
 			foreach ( $schedule as $id => $item ) {
 				$id = (isset($item->id)?$item->id:$id);
-				if ( isset ( $_POST['closeeating-'.$id.'-submit'] )
-					&& $meeting->users->{$this->database->getUserId($this->auth->userinfo->name)}->schedule->{$id}->cooking ) {
-					$this->database->closeForEating($date, $id, $_POST['closeeating-'.$item->id.'-spend']);
+				if ( isset ( $_POST['closeeating-'.$id.'-submit'] ) ) {
+					$this->database->closeForEating($date, $id, $this->auth->userinfo->{'identity'}, $_POST['closeeating-'.$item->id.'-spend']);
 					if ( is_null($itemid) )
 						header ( 'Location: ./?meeting='.$date );
 					else
@@ -503,7 +502,6 @@ class Meeting extends Page {
 				|| (is_null($itemid) && $item->unique) ) {
 				continue;
 			} elseif ( $item->type == 'eat' 
-				&& $userSchedule[0][$item->id]['cooking']
 				&& $item->open ) {
 				$form .= gfRawMsg('<form method="post">
 <fieldset>
