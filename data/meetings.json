@@ -2652,7 +2652,7 @@
 "usertype":"normal","comment":"Er i Jylland. Inds\u00e6t selv passende vredt emotikon.","modified":1348418798,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
 "14":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1348525333}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2012-05-27":{"title":"Oprydning","schedule":{"0":{"title":"Oprydning","type":"meet","start":"12:00","end":"18:00","unique":false,"nojoin":true,"id":"0"},
 "1":{"title":"Brunch","type":"eat","start":"11:00","end":"12:00","open":true,"spend":"0","costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
