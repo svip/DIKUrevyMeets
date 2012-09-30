@@ -2946,6 +2946,9 @@
 "usertype":"normal","comment":"Allerede booket.","modified":1348434271,"name":"Ejnar H\u00e5konsen"},
 "6":{"schedule":{"0":{"attending":false},
 "1":{"eating":true,"cooking":true,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"&lt;!-- ??? --&gt;","modified":1348581827}},
+"usertype":"normal","comment":"&lt;!-- ??? --&gt;","modified":1348581827,"name":"Phillip Alexander Roschnowski"},
+"128":{"schedule":{"0":{"attending":false},
+"1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
+"usertype":"normal","comment":"kan tidligst fra 17.30, s\u00e5 ret d\u00e5rlig madneger","modified":1349012202}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
