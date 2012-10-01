@@ -2949,6 +2949,9 @@
 "usertype":"normal","comment":"&lt;!-- ??? --&gt;","modified":1348581827,"name":"Phillip Alexander Roschnowski"},
 "128":{"schedule":{"0":{"attending":false},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"kan tidligst fra 17.30, s\u00e5 ret d\u00e5rlig madneger","modified":1349012202}},
+"usertype":"normal","comment":"kan tidligst fra 17.30, s\u00e5 ret d\u00e5rlig madneger","modified":1349012202,"name":"chi"},
+"22":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
+"usertype":"normal","comment":"","modified":1349070109}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
