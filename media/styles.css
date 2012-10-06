@@ -45,8 +45,12 @@ input[type=checkbox]:checked + label {
 }
 input[type=checkbox]:checked + label:before { content: "☑ "; }
 input[type=checkbox]:disabled + label {
-	background: #bbb;
-	color: #888;
+	background: #cbb;
+	color: #988;
+}
+input[type=checkbox]:disabled:checked + label {
+	background: #bcb;
+	color: #898;
 }
 form { width: 80%; background: none; padding: 15px 10px; }
 form#login > fieldset { display: none; }

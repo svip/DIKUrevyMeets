@@ -592,7 +592,9 @@ class Meeting extends Page {
 							);
 							$form .= (!$item->open
 								? gfRawMsg(' <span>$1</span>',
-									gfMsg('joinform-eatingisclosed'))
+									gfMsg('joinform-eatingisclosed',
+										$this->getClosedBy(@$item->closedby)
+									))
 								: '' );
 							$form .= '<br />';
 						}
@@ -689,7 +691,9 @@ class Meeting extends Page {
 						);
 						$form .= (!$item->open
 							? gfRawMsg(' <span>$1</span>',
-								gfMsg('joinform-eatingisclosed'))
+								gfMsg('joinform-eatingisclosed',
+									$this->getClosedBy(@$item->closedby)
+								))
 							: '' );
 						$form .= '<br />';
 					}
@@ -706,5 +710,12 @@ class Meeting extends Page {
 			gfMsg('joinform-submit-join')
 		);
 		return $form;
+	}
+	
+	private function getClosedBy ( $userid ) {
+		if ( empty($userid) ) {
+			return gfMsg('user-system');
+		}
+		return gfRawMsg('<b>$1</b>', $this->database->getUserById($userid)->name);
 	}
 }
