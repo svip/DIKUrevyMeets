@@ -24,7 +24,7 @@ class Meeting extends Page {
 	}
 	
 	function userSort ( $a, $b ) {
-		return strncasecmp($a->name, $b->name, 4);
+		return strncasecmp((isset($a->nickname)?$a->nickname:$a->name), (isset($b->nickname)?$b->nickname:$b->name), 4);
 	}
 	
 	protected function showTime ( $time ) {
