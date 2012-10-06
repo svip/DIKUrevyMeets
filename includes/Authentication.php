@@ -61,8 +61,9 @@ class Authentication {
 							$this->userinfo = $user;
 							$this->loginChecked = true;
 							$this->login = true;
-							if ( $result['value'] != null
-								&& $result['value'] != $user->name ) {
+							if ( ($result['value'] != null || !is_null($result['name']))
+								&& ($result['value'] != $user->name
+									|| $result['name'] != @$user->nickname) ) {
 								$this->database->updateUser ( $result['uid'],
 									array ( 'realname' => $result['value'],
 										'nickname' => $result['name']) );
