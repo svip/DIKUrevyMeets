@@ -290,7 +290,7 @@ class Meeting extends Page {
 				if (intval($split[0]) == $this->auth->userinfo->{'identity'})
 					$currentInfo[] = $user;
 			}
-			$table .= '<tr><td class="user">'.$this->makeUserName($userid).'</td>';
+			$table .= '<tr><td class="user">'.$this->makeUserName($userid, $user->name).'</td>';
 			foreach ( $schedule as $item ) {
 				$id = $item->id;
 				if ( $item->nojoin ) {

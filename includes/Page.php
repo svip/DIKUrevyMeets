@@ -100,7 +100,7 @@ abstract class Page {
 		return $t->format('Y-m-d');
 	}
 	
-	protected function makeUserName ( $userid ) {
+	protected function makeUserName ( $userid, $fallbackname ) {
 		if ( !is_null($this->database->getUserById($userid)) ) {
 			$nickname = null;
 			if ( isset($this->database->getUserById($userid)->nickname) ) {
@@ -114,6 +114,8 @@ abstract class Page {
 					$nickname
 				);
 		}
+		if ( !empty($fallbackname) )
+			return gfRawMsg('<span class="tempuser">$1</span>', $fallbackname);
 		return '';
 	}
 }
