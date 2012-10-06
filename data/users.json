@@ -1,7 +1,7 @@
 {"4":{"name":"#Brainfuck","register":1316805316,"admin":true,"identity":"4"},
 "3":{"name":"Ronni Elken Lindsgaard","register":1316807433,"admin":true,"identity":"3"},
 "5":{"name":"Ahmed","register":1316811751,"admin":true,"identity":"5"},
-"6":{"name":"Phillip Alexander Roschnowski","register":1316861488,"admin":false,"identity":"6"},
+"6":{"name":"Phillip 2.0","register":1316861488,"admin":false,"identity":"6"},
 "7":{"name":"Troels Henriksen","register":1316864071,"admin":false,"identity":"7"},
 "8":{"name":"Jenny-Margrethe Vej","register":1316865024,"admin":true,"identity":"8"},
 "9":{"name":"S\u00f8ren Lynnerup","register":1316865571,"admin":true,"identity":"9"},
@@ -81,4 +81,5 @@
 "126":{"name":"Sara Lee Naldal","register":1348472063,"admin":false,"identity":"126"},
 "127":{"name":"Nikolaj Pedersen","register":1348492831,"admin":false,"identity":"127"},
 "128":{"name":"\u03a7","register":1349012060,"admin":false,"identity":"128"},
-"139":{"name":"Rasmus Wriedt Larsen","register":1349207207,"admin":false,"identity":"139"}}
+"139":{"name":"Rasmus Wriedt Larsen","register":1349207207,"admin":false,"identity":"139"},
+"136":{"name":"Henriks Urms","register":1349545437,"admin":false,"identity":"136"}}
