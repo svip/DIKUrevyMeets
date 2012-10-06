@@ -1,6 +1,8 @@
 <?php
 
 $messages = array (
+	'user-system'                 => 'Systemet',
+	
 	'topnav-back'                 => 'Tilbage',
 	'topnav-managemeeting'        => 'Behandle dette møde',
 	
@@ -29,7 +31,7 @@ $messages = array (
 	'joinform-submit-change'      => 'Ændr',
 	'joinform-submit-join'        => 'Tilmeld',
 	'joinform-submit-remove'      => 'Fjern',
-	'joinform-eatingisclosed'     => '(Kokkene har lukket for madtilmeldingen)',
+	'joinform-eatingisclosed'     => '($1 har lukket for madtilmeldingen)',
 	'joinform-title-extraperson'  => 'Tilmeld en <b>extra person</b>',
 	'joinform-extrapersontext'    => 'I stedet for at tilmelde mere end én person per linje, så tilmeld derimod en ekstra person (De kan altid ændre denne tilmelding senere, da tilmeldingen vil blive bundet til Deres konto).',
 	'joinform-extrapersonname'    => 'Navn på person',
