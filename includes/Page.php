@@ -99,4 +99,21 @@ abstract class Page {
 		$t->add(new DateInterval("P{$days}D"));
 		return $t->format('Y-m-d');
 	}
+	
+	protected function makeUserName ( $userid ) {
+		if ( !is_null($this->database->getUserById($userid)) ) {
+			$nickname = null;
+			if ( isset($this->database->getUserById($userid)->nickname) ) {
+				$nickname = $this->database->getUserById($userid)->nickname;
+			}
+			if ( is_null($nickname) )
+				return gfRawMsg('$1', $this->database->getUserById($userid)->name);
+			else
+				return gfRawMsg('<span title="$1" class="username">$2</span>',
+					$this->database->getUserById($userid)->name,
+					$nickname
+				);
+		}
+		return '';
+	}
 }

@@ -234,11 +234,12 @@ class Database {
 		return true;
 	}
 	
-	function insertUser ( $name, $service, $uid, $signature ) {
+	function insertUser ( $name, $nickname, $service, $uid, $signature ) {
 		if ( isset($this->users->{$uid}) )
 			return false;
 		$this->users->{$uid} = array (
 			'name'		=> $name,
+			'nickname'      => $nickname,
 			'register'	=> time(),
 			'admin'		=> false,
 			'identity'	=> $uid,
@@ -250,8 +251,10 @@ class Database {
 	function updateUser ( $userid, $dataToUpdate ) {
 		if ( empty ( $this->users->{$userid} ) )
 			return false;
-		if ( !empty($dataToUpdate['username']) )
-			$this->users->{$userid}->name = $dataToUpdate['username'];
+		if ( !empty($dataToUpdate['realname']) )
+			$this->users->{$userid}->name = $dataToUpdate['realname'];
+		if ( !empty($dataToUpdate['nickname']) )
+			$this->users->{$userid}->nickname = $dataToUpdate['nickname'];
 		if ( isset($dataToUpdate['admin']) )
 			$this->users->{$userid}->admin = $dataToUpdate['admin'];
 		$this->writeData ( 'users' );

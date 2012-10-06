@@ -31,9 +31,9 @@ class Authentication {
 		return null;
 	}
 	
-	private function drupalRegister ( $uid, $name ) {
+	private function drupalRegister ( $uid, $name, $nickname ) {
 		global $Debug;
-		if ( $this->database->insertUser ( $name, 'drupal', $uid, null ) ) {
+		if ( $this->database->insertUser ( $name, $nickname, 'drupal', $uid, null ) ) {
 			if ( !$Debug ) // Never redirect in debug mode.
 				if ( !empty($_SERVER['HTTP_REFERER']) )
 					header('Location: '.$_SERVER['HTTP_REFERER']);
@@ -64,12 +64,13 @@ class Authentication {
 							if ( $result['value'] != null
 								&& $result['value'] != $user->name ) {
 								$this->database->updateUser ( $result['uid'],
-									array ( 'username' => $result['value'] ) );	
+									array ( 'realname' => $result['value'],
+										'nickname' => $result['name']) );
 							}
 							return true;
 						}
 					}
-					$this->drupalRegister($result['uid'], (!empty($result['value'])?$result['value']:$result['name']));
+					$this->drupalRegister($result['uid'], $result['value'], $result['name']);
 					$this->userinfo = $user;
 					$this->loginChecked = true;
 					$this->login = true;
