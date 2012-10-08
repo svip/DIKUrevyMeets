@@ -2962,5 +2962,5 @@
 "22-bb06":{"name":"Henriks Urms","usertype":"extra","schedule":{"0":{"attending":true},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
 "comment":"Vil gerne v\u00e6re madneger, hvis jeg kan spise med","modified":1349545079}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
