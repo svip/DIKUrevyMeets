@@ -24,7 +24,7 @@
 "29":{"name":"Jacob B\u00f8lling Hansen","register":1317108691,"admin":false,"identity":"29"},
 "30":{"name":"Dan Tedja Christensen","register":1317112630,"admin":false,"identity":"30"},
 "32":{"name":"Daniel Juhl","register":1317121561,"admin":false,"identity":"32"},
-"33":{"name":"Markus Lund Wittorf","register":1317142390,"admin":false,"identity":"33"},
+"33":{"name":"Markus Lund Wittorf","register":1317142390,"admin":false,"identity":"33","nickname":"Markus Lund Wittorf"},
 "34":{"name":"Christoffer Wadum Larsen","register":1317193921,"admin":false,"identity":"34"},
 "35":{"name":"Nana Girotti","register":1317214221,"admin":false,"identity":"35","nickname":"Nana"},
 "38":{"name":"Andreas Malmkj\u00e6r-M\u00f8rch","register":1317405518,"admin":false,"identity":"38","nickname":"Andreas"},
@@ -80,6 +80,8 @@
 "122":{"name":"Rasmus Klett Mortensen","register":1348221762,"admin":false,"identity":"122","nickname":"Rasmus Klett"},
 "126":{"name":"Sara Lee Naldal","register":1348472063,"admin":false,"identity":"126"},
 "127":{"name":"Nikolaj Pedersen","register":1348492831,"admin":false,"identity":"127"},
-"128":{"name":"\u03a7","register":1349012060,"admin":false,"identity":"128"},
+"128":{"name":"chi","register":1349012060,"admin":false,"identity":"128","nickname":"chi"},
 "139":{"name":"Rasmus Wriedt Larsen","register":1349207207,"admin":false,"identity":"139"},
-"136":{"name":"Henriks Urms","register":1349545437,"admin":false,"identity":"136","nickname":"Henrik Urms"}}
+"136":{"name":"Henriks Urms","register":1349545437,"admin":false,"identity":"136","nickname":"Henrik Urms"},
+"119":{"name":"Peter Troelsen","nickname":"Pe-T-eR","register":1350584974,"admin":false,"identity":"119"},
+"148":{"name":"Jonas Aaslet","nickname":"Jaaslet","register":1350591768,"admin":false,"identity":"148"}}
