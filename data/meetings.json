@@ -3007,7 +3007,7 @@
 "33":{"schedule":{"0":{"attending":false},
 "1":{"attending":false}},
 "usertype":"normal","comment":"","modified":1350596114}},
-"hidden":false,"locked":false,"tags":{"0":"intro","1":"workshop"},
+"hidden":true,"locked":true,"tags":{"0":"intro","1":"workshop"},
 "days":"2"},
 "2012-11-07":{"title":"Politrevy","schedule":{"0":{"id":0,"title":"Generalpr\u00f8ve","type":"meet","start":"20:00","end":"23:00","unique":false,"nojoin":false},
 "1":{"id":1,"title":"Aftensmad","type":"eat","start":"18:00","end":"19:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false}},
