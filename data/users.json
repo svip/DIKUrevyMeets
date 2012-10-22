@@ -1,5 +1,5 @@
 {"4":{"name":"#Brainfuck","register":1316805316,"admin":true,"identity":"4","nickname":"Brainfuck"},
-"3":{"name":"Ronni Elken Lindsgaard","register":1316807433,"admin":true,"identity":"3"},
+"3":{"name":"Ronni Elken Lindsgaard","register":1316807433,"admin":true,"identity":"3","nickname":"ronnil"},
 "5":{"name":"Ahmed","register":1316811751,"admin":true,"identity":"5"},
 "6":{"name":"Phillip Alexander Roschnowski","register":1316861488,"admin":false,"identity":"6","nickname":"\u03a6"},
 "7":{"name":"Troels Henriksen","register":1316864071,"admin":false,"identity":"7","nickname":"Instruktorl\u00f8jtnanten"},
@@ -85,4 +85,6 @@
 "136":{"name":"Henriks Urms","register":1349545437,"admin":false,"identity":"136","nickname":"Henrik Urms"},
 "119":{"name":"Peter Troelsen","nickname":"Pe-T-eR","register":1350584974,"admin":false,"identity":"119"},
 "148":{"name":"Jonas Aaslet","nickname":"Jaaslet","register":1350591768,"admin":false,"identity":"148"},
-"149":{"name":"Mia Louw V\u00e6rndal","nickname":"Mia Louw","register":1350841254,"admin":false,"identity":"149"}}
+"149":{"name":"Mia Louw V\u00e6rndal","nickname":"Mia Louw","register":1350841254,"admin":false,"identity":"149"},
+"152":{"name":"Kasper Fab\u00e6ch Brandt","nickname":"brandt","register":1350926537,"admin":false,"identity":"152"},
+"154":{"name":"Sine Vesterg\u00e5rd Jensen","nickname":"Sine V.Jensen","register":1350936979,"admin":false,"identity":"154"}}
