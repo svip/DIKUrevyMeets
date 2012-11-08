@@ -3071,5 +3071,5 @@
 "2012-11-07":{"title":"Politrevy","schedule":{"0":{"id":0,"title":"Generalpr\u00f8ve","type":"meet","start":"20:00","end":"23:00","unique":false,"nojoin":false},
 "1":{"id":1,"title":"Aftensmad","type":"eat","start":"18:00","end":"19:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false}},
 "comment":"Fra hjemmesiden: \"Der vil v\u00e6re generalpr\u00f8ve onsdag d. 7. november kl. 20, hvor i (andre studierevyer) er velkomne til at komme ind og se p\u00e5. Dog skal i venligst sende en mail til politrevy@gmail.com senest dagen inden s\u00e5 vi ved hvor mange der m\u00f8der op.\"\r\n\r\nhttp:\/\/politrevy.wix.com\/politrevy#!forestilling\/cjg9","users":{},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
