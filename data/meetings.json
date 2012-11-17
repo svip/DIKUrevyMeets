@@ -2875,7 +2875,7 @@
 "usertype":"normal","comment":"Tager hjem l\u00f8rdag eftermiddag","modified":1352410409,"name":"Julie Meinicke Nielsen"},
 "17":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"K\u00f8rer med i le bauws","modified":1352940880,"name":"Klaes Rasmussen"}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":"2"},
 "2012-09-11":{"title":"Introaften","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 17:30","end":"0 23:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"0 19:00","end":"0 20:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
