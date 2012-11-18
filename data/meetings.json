@@ -3091,6 +3091,10 @@
 "22":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1353256674,"name":"Sebastian Paaske T\u00f8rholm"},
 "116":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1353256736}},
+"usertype":"normal","comment":"","modified":1353256736,"name":"Maya Saietz"},
+"14":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1353260774,"name":"Martin Nicklas J\u00f8rgensen"},
+"87":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1353265097}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
