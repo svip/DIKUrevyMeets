@@ -3087,6 +3087,10 @@
 "days":false},
 "2012-12-01":{"title":"Matematikrevy","schedule":{"0":{"title":"L\u00f8rdagsforestilling","type":"meet","start":"0 19:00","end":"0 23:00","unique":false,"nojoin":false,"id":"0"}},
 "comment":"","users":{"8":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1353230023}},
+"usertype":"normal","comment":"","modified":1353230023,"name":"Jenny-Margrethe Vej"},
+"22":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1353256674,"name":"Sebastian Paaske T\u00f8rholm"},
+"116":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1353256736}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
