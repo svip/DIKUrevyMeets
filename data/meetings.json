@@ -3095,6 +3095,8 @@
 "14":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1353260774,"name":"Martin Nicklas J\u00f8rgensen"},
 "87":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1353265097}},
+"usertype":"normal","comment":"","modified":1353265097,"name":"Daniel Egeberg"},
+"148":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1353335398}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
