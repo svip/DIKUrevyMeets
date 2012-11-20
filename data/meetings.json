@@ -3097,6 +3097,8 @@
 "87":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1353265097,"name":"Daniel Egeberg"},
 "148":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1353335398}},
+"usertype":"normal","comment":"","modified":1353335398,"name":"Jonas Aaslet"},
+"114":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1353366467}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
