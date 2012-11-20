@@ -3099,6 +3099,8 @@
 "148":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1353335398,"name":"Jonas Aaslet"},
 "114":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1353366467}},
+"usertype":"normal","comment":"","modified":1353366467,"name":"Simon Skjerning Linneberg"},
+"31":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1353441920}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
