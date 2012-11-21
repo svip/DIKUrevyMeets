@@ -3101,6 +3101,10 @@
 "114":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1353366467,"name":"Simon Skjerning Linneberg"},
 "31":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1353441920}},
+"usertype":"normal","comment":"","modified":1353441920,"name":"Albert Schulz"},
+"42":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1353514750,"name":"#A"},
+"38":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1353514782}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
