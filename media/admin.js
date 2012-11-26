@@ -155,4 +155,9 @@ window.onload = function() {
 		document.getElementById('meeting-tags').onfocus = tagSearch;
 		document.getElementById('meeting-tags').onkeyup = tagSearch;
 	}
+	i = 0;
+	while ( document.getElementById('newmeeting-'+i+'-start') ) {
+		i++;
+	}
+	currentId = i-1;
 };
