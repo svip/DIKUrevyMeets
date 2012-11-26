@@ -18,6 +18,7 @@ class Meeting extends Page {
 			);
 			return;
 		}
+		$this->additionalScript[] = 'meeting.js';
 		$itemid = isset($_GET['subid'])?$_GET['subid']:null;
 		$meeting = $this->database->getMeetings()->{$m};
 		$this->makePage ( $m, $meeting, $itemid );
@@ -232,7 +233,11 @@ class Meeting extends Page {
 			}
 		}
 		$table .= '</tr><tr>';
-		$table .= gfRawMsg('<th>$1</th>', gfMsg('datatable-header-user'));
+		$table .= gfRawMsg('<th>$1<br />$2</th>', gfMsg('datatable-header-user'),
+			gfRawMsg('<a href="javascript://" onclick="toggleNames();">$1</a>',
+				gfMsg('datatable-header-usertoggle')
+			)
+		);
 		foreach ( $schedule as $item ) {
 			if ( $item->nojoin )
 				continue;

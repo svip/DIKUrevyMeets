@@ -13,6 +13,7 @@ $messages = array (
 	
 	'datatable-header-schedule'   => 'Program',
 	'datatable-header-user'       => 'Revyt',
+	'datatable-header-usertoggle' => 'CPR-navne',
 	'datatable-header-eating'     => 'Spiser med',
 	'datatable-header-cooking'    => 'Madherre',
 	'datatable-header-foodhelp'   => 'Madneger',
