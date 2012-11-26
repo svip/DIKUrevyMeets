@@ -496,30 +496,6 @@ class Meeting extends Page {
 		
 		if ( !$canJoin ) return '';
 		
-		foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
-			if ( $item->nojoin
-				|| (!is_null($itemid) && $item->id != $itemid)
-				|| (is_null($itemid) && $item->unique) ) {
-				continue;
-			} elseif ( $item->type == 'eat' 
-				&& $item->open ) {
-				$form .= gfRawMsg('<form method="post">
-<fieldset>
-<legend>$1</legend>
-<label for="closeeating-$2-spend">$3:</label>
-<input type="text" name="closeeating-$2-spend" id="closeeating-$2-spend" value="$4" />
-<input type="submit" name="closeeating-$2-submit" value="$5" />
-</fieldset>
-</form>',
-					gfMsg('closeeatingform-title', $item->title),
-					$item->id,
-					gfMsg('closeeatingform-spend'),
-					$item->spend,
-					gfMsg('closeeatingform-submit')
-				);
-			}
-		}
-		
 		foreach ( $currentInfo as $subuserid => $user ) {
 			$form .= gfRawMsg('<form method="post">
 	<fieldset>
@@ -635,6 +611,30 @@ class Meeting extends Page {
 		
 		$subuserid++;
 		
+		foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
+			if ( $item->nojoin
+				|| (!is_null($itemid) && $item->id != $itemid)
+				|| (is_null($itemid) && $item->unique) ) {
+				continue;
+			} elseif ( $item->type == 'eat' 
+				&& $item->open ) {
+				$form .= gfRawMsg('<form method="post">
+<fieldset>
+<legend>$1</legend>
+<label for="closeeating-$2-spend">$3:</label>
+<input type="text" name="closeeating-$2-spend" id="closeeating-$2-spend" value="$4" />
+<input type="submit" name="closeeating-$2-submit" value="$5" />
+</fieldset>
+</form>',
+					gfMsg('closeeatingform-title', $item->title),
+					$item->id,
+					gfMsg('closeeatingform-spend'),
+					$item->spend,
+					gfMsg('closeeatingform-submit')
+				);
+			}
+		}
+		
 		$form .= gfRawMsg('<form method="post">
 <fieldset>
 <legend>$1</legend>
@@ -647,6 +647,7 @@ class Meeting extends Page {
 			gfMsg('joinform-extrapersontext'),
 			gfMsg('joinform-extrapersonname')
 		);
+		
 		foreach ( $this->sortSchedule($meeting->schedule) as $item ) {
 			if ( $item->nojoin ) {
 				continue;
