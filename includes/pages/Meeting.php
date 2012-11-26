@@ -25,7 +25,15 @@ class Meeting extends Page {
 	}
 	
 	function userSort ( $a, $b ) {
-		return strncasecmp((isset($a->nickname)?$a->nickname:$a->name), (isset($b->nickname)?$b->nickname:$b->name), 4);
+		$a = (isset($a->nickname)?$a->nickname:$a->name);
+		$b = (isset($b->nickname)?$b->nickname:$b->name);
+		if ( $a[0] == '#' ) $a[0] = 'Å';
+		if ( $b[0] == '#' ) $b[0] = 'Å';
+		$a = preg_replace('@[^a-zA-ZæøåÆØÅ]@i', '', $a);
+		$b = preg_replace('@[^a-zA-ZæøåÆØÅ]@i', '', $b);
+		if ( preg_match('@.*brainfuck.*@i', $a) ) $a = '########';
+		if ( preg_match('@.*brainfuck.*@i', $b) ) $b = '########';
+		return strncasecmp($a, $b, 4);
 	}
 	
 	protected function showTime ( $time ) {
