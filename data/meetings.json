@@ -3140,6 +3140,8 @@
 "35":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1353873413,"name":"Nana Girotti"},
 "24":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1353873690}},
+"usertype":"normal","comment":"","modified":1353873690,"name":"Mikkel Kj\u00e6r Jensen"},
+"25":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1353888559}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
