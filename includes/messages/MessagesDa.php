@@ -9,6 +9,7 @@ $messages = array (
 	'meeting-nomeetingfor'        => 'Intet møde $1 den $2.',
 	'meeting-tofrontpage'         => 'Til forsiden',
 	'meeting-multiday-period'     => 'Fra $1 den $2 til $3 den $4',
+	'meeting-schedule'            => 'Program',
 	
 	'datatable-header-schedule'   => 'Program',
 	'datatable-header-user'       => 'Revyt',
