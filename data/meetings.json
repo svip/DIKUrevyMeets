@@ -3151,7 +3151,7 @@
 "comment":"","modified":1354087086},
 "3":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1354183774}},
-"hidden":false,"locked":true,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2013-04-26":{"title":"Hyttetur #1","schedule":{"0":{"id":"0","title":"Deltager i hygge!!","type":"meet","start":"0 16:00","end":"0 23:59","unique":false,"nojoin":false},
 "1":{"id":"1","title":"Deltager i hygge!!","type":"meet","start":"1 00:00","end":"1 23:59","unique":false,"nojoin":false},
