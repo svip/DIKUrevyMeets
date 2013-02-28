@@ -3659,6 +3659,12 @@
 "usertype":"normal","comment":"","modified":1361122149,"name":"Ejnar H\u00e5konsen"},
 "14":{"schedule":{"0":{"attending":true},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1361734042}},
+"usertype":"normal","comment":"","modified":1361734042,"name":"Martin Nicklas J\u00f8rgensen"},
+"22":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1362052474,"name":"Sebastian Paaske T\u00f8rholm"},
+"114":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1362061474}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
