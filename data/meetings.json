@@ -3722,6 +3722,9 @@
 "usertype":"normal","comment":"","modified":1362330485,"name":"Jonas Aaslet"},
 "148-ad8b":{"name":"C\u00e6cilie","usertype":"extra","schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"comment":"","modified":1362330511}},
+"comment":"","modified":1362330511},
+"115":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1362493721}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
