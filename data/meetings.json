@@ -3751,5 +3751,5 @@
 "usertype":"normal","comment":"","modified":1362742301},
 "22-eb3e":{"name":"Kristoffer S\u00f8holm","usertype":"extra","schedule":{"0":{"attending":true}},
 "comment":"","modified":1362753150}},
-"hidden":false,"locked":true,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
