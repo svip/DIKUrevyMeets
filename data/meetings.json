@@ -3200,7 +3200,7 @@
 "days":"2"},
 "2013-03-25":{"title":"Materialedeadline","schedule":{"0":{"id":0,"title":"","type":"meet","start":"11:55","end":"12:00","unique":false,"nojoin":true}},
 "comment":"Alt materiale skal v\u00e6re f\u00e6rdig og TeXet samt lagt p\u00e5 serveren inden kl. 1200, hvis det skal med i betragtning til \u00e5rets forestilling","users":{},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2013-03-27":{"title":"Materialeudv\u00e6lgelse samt rollefordeling","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"09:00","end":"23:00","unique":false,"nojoin":true}},
 "comment":"I dag v\u00e6lges materiale og roller fordeles","users":{},
