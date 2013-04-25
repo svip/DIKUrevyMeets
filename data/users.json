@@ -63,7 +63,7 @@
 "77":{"name":"Daisy","register":1337092102,"admin":false,"identity":"77"},
 "1":{"name":"revyboss","register":1337238033,"admin":false,"identity":"1"},
 "79":{"name":"Morten Br\u00f8ns-Pedersen","register":1337331573,"admin":false,"identity":"79"},
-"82":{"name":"Michael Andersen","register":1337343227,"admin":false,"identity":"82","nickname":"BlackPlague"},
+"82":{"name":"Michael Andersen","register":1337343227,"admin":false,"identity":"82","nickname":"Michael Andersen"},
 "75":{"name":"Christina Heltoft","register":1337641899,"admin":false,"identity":"75"},
 "87":{"name":"Daniel Egeberg","register":1337766832,"admin":true,"identity":"87","nickname":"degeberg"},
 "85":{"name":"Toke Lyn\u00e6s Larsen","register":1337766854,"admin":false,"identity":"85"},
@@ -93,4 +93,5 @@
 "311":{"name":"kasper","nickname":"K\u00f8k","register":1364645434,"admin":false,"identity":"311"},
 "327":{"name":"Alexandra Hou","nickname":"MadameSandler","register":1365603396,"admin":false,"identity":"327"},
 "315":{"name":"Kristoffer S\u00f8holm","nickname":"kristoffer","register":1366589567,"admin":false,"identity":"315"},
-"309":{"name":"Mathias Svensson","nickname":"idolf.hatler@coq.dk","register":1366696923,"admin":false,"identity":"309"}}
+"309":{"name":"Mathias Svensson","nickname":"idolf.hatler@coq.dk","register":1366696923,"admin":false,"identity":"309"},
+"352":{"name":"lasse minet larsen","nickname":"Lasse Larsen","register":1366911194,"admin":false,"identity":"352"}}
