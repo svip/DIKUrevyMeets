@@ -462,7 +462,7 @@ class Admin extends Page {
 				$id = $item->id;
 				$useritem = $user->schedule->{$id};
 				if ( $item->type == 'meet' ) {
-					$form .= '<td class="centre '.($useritem->attending?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-attending" '.($useritem->attending?'checked="true"':'').' id="meeting-'.$userid.'-'.$id.'-attending" '.($useritem->attending?'checked="true"':'').'" /><label for="meeting-'.$userid.'-'.$id.'-attending" '.($useritem->attending?'checked="true"':'').'"></label></td>';
+					$form .= '<td class="centre '.(@$useritem->attending?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-attending" '.(@$useritem->attending?'checked="true"':'').' id="meeting-'.$userid.'-'.$id.'-attending" '.($useritem->attending?'checked="true"':'').'" /><label for="meeting-'.$userid.'-'.$id.'-attending" '.(@$useritem->attending?'checked="true"':'').'"></label></td>';
 				} elseif ( $item->type == 'eat' ) {
 					$form .= '<td class="centre '.($useritem->eating?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-eating" '.($useritem->eating?'checked="true"':'').' id="meeting-'.$userid.'-'.$id.'-eating" '.($useritem->eating?'checked="true"':'').'" /><label for="meeting-'.$userid.'-'.$id.'-eating" '.($useritem->eating?'checked="true"':'').'"></label></td>';
 					$form .= '<td class="centre '.($useritem->cooking?'yes':'no').'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-cooking" '.($useritem->cooking?'checked="true"':'').' id="meeting-'.$userid.'-'.$id.'-cooking" '.($useritem->cooking?'checked="true"':'').'" /><label for="meeting-'.$userid.'-'.$id.'-cooking" '.($useritem->cooking?'checked="true"':'').'"></td>';
