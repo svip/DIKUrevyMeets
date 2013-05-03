@@ -4543,6 +4543,10 @@
 "114-81d6":{"name":"Martin","usertype":"extra","schedule":{"0":{"attending":true}},
 "comment":"","modified":1367338862},
 "327":{"schedule":{"0":{"attending":false}},
-"usertype":"normal","comment":"","modified":1367484274}},
+"usertype":"normal","comment":"","modified":1367484274,"name":"Alexandra Hou"},
+"135":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1367568517,"name":"Alexander Worm Olsen"},
+"135-654c":{"name":"Sofia","usertype":"extra","schedule":{"0":{"attending":true}},
+"comment":"","modified":1367568524}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
