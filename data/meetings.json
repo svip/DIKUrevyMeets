@@ -4589,5 +4589,5 @@
 "usertype":"normal","comment":"","modified":1367568517},
 "135-654c":{"name":"Sofia","usertype":"extra","schedule":{"0":{"attending":true}},
 "comment":"","modified":1367568524}},
-"hidden":false,"locked":true,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
