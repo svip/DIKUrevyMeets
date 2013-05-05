@@ -4439,7 +4439,7 @@
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0},
 "2":{"attending":true}},
 "usertype":"normal","comment":"","modified":1367599067}},
-"hidden":false,"locked":true,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2013-03-09":{"title":"MBK-revy","schedule":{"0":{"id":0,"title":"Pladsreservation","type":"meet","start":"19:30","end":"23:00","unique":false,"nojoin":false}},
 "comment":"","users":{"20":{"schedule":{"0":{"attending":true},
