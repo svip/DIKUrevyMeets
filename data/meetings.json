@@ -4056,7 +4056,7 @@
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0},
 "2":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1368921233}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2013-05-20":{"title":"#4 \u00f8vedag","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 18:30","end":"0 23:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"0 17:30","end":"0 18:30","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
