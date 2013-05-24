@@ -4645,7 +4645,7 @@
 "14-f6b7":{"name":"Martin Elvers","usertype":"extra","schedule":{"0":{"attending":false},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "comment":"introen bli'r aaaarrrldrig f\u00e6rdig !","modified":1369262629}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2013-05-24":{"title":"#8 Pr\u00e6miere","schedule":{"0":{"id":"0","title":"M\u00f8de","type":"meet","start":"0 18:00","end":"0 23:00","unique":false,"nojoin":false},
 "1":{"id":"1","title":"Aftensmad","type":"eat","start":"0 17:30","end":"0 18:00","open":false,"spend":"0","costperperson":0,"unique":false,"nojoin":false,"closedby":"6"}},
