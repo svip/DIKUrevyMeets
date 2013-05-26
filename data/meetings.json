@@ -5454,6 +5454,9 @@
 "usertype":"normal","comment":"","modified":1369571877,"name":"Sebastian Paaske T\u00f8rholm"},
 "38":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Allergisk over for \u00e6g, n\u00f8dder og r\u00e5 frugt og gr\u00f8nt.","modified":1369577892}},
+"usertype":"normal","comment":"Allergisk over for \u00e6g, n\u00f8dder og r\u00e5 frugt og gr\u00f8nt.","modified":1369577892,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
+"4":{"schedule":{"0":{"attending":false},
+"1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"I Frankrig","modified":1369585356}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
