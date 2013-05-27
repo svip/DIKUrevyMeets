@@ -5472,6 +5472,9 @@
 "usertype":"normal","comment":"","modified":1369656189,"name":"Camilla Maach Br\u00f8nnum Olsen"},
 "36":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Kan godt lide patter ;)","modified":1369669517}},
+"usertype":"normal","comment":"Kan godt lide patter ;)","modified":1369669517,"name":"Thomas Nicolaj Barnholdt"},
+"20":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Kan godt lide patter","modified":1369688324}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
