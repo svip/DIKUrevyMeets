@@ -5466,6 +5466,12 @@
 "usertype":"normal","comment":"","modified":1369609874,"name":"Ejnar H\u00e5konsen"},
 "21":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1369646387}},
+"usertype":"normal","comment":"","modified":1369646387,"name":"Sarah Vang N\u00f8hr"},
+"115":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1369656189,"name":"Camilla Maach Br\u00f8nnum Olsen"},
+"36":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Kan godt lide patter ;)","modified":1369669517}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
