@@ -5457,7 +5457,7 @@
 "usertype":"normal","comment":"Allergisk over for \u00e6g, n\u00f8dder og r\u00e5 frugt og gr\u00f8nt.","modified":1369577892,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
 "4":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"I Frankrig","modified":1369585356,"name":"Brainfuck"},
+"usertype":"normal","comment":"JEG SKAL TISSE!","modified":1369694037},
 "149":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1369609812,"name":"Mia Louw V\u00e6rndal"},
@@ -5475,6 +5475,6 @@
 "usertype":"normal","comment":"Kan godt lide patter ;)","modified":1369669517,"name":"Thomas Nicolaj Barnholdt"},
 "20":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Kan godt lide patter","modified":1369688324}},
+"usertype":"normal","comment":"Kan godt lide patter","modified":1369688324,"name":"Claus Appel (Spectrum)"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
