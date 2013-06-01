@@ -346,9 +346,12 @@ class Meeting extends Page {
 					}
 				}
 			}
-			if ( preg_match('/.*postrevy.*/i', $meeting->title) 
-				&& !$this->verifyPun($user->comment) ) {
-				$user->comment = gfMsg('punrequired');	
+			if ( preg_match('/.*postrevy.*/i', $meeting->title) ) {
+				if ( !$this->verifyPun($user->comment) ) {
+					$user->comment = gfMsg('punrequired');
+				} else {
+					$user->comment = preg_replace('/(patter|patte|pat)/i', '<span style="color: green; font-weight: bold;">\1</span>', $user->comment);
+				}
 			}
 			$table .= gfRawMsg('<td class="comment">$1</td></tr>',
 				$user->comment
