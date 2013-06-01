@@ -346,6 +346,10 @@ class Meeting extends Page {
 					}
 				}
 			}
+			if ( preg_match('/.*postrevy.*/i', $meeting->title) 
+				&& !$this->verifyPun($user->comment) ) {
+				$user->comment = gfMsg('punrequired');	
+			}
 			$table .= gfRawMsg('<td class="comment">$1</td></tr>',
 				$user->comment
 			);
@@ -454,7 +458,7 @@ class Meeting extends Page {
 		
 		if ( preg_match('/.*postrevy.*/i', $meeting->title)
 			&& !$this->verifyPun($comment) ) {
-			$comment = '<span style="color: red; font-weight: bold;">PATTEORDSPIL ER PÅKRÆVET I KOMMENTARFELT TIL POSTREVY.</span>';
+			$comment = gfMsg('punrequired');
 		}
 		
 		if ( $_POST['meeting-usertype'] == 'extra' ) {

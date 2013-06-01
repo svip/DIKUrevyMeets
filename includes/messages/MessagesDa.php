@@ -1,6 +1,8 @@
 <?php
 
 $messages = array (
+	'punrequired'                 => '<span style="color: red; font-weight: bold;">PATTEORDSPIL ER PÅKRÆVET I KOMMENTARFELTET TIL POSTREVYEN.</span>',
+	
 	'user-system'                 => 'Systemet',
 	
 	'topnav-back'                 => 'Tilbage',
