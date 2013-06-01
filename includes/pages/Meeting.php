@@ -524,7 +524,7 @@ class Meeting extends Page {
 				}
 			}
 			if ( !is_null($currentInfo[$subuserid]) )
-				$userSchedule[$subuserid]['comment'] = $this->safeString($currentInfo[$subuserid]->comment);
+				$userSchedule[$subuserid]['comment'] = $this->safeString($this->database->stripHtml($currentInfo[$subuserid]->comment));
 			else
 				$userSchedule[$subuserid]['comment'] = '';
 		}
@@ -632,7 +632,9 @@ class Meeting extends Page {
 <input type="submit" name="meeting-submit" value="$4" />',
 				$subuserid,
 				gfMsg('joinform-comment'),
-				$userSchedule[$subuserid]['comment'],
+				($userSchedule[$subuserid]['comment']==gfMsg('punrequired')
+					?''
+					:$this->database->stripHtml($userSchedule[$subuserid]['comment'])),
 				(is_null($currentInfo[$subuserid])
 					? gfMsg('joinform-submit-join')
 					: gfMsg('joinform-submit-change'))

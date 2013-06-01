@@ -152,7 +152,8 @@ class Database {
 	}
 	
 	function stripHtml ( $string ) {
-		return str_replace(array('<', '>'), array('&lt;', '&gt;'), $string);
+		return strip_tags($string);
+		//return str_replace(array('<', '>'), array('&lt;', '&gt;'), $string);
 	}
 	
 	function insertMeeting ( $date, $title, $schedule=array(array
