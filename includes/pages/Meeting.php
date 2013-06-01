@@ -347,7 +347,8 @@ class Meeting extends Page {
 				}
 			}
 			if ( preg_match('/.*postrevy.*/i', $meeting->title) ) {
-				if ( !$this->verifyPun($user->comment) ) {
+				if ( !$this->verifyPun($user->comment)
+					|| $user->comment == gfMsg('punrequired') ) {
 					$user->comment = gfMsg('punrequired');
 				} else {
 					$user->comment = preg_replace('/(patter|patte|pat)/i', '<span style="color: green; font-weight: bold;">\1</span>', $user->comment);
