@@ -24,7 +24,7 @@ class Meeting extends Page {
 		$this->makePage ( $m, $meeting, $itemid );
 	}
 	
-	function userSort ( $a, $b ) {
+	private function userSort ( $a, $b ) {
 		$a = (isset($a->nickname)?$a->nickname:$a->name);
 		$b = (isset($b->nickname)?$b->nickname:$b->name);
 		if ( $a[0] == '#' ) $a[0] = 'Å';
@@ -421,6 +421,15 @@ class Meeting extends Page {
 			header ( 'Location: ./?meeting='.$date.'&subid='.$itemid );
 	}
 	
+	private function verifyPun($comment) {
+		if ( !preg_match('/.*pat.*/i', $comment) )
+			return false;
+		if ( preg_match('/.*patter.*/i', $comment) )
+			return strlen($comment) > 10;
+		else
+			return strlen($comment) > 6;
+	}
+	
 	private function handleMeetingSubmit ( $date, $meeting, $itemid ) {
 		
 		$userSchedule = array();
@@ -442,6 +451,11 @@ class Meeting extends Page {
 		}
 		
 		$comment = $this->database->stripHtml($_POST['meeting-comment']);
+		
+		if ( preg_match('/.*postrevy.*/i', $meeting->title)
+			&& !$this->verifyPun($comment) ) {
+			$comment = '<span style="color: red; font-weight: bold;">PATTEORDSPIL ER PÅKRÆVET I KOMMENTARFELT TIL POSTREVY.</span>';
+		}
 		
 		if ( $_POST['meeting-usertype'] == 'extra' ) {
 			$name = $_POST['meeting-name'];
