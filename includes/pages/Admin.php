@@ -470,7 +470,7 @@ class Admin extends Page {
 					$form .= '<td class="centre '.($useritem->paid?'yes':($useritem->eating?'no':'nomatter')).'"><input type="checkbox" name="meeting-'.$userid.'-'.$id.'-paid" '.($useritem->paid?'checked="true"':'').' id="meeting-'.$userid.'-'.$id.'-paid" '.($useritem->paid?'checked="true"':'').'" /><label for="meeting-'.$userid.'-'.$id.'-paid" '.($useritem->paid?'checked="true"':'').'"></label></td>';
 				}
 			}
-			$form .= '<td><input type="text" name="meeting-'.$userid.'-comment" value="'.$user->comment.'" /></td>';
+			$form .= '<td><input type="text" name="meeting-'.$userid.'-comment" value="'.$this->database->stripHtml($user->comment).'" /></td>';
 			$form .= '<td class="modified">'.$this->fullTimestamp($user->modified).'</td>';
 			$form .= '</tr>';
 		}
