@@ -203,8 +203,10 @@ class Database {
 			// don't do anything with a locked meeting.
 			return false;
 		foreach ( $schedule as $id => $item )
-			if ( $item['type'] == 'eat' )
+			if ( $item['type'] == 'eat' ) {
 				$schedule[$id]['open'] = $this->meetings->{$date}->schedule->{$id}->open;
+				$schedule[$id]['closedby'] = $this->meetings->{$date}->schedule->{$id}->closedby;
+			}
 		$this->meetings->{$date}->title = $title;
 		$this->meetings->{$date}->comment = $comment;
 		$this->meetings->{$date}->schedule = $schedule;
