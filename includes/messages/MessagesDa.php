@@ -45,6 +45,9 @@ $messages = array (
 	'closeeatingform-spend'       => 'Beløb brugt på mad i antal kroner (efterlad som 0 hvis ukendt)',
 	'closeeatingform-submit'      => 'Luk',
 	
+	'openeatingform-title'        => 'Genåbn madtilmeldingen',
+	'openeatingform-submit'       => 'Åbn',
+	
 	'ical-linktofull'             => 'Henvisning til det fulde ical-kalender-abonnement',
 	'ical-instructions'           => 'højreklik og gem selve henvisningen, indsæt den derefter i Deres kalenderprogram',
 	'ical-filtercalendar-header'  => 'Filtér Deres ical-kalender',
