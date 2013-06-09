@@ -287,9 +287,9 @@ class Database {
 					&& !$item->open ) {
 					if ( is_array ( $userSchedule ) ) {
 						if ( !empty($this->meetings->{$date}->{'users'}->{$userid}) ) {
-							$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->eating;
-							$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->cooking;
-							$userSchedule[$id]['foodhelp'] = @$this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->foodhelp;
+							$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$userid}->schedule->{$id}->eating;
+							$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$userid}->schedule->{$id}->cooking;
+							$userSchedule[$id]['foodhelp'] = @$this->meetings->{$date}->{'users'}->{$userid}->schedule->{$id}->foodhelp;
 						} else {
 							$userSchedule[$id]['eating'] = false;
 							$userSchedule[$id]['cooking'] = false;

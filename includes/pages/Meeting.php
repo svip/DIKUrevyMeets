@@ -439,7 +439,6 @@ class Meeting extends Page {
 	}
 	
 	private function handleMeetingSubmit ( $date, $meeting, $itemid ) {
-		
 		$userSchedule = array();
 		
 		foreach ( $meeting->schedule as $id => $item ) {
