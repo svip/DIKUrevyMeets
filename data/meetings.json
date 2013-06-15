@@ -5551,5 +5551,5 @@
 "67":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"<span style=\"color: red; font-weight: bold;\">PATTEORDSPIL ER P\u00c5KR\u00c6VET I KOMMENTARFELTET TIL POSTREVYEN.<\/span>","modified":1371204145,"name":"taus m\u00f8ller"}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
