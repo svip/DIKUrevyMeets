@@ -53,6 +53,7 @@ type oldMeeting struct {
 	Days interface{}
 }
 
+// This is a hack, don't bother understanding it
 func parseLegacyData(data []byte) error {
 	var f map[string]oldMeeting
 	r := make(Meetings)

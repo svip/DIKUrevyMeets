@@ -85,6 +85,8 @@ func loadMeetings() {
 }
 
 func GetMeetings() Meetings {
-	loadMeetings()
+	if !meetingsLoaded {
+		loadMeetings()
+	}
 	return Meetings{}
 }
