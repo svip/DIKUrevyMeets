@@ -20,6 +20,7 @@ func loadMessages() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("Messages loaded.")
 	messagesLoaded = true
 }
 
