@@ -65,8 +65,13 @@ var meetings Meetings
 //var meetings map[string]interface{}
 var meetingsLoaded bool
 
+var readyToWriteMeetings = make(chan bool)
+var readyToWriteUsers = make(chan bool)
+
+const meetingsFile = "../data/meetings.json"
+
 func loadMeetings() {
-	data, err := ioutil.ReadFile("../data/meetings.json")
+	data, err := ioutil.ReadFile(meetingsFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -81,7 +86,40 @@ func loadMeetings() {
 	}
 	fmt.Println("Meetings loaded.")
 	meetingsLoaded = true
-	fmt.Println(meetings)
+}
+
+func WriteMeetings() {
+	if !<-readyToWriteMeetings {
+		return
+	}
+	data, err := json.Marshal(meetings)
+	if err != nil {
+		return
+	}
+	ioutil.WriteFile(meetingsFile, data, 0777)
+	log.Println("Meetings file written.")
+}
+
+func WriteUsers() {
+	if !<-readyToWriteUsers {
+		return
+	}
+//	data, err := json.Marshal(users)
+//	ioutil.WriteFile(usersFile, data, 0777)
+//	log.Println("Users file written.")
+}
+
+func GetAvailableMeetings() Meetings {
+	if !meetingsLoaded {
+		loadMeetings()
+	}
+	m := Meetings{}
+	for date := range meetings {
+		if !meetings[date].Hidden && !meetings[date].Locked {
+			m[date] = meetings[date]
+		}
+	}
+	return m
 }
 
 func GetMeetings() Meetings {
