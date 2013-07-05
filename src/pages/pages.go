@@ -1,14 +1,16 @@
 package pages
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
+	"html/template"
+	"bytes"
+	"log"
 )
 
 type HandlePage interface {
-	Content() string
+	Content() template.HTML
 	Title() string
 }
 
@@ -34,10 +36,10 @@ func HandleAction (req *http.Request) (html string) {
 	if action == "" {
 		values, err := url.ParseQuery(req.URL.RawQuery)
 		if err != nil {
-			html = "500"
-			return
+			log.Println(err)
+		} else {
+			action = values.Get("action")
 		}
-		action = values.Get("action")
 	}
 	var page HandlePage
 	switch action {
@@ -48,12 +50,25 @@ func HandleAction (req *http.Request) (html string) {
 			page = frontPage(req)
 	}
 	
-	html = fmt.Sprintf("<html><head><title>%s</title></head><body>%s</body></html>", page.Title(), page.Content())
+	mainhtml, err := template.ParseFiles("./template.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	data := struct {
+		Title string
+		Style string
+		Script string
+		Topmenu string
+		Content template.HTML
+	}{page.Title(), "", "", "", page.Content()}
+	out := bytes.NewBuffer([]byte(``))
+	mainhtml.Execute(out, data)
+	html = out.String()
 	return
 }
 
-func (p Page) Content() string {
-	return p.content
+func (p Page) Content() template.HTML {
+	return template.HTML(p.content)
 }
 
 func (p Page) Title() string {
