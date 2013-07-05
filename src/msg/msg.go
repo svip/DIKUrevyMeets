@@ -28,6 +28,9 @@ func Msg(msg string, a ...interface{}) string {
 	if !messagesLoaded {
 		loadMessages()
 	}
+	if _, ok := messages[msg]; !ok {
+		return fmt.Sprintf("<%s>", msg)
+	}
 	return RawMsg(messages[msg], a...)
 }
 
