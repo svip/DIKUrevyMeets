@@ -4,6 +4,10 @@ import (
 	"net/http"
 	"msg"
 	"db"
+	"log"
+	"html/template"
+	"bytes"
+	"fmt"
 )
 
 type FrontPage struct {
@@ -17,10 +21,27 @@ func frontPage (req *http.Request) HandlePage {
 }
 
 func (p *FrontPage) Render() {
-	db.GetMeetings()
+	meetings := db.GetAvailableMeetings()
 	p.Page.title = msg.Msg("front-title")
-	p.Page.content = msg.RawMsg("$1, $2, $1, $3, $5, $6, $8, $11",
-		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
-		11, "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V")
+	
+	var content string
+	
+	meetingRow, err := template.New("meetingRow").Parse(`<tr>
+	<td>{{.Dayname}}</td><td><a href="/møde/{{.Date}}">{{.Writtendate}}</a></td>
+</tr>
+`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for date := range meetings {
+		meetingData := struct {
+			Dayname,Date,Writtendate string
+		}{"x", date, date}
+		out := bytes.NewBufferString(content)
+		meetingRow.Execute(out, meetingData)
+		out.WriteString(content)
+	}
+	
+	p.Page.content = content
 	//msg.Msg("front-title")
 }

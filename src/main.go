@@ -3,20 +3,12 @@ package main
 import (
 	"io"
 	"net/http"
-	"net/url"
 	"log"
-	"fmt"
 	"pages"
 )
 
 func MainEntry(w http.ResponseWriter, req *http.Request) {
-	values, err := url.ParseQuery(req.URL.RawQuery)
-	if err != nil {
-		io.WriteString(w, "500")
-		return
-	}
-	io.WriteString(w, pages.HandleAction(values.Get("action"), req))
-	fmt.Println(req.URL.RawQuery)
+	io.WriteString(w, pages.HandleAction(req))
 }
 
 func main () {
