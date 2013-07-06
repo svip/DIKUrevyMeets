@@ -1,6 +1,17 @@
 {
-	"front-title":          "DIKUrevy-mødekalender",
-	"frontpage-h1":         "DIKUrevy-møder",
+	"front-title":            "DIKUrevy-mødekalender",
+	"frontpage-h1":           "DIKUrevy-møder",
 	
-	"meeting-title":        "Møde: $1"
+	"meeting-title":          "Møde: $1",
+	"meeting-table-schedule": "Program",
+	"meeting-table-user":     "Revyt",
+	"meeting-table-realnametoggle": "CPR-navne",
+	"meeting-table-eating":   "Spiser med",
+	"meeting-table-cooking":  "Madherre",
+	"meeting-table-foodhelp": "Madneger",
+	"meeting-table-attending": "Kommer",
+	"meeting-table-comment":  "Kommentar",
+	
+	"tick-yes":               "✔",
+	"tick-no":                "✘"
 }
