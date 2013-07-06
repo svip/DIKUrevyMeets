@@ -77,7 +77,7 @@ func HandleAction (w http.ResponseWriter, req *http.Request) {
 	}
 	var page HandlePage
 	switch action {
-		case "meeting":
+		case "meeting": fallthrough
 		case "møde":
 			page = meetingPage(req)
 		default:
