@@ -13,7 +13,7 @@ type FrontPage struct {
 	Page Page
 }
 
-func frontPage(req *http.Request, path []string) HandlePage {
+func frontPage(req *http.Request) HandlePage {
 	page := &FrontPage{newPage()}
 	page.Render()
 	return page.Page

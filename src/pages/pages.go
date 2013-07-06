@@ -79,9 +79,9 @@ func HandleAction (w http.ResponseWriter, req *http.Request) {
 	switch action {
 		case "meeting":
 		case "møde":
-			page = meetingPage(req, path)
+			page = meetingPage(req)
 		default:
-			page = frontPage(req, path)
+			page = frontPage(req)
 	}
 	
 	// If redirect is set, we should redirect there.

@@ -11,7 +11,7 @@ type MeetingPage struct {
 	req *http.Request
 }
 
-func meetingPage (req *http.Request, path []string) HandlePage {
+func meetingPage (req *http.Request) HandlePage {
 	page := &MeetingPage{newPage(), req}
 	page.Render()
 	return page.Page
