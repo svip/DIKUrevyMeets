@@ -35,6 +35,7 @@ type oldUserScheduleItem struct {
 }
 
 type oldUserSchedule struct {
+	Id systemUserId
 	Schedule map[string]oldUserScheduleItem
 	Usertype userType
 	Comment string
@@ -75,15 +76,16 @@ func parseLegacyData(data []byte) error {
 			default:
 				newdays = 0
 		}
-		newschedule := make(map[string]scheduleItem)
+		newschedule := make(map[string]ScheduleItem)
 		for itemId := range f[date].Schedule {
 			item := f[date].Schedule[itemId]
-			var newid int
+			var newid scheduleItemId
 			switch item.Id.(type) {
 				case string:
-					newid, _ = strconv.Atoi(item.Id.(string))
+					tmp, _ := strconv.Atoi(item.Id.(string))
+					newid = scheduleItemId(tmp)
 				case int:
-					newid = item.Id.(int)
+					newid = scheduleItemId(item.Id.(int))
 			}
 			var newspend float32
 			switch item.Spend.(type) {
@@ -94,11 +96,11 @@ func parseLegacyData(data []byte) error {
 					newspend = float32(item.Spend.(int))
 			}
 			strid := fmt.Sprintf("%d", newid)
-			newschedule[strid] = scheduleItem{newid, item.Title, item.Type, item.Start, item.End, item.Unique, item.IcalUnique, item.Nojoin, item.CostPerPerson, newspend, item.Open}
+			newschedule[strid] = ScheduleItem{newid, item.Title, item.Type, item.Start, item.End, item.Unique, item.IcalUnique, item.Nojoin, item.CostPerPerson, newspend, item.Open}
 		}
-		newusers := make(map[string]userSchedule)
+		newusers := make(map[string]UserSchedule)
 		for userId := range f[date].Users {
-			newuserschedule := make(map[string]userScheduleItem)
+			newuserschedule := make(map[string]UserScheduleItem)
 			for userItemId := range f[date].Users[userId].Schedule {
 				item := f[date].Users[userId].Schedule[userItemId]
 				neweating := false
@@ -122,9 +124,10 @@ func parseLegacyData(data []byte) error {
 							newfoodhelp = true
 						}
 				}
-				newuserschedule[userItemId] = userScheduleItem{item.Attending, neweating, newcooking, newfoodhelp, item.Paid}
+				newuserschedule[userItemId] = UserScheduleItem{item.Attending, neweating, newcooking, newfoodhelp, item.Paid}
 			}
-			newusers[userId] = userSchedule{newuserschedule, f[date].Users[userId].Usertype, f[date].Users[userId].Comment, f[date].Users[userId].Modified, f[date].Users[userId].Name}
+			i, _ := strconv.Atoi(userId)
+			newusers[userId] = UserSchedule{systemUserId(i), newuserschedule, f[date].Users[userId].Usertype, f[date].Users[userId].Comment, f[date].Users[userId].Modified, f[date].Users[userId].Name}
 		}
 		r[date] = Meeting{f[date].Title, newschedule, f[date].Comment, newusers, f[date].Hidden, f[date].Locked, newtags, newdays}
 	}
