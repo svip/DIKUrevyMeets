@@ -13,7 +13,7 @@ type FrontPage struct {
 	Page Page
 }
 
-func frontPage(req *http.Request) HandlePage {
+func frontPage(req *http.Request, path []string) HandlePage {
 	page := &FrontPage{newPage()}
 	page.Render()
 	return page.Page
@@ -34,11 +34,10 @@ func (p *FrontPage) Render() {
 	}
 
 	for date := range meetings {
-		meetingData := struct {
-			Dayname, Date, Writtendate string
-		}{"x", date, date}
 		out := bytes.NewBufferString(content)
-		meetingRow.Execute(out, meetingData)
+		meetingRow.Execute(out, struct {
+			Dayname, Date, Writtendate string
+		}{"x", date, date})
 		content = out.String()
 	}
 
@@ -49,14 +48,13 @@ func (p *FrontPage) Render() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	data := struct {
+	
+	out := bytes.NewBuffer([]byte(``))
+	meetingTable.Execute(out, struct {
 		Title    string
 		Table    template.HTML
 		UserNote string
-	}{msg.Msg("frontpage-h1"), template.HTML(content), ""}
-	out := bytes.NewBuffer([]byte(``))
-	meetingTable.Execute(out, data)
+	}{msg.Msg("frontpage-h1"), template.HTML(content), ""})
 	content = out.String()
 
 	p.Page.content = content

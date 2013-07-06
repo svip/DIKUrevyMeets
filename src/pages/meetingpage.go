@@ -9,7 +9,7 @@ type MeetingPage struct {
 	Page Page
 }
 
-func meetingPage (req *http.Request) HandlePage {
+func meetingPage (req *http.Request, path []string) HandlePage {
 	page := &MeetingPage{newPage()}
 	page.Render()
 	return page.Page

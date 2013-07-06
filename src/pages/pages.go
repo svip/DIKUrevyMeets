@@ -23,16 +23,12 @@ func newPage () Page {
 	return Page{"",""}
 }
 
-func GetPathSegment(req *http.Request, segment int) string {
-	splits := strings.Split(req.URL.Path, "/")
-	if len(splits) - 1 < segment {
-		return ""
-	}
-	return splits[segment]
-}
-
 func HandleAction (req *http.Request) (html string) {
-	action := GetPathSegment(req, 1)
+	path := strings.Split(req.URL.Path, "/")
+	action := ""
+	if len(path) >= 2 {
+		action = path[1]
+	}
 	if action == "" {
 		values, err := url.ParseQuery(req.URL.RawQuery)
 		if err != nil {
@@ -45,24 +41,23 @@ func HandleAction (req *http.Request) (html string) {
 	switch action {
 		case "meeting":
 		case "møde":
-			page = meetingPage(req)
+			page = meetingPage(req, path)
 		default:
-			page = frontPage(req)
+			page = frontPage(req, path)
 	}
 	
 	mainhtml, err := template.ParseFiles("./template.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	data := struct {
+	out := bytes.NewBuffer([]byte(``))
+	mainhtml.Execute(out, struct {
 		Title string
 		Style string
 		Script string
 		Topmenu string
 		Content template.HTML
-	}{page.Title(), "", "", "", page.Content()}
-	out := bytes.NewBuffer([]byte(``))
-	mainhtml.Execute(out, data)
+	}{page.Title(), "", "", "", page.Content()})
 	html = out.String()
 	return
 }
