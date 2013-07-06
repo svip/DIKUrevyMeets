@@ -126,7 +126,7 @@ func parseLegacyData(data []byte) error {
 			}
 			newusers[userId] = userSchedule{newuserschedule, f[date].Users[userId].Usertype, f[date].Users[userId].Comment, f[date].Users[userId].Modified, f[date].Users[userId].Name}
 		}
-		r[date] = meeting{f[date].Title, newschedule, f[date].Comment, newusers, f[date].Hidden, f[date].Locked, newtags, newdays}
+		r[date] = Meeting{f[date].Title, newschedule, f[date].Comment, newusers, f[date].Hidden, f[date].Locked, newtags, newdays}
 	}
 	meetings = r
 	return nil

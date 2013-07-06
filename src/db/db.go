@@ -46,7 +46,7 @@ type userSchedule struct {
 type Tag string
 type UserId string
 
-type meeting struct {
+type Meeting struct {
 	Title string
 	Schedule map[string]scheduleItem
 	Comment string
@@ -59,7 +59,7 @@ type meeting struct {
 
 type meetingDate string
 
-type Meetings map[string]meeting
+type Meetings map[string]Meeting
 
 var meetings Meetings
 //var meetings map[string]interface{}
@@ -69,6 +69,14 @@ var readyToWriteMeetings = make(chan bool)
 var readyToWriteUsers = make(chan bool)
 
 const meetingsFile = "../data/meetings.json"
+
+type DbError struct {
+	error string
+}
+
+func (e *DbError) Error() string {
+	return e.error
+}
 
 func loadMeetings() {
 	data, err := ioutil.ReadFile(meetingsFile)
@@ -127,4 +135,15 @@ func GetMeetings() Meetings {
 		loadMeetings()
 	}
 	return Meetings{}
+}
+
+func GetMeeting(date string) (Meeting, error) {
+	if !meetingsLoaded {
+		loadMeetings()
+	}
+	meeting, ok := meetings[date]
+	if !ok {
+		return Meeting{}, &DbError{"No such meeting"}
+	}
+	return meeting, nil
 }
