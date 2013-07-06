@@ -266,6 +266,93 @@ class Admin extends Page {
 		return $this->database->getUserById($userid)->name;
 	}
 	
+	private function handleMeetingSubmit ( $date, $meeting ) {
+		$newdate = $_POST['meeting-date'];
+		$title = $_POST['meeting-title'];
+		$meetComment = $_POST['meeting-comment'];
+		$locked = isset($_POST['meeting-locked']);
+		$hidden = isset($_POST['meeting-hidden']);
+		$tags = explode(',', $_POST['meeting-tags']);
+		$days = is_numeric($_POST['meeting-days'])?$_POST['meeting-days']:false;
+		foreach ( $tags as $k => $tag )
+			$tags[$k] = trim($tag);
+		
+		$i = 0;
+		$newSchedule = array();
+		while ( true ) {
+			if ( !isset($_POST['newmeeting-'.$i.'-type']) )
+				break;
+			if ( !isset($_POST['newmeeting-'.$i.'-ignore']) ) {
+				$type = $_POST['newmeeting-'.$i.'-type'];
+				if ( $type == 'meet' ) {
+					$newSchedule[] = array (
+						'id'		=> $i,
+						'title'		=> $_POST['newmeeting-'.$i.'-title'],
+						'type'		=> 'meet',
+						'start'		=> $_POST['newmeeting-'.$i.'-start'],
+						'end'		=> $_POST['newmeeting-'.$i.'-end'],
+						'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
+						'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
+					);
+				} elseif ( $type == 'eat' ) {
+					$spend = isset($_POST['newmeeting-'.$i.'-spend'])
+						?floatval($_POST['newmeeting-'.$i.'-spend'])
+						:0.0;
+					$newSchedule[] = array (
+						'id'		=> $i,
+						'title'		=> $_POST['newmeeting-'.$i.'-title'],
+						'type'		=> 'eat',
+						'start'		=> $_POST['newmeeting-'.$i.'-start'],
+						'end'		=> $_POST['newmeeting-'.$i.'-end'],
+						'open'		=> null,
+						'spend'		=> $spend,
+						'costperperson'	=> 0.0, // let the database calc
+						'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
+						'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
+					);
+				}
+			}
+			$i++;
+		}
+		$users = explode(',', $_POST['meeting-users']);
+		foreach ( $users as $userid ) {
+			if ( empty($userid) ) continue;
+			$comment = $_POST['meeting-'.$userid.'-comment'];
+			$userSchedule = $meeting->users->{$userid}->schedule;
+			foreach ( $meeting->schedule as $id => $item ) {
+				if ( $item->type == 'meet' ) {
+					$userSchedule->{$id}->attending = isset($_POST['meeting-'.$userid.'-'.$id.'-attending']);
+				} elseif ( $item->type == 'eat' ) {
+					$userSchedule->{$id}->eating = isset($_POST['meeting-'.$userid.'-'.$id.'-eating']);
+					$userSchedule->{$id}->cooking = isset($_POST['meeting-'.$userid.'-'.$id.'-cooking']);
+					$userSchedule->{$id}->foodhelp = isset($_POST['meeting-'.$userid.'-'.$id.'-foodhelp']);
+					$userSchedule->{$id}->paid = isset($_POST['meeting-'.$userid.'-'.$id.'-paid'])?$item->costperperson:0.0;
+				}
+			}
+			if ( strpos($userid, '-')!==false ) {
+				$name = $meeting->users->{$userid}->name;
+				if ( !$name )
+					$name = 'N/A';
+				$this->database->addNonUserToDate ( $date, $userid, $name, $userSchedule, $comment, true, true );
+			} elseif ( is_numeric($userid) ) {
+				$this->database->addUserToDate ( $date, $userid, $userSchedule, $comment, true, true );
+			} else {
+				// unsane userid, remove it.
+				$this->database->removeUserFromDate ( $date, $userid, true );
+			}
+		}
+		$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $days, $tags, $locked, $hidden, true);
+		if ( $newdate != $date ) {
+			if ( $this->database->moveMeeting ( $date, $newdate ) ) {
+				header('Location: ./?admin=meeting&date='.$newdate);
+				return;
+			}
+		}
+		header('Location: ./?admin=meeting&date='.$date);
+		return;
+	
+	}
+	
 	private function meetingPage ( ) {
 		$date = $_GET['date'];
 		$meeting = $this->database->getMeeting($date);
@@ -273,88 +360,7 @@ class Admin extends Page {
 			header( 'Location: ./?admin=front' );
 		}
 		if ( isset($_POST['meeting-submit']) ) {
-			$newdate = $_POST['meeting-date'];
-			$title = $_POST['meeting-title'];
-			$meetComment = $_POST['meeting-comment'];
-			$locked = isset($_POST['meeting-locked']);
-			$hidden = isset($_POST['meeting-hidden']);
-			$tags = explode(',', $_POST['meeting-tags']);
-			$days = is_numeric($_POST['meeting-days'])?$_POST['meeting-days']:false;
-			foreach ( $tags as $k => $tag )
-				$tags[$k] = trim($tag);
-			
-			$i = 0;
-			$newSchedule = array();
-			while ( true ) {
-				if ( !isset($_POST['newmeeting-'.$i.'-type']) )
-					break;
-				if ( !isset($_POST['newmeeting-'.$i.'-ignore']) ) {
-					$type = $_POST['newmeeting-'.$i.'-type'];
-					if ( $type == 'meet' ) {
-						$newSchedule[] = array (
-							'id'		=> $i,
-							'title'		=> $_POST['newmeeting-'.$i.'-title'],
-							'type'		=> 'meet',
-							'start'		=> $_POST['newmeeting-'.$i.'-start'],
-							'end'		=> $_POST['newmeeting-'.$i.'-end'],
-							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
-							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
-						);
-					} elseif ( $type == 'eat' ) {
-						$spend = isset($_POST['newmeeting-'.$i.'-spend'])
-							?floatval($_POST['newmeeting-'.$i.'-spend'])
-							:0.0;
-						$newSchedule[] = array (
-							'id'		=> $i,
-							'title'		=> $_POST['newmeeting-'.$i.'-title'],
-							'type'		=> 'eat',
-							'start'		=> $_POST['newmeeting-'.$i.'-start'],
-							'end'		=> $_POST['newmeeting-'.$i.'-end'],
-							'open'		=> null,
-							'spend'		=> $spend,
-							'costperperson'	=> 0.0, // let the database calc
-							'unique'	=> isset($_POST['newmeeting-'.$i.'-unique']),
-							'nojoin'	=> isset($_POST['newmeeting-'.$i.'-nojoin']),
-						);
-					}
-				}
-				$i++;
-			}
-			$users = explode(',', $_POST['meeting-users']);
-			foreach ( $users as $userid ) {
-				if ( empty($userid) ) continue;
-				$comment = $_POST['meeting-'.$userid.'-comment'];
-				$userSchedule = $meeting->users->{$userid}->schedule;
-				foreach ( $meeting->schedule as $id => $item ) {
-					if ( $item->type == 'meet' ) {
-						$userSchedule->{$id}->attending = isset($_POST['meeting-'.$userid.'-'.$id.'-attending']);
-					} elseif ( $item->type == 'eat' ) {
-						$userSchedule->{$id}->eating = isset($_POST['meeting-'.$userid.'-'.$id.'-eating']);
-						$userSchedule->{$id}->cooking = isset($_POST['meeting-'.$userid.'-'.$id.'-cooking']);
-						$userSchedule->{$id}->foodhelp = isset($_POST['meeting-'.$userid.'-'.$id.'-foodhelp']);
-						$userSchedule->{$id}->paid = isset($_POST['meeting-'.$userid.'-'.$id.'-paid'])?$item->costperperson:0.0;
-					}
-				}
-				if ( strpos($userid, '-')!==false ) {
-					$name = $meeting->users->{$userid}->name;
-					if ( !$name )
-						$name = 'N/A';
-					$this->database->addNonUserToDate ( $date, $userid, $name, $userSchedule, $comment, true, true );
-				} elseif ( is_numeric($userid) ) {
-					$this->database->addUserToDate ( $date, $userid, $userSchedule, $comment, true, true );
-				} else {
-					// unsane userid, remove it.
-					$this->database->removeUserFromDate ( $date, $userid, true );
-				}
-			}
-			$this->database->updateMeeting($date, $title, $meetComment, $newSchedule, $days, $tags, $locked, $hidden, true);
-			if ( $newdate != $date ) {
-				if ( $this->database->moveMeeting ( $date, $newdate ) ) {
-					header('Location: ./?admin=meeting&date='.$newdate);
-					return;
-				}
-			}
-			header('Location: ./?admin=meeting&date='.$date);
+			$this->handleMeetingSubmit($date, $meeting);
 			return;
 		}
 		$schedule = $this->sortSchedule($meeting->schedule);

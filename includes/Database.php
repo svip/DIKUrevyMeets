@@ -203,8 +203,10 @@ class Database {
 			// don't do anything with a locked meeting.
 			return false;
 		foreach ( $schedule as $id => $item )
-			if ( $item['type'] == 'eat' )
+			if ( $item['type'] == 'eat' ) {
 				$schedule[$id]['open'] = $this->meetings->{$date}->schedule->{$id}->open;
+				$schedule[$id]['closedby'] = $this->meetings->{$date}->schedule->{$id}->closedby;
+			}
 		$this->meetings->{$date}->title = $title;
 		$this->meetings->{$date}->comment = $comment;
 		$this->meetings->{$date}->schedule = $schedule;
@@ -287,9 +289,9 @@ class Database {
 					&& !$item->open ) {
 					if ( is_array ( $userSchedule ) ) {
 						if ( !empty($this->meetings->{$date}->{'users'}->{$userid}) ) {
-							$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->eating;
-							$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->cooking;
-							$userSchedule[$id]['foodhelp'] = @$this->meetings->{$date}->{'users'}->{$name}->schedule->{$userid}->foodhelp;
+							$userSchedule[$id]['eating'] = $this->meetings->{$date}->{'users'}->{$userid}->schedule->{$id}->eating;
+							$userSchedule[$id]['cooking'] = $this->meetings->{$date}->{'users'}->{$userid}->schedule->{$id}->cooking;
+							$userSchedule[$id]['foodhelp'] = @$this->meetings->{$date}->{'users'}->{$userid}->schedule->{$id}->foodhelp;
 						} else {
 							$userSchedule[$id]['eating'] = false;
 							$userSchedule[$id]['cooking'] = false;
