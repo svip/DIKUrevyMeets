@@ -235,19 +235,19 @@ func (p *MeetingPage) Render() {
 		UsersTotal int
 		Table template.HTML
 	}{
-		meeting.Title,        // Title
-		meeting.Comment,      // SubTitle
-		p.date,               // WrittenDate
-		msg.Msg("meeting-table-schedule"), // LabelSchedule
-		msg.Msg("meeting-table-comment"),  // LabelComment
-		msg.Msg("meeting-table-user"),     // LabelUser
-		msg.Msg("meeting-table-realnametoggle"), // LabelRealNameToggle
-		p.makeTableScheduleTop(sortedSchedule),    // ScheduleTop
-		p.makeTableScheduleMiddle(sortedSchedule), // ScheduleMiddle
-		p.makeTableScheduleBottom(sortedSchedule), // ScheduleBottom
-		p.makeTableScheduleTotals(meeting),  // ScheduleTotals
-		len(meeting.Users),                  // UsersTotal
-		template.HTML(table),                // Table
+		Title:         meeting.Title,
+		SubTitle:      meeting.Comment,
+		WrittenDate:   p.date,
+		LabelSchedule: msg.Msg("meeting-table-schedule"), // LabelSchedule
+		LabelComment:  msg.Msg("meeting-table-comment"),  // LabelComment
+		LabelUser:     msg.Msg("meeting-table-user"),     // LabelUser
+		LabelRealNameToggle: msg.Msg("meeting-table-realnametoggle"),
+		ScheduleTop:    p.makeTableScheduleTop(sortedSchedule),
+		ScheduleMiddle: p.makeTableScheduleMiddle(sortedSchedule),
+		ScheduleBottom: p.makeTableScheduleBottom(sortedSchedule),
+		ScheduleTotals: p.makeTableScheduleTotals(meeting),
+		UsersTotal:     len(meeting.Users),
+		Table:          template.HTML(table),
 	})
 	p.Page.content = out.String()
 	p.Page.title = msg.Msg("meeting-title", meeting.Title)
