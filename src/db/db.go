@@ -14,15 +14,6 @@ type scheduleItemType string
 type timeStamp int
 type userType string
 
-type User struct {
-	Id systemUserId
-	Name string
-	Register int
-	Admin bool
-	Identity string
-	Nickname string
-}
-
 type ScheduleItem struct {
 	Id scheduleItemId
 	Title string
@@ -69,19 +60,14 @@ type Meeting struct {
 }
 
 type Meetings map[string]Meeting
-type Users map[string]*User
 
 var meetings Meetings
-var users Users
 
 var meetingsLoaded bool
-var usersLoaded bool
 
 var readyToWriteMeetings = make(chan bool)
-var readyToWriteUsers = make(chan bool)
 
 const meetingsFile = "../data/meetings.json"
-const usersFile = "../data/users.json"
 
 type DbError struct {
 	error string
@@ -109,25 +95,6 @@ func loadMeetings() {
 	meetingsLoaded = true
 }
 
-func loadUsers() {
-	data, err := ioutil.ReadFile(usersFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = json.Unmarshal(data, &users)
-	if err != nil {
-		log.Fatal(err)
-	}
-	for userId, user := range users {
-		if user.Id == 0 {
-			i, _ := strconv.Atoi(userId)
-			user.Id = systemUserId(i)
-		}
-	}
-	fmt.Println("Users loaded.")
-	usersLoaded = true
-}
-
 func WriteMeetings() {
 	if !<-readyToWriteMeetings {
 		return
@@ -138,22 +105,6 @@ func WriteMeetings() {
 	}
 	ioutil.WriteFile(meetingsFile, data, 0777)
 	log.Println("Meetings file written.")
-}
-
-func WriteUsers() {
-	if !<-readyToWriteUsers {
-		return
-	}
-//	data, err := json.Marshal(users)
-//	ioutil.WriteFile(usersFile, data, 0777)
-//	log.Println("Users file written.")
-}
-
-func GetUsers() Users {
-	if !usersLoaded {
-		loadUsers()
-	}
-	return users
 }
 
 func GetAvailableMeetings() Meetings {
@@ -212,24 +163,5 @@ func SortSchedule(schedule map[string]ScheduleItem) (sorted []ScheduleItem) {
 	}
 	ss := &ScheduleSorter{sorted}
 	sort.Sort(ss)
-	return sorted
-}
-
-type UserSorter struct {
-	users []UserSchedule
-}
-
-func (s UserSorter) Len() int { return len(s.users) }
-func (s UserSorter) Swap(i, j int) { s.users[i], s.users[j] = s.users[j], s.users[i] }
-func (s UserSorter) Less(i, j int) bool {
-	return s.users[i].Name < s.users[j].Name
-}
-
-func SortUsersByName(users map[string]UserSchedule) (sorted []UserSchedule) {
-	for userId := range users {
-		sorted = append(sorted, users[userId])
-	}
-	us := &UserSorter{sorted}
-	sort.Sort(us)
 	return sorted
 }
