@@ -24,6 +24,7 @@ type oldScheduleItem struct {
 	CostPerPerson float32
 	Spend interface{}
 	Open bool
+	Closedby string
 }
 
 type oldUserScheduleItem struct {
@@ -35,7 +36,7 @@ type oldUserScheduleItem struct {
 }
 
 type oldUserSchedule struct {
-	Id systemUserId
+	Id interface{}
 	Schedule map[string]oldUserScheduleItem
 	Usertype userType
 	Comment string
@@ -96,7 +97,8 @@ func parseLegacyData(data []byte) error {
 					newspend = float32(item.Spend.(int))
 			}
 			strid := fmt.Sprintf("%d", newid)
-			newschedule[strid] = ScheduleItem{newid, item.Title, item.Type, item.Start, item.End, item.Unique, item.IcalUnique, item.Nojoin, item.CostPerPerson, newspend, item.Open}
+			newclosedby, _ :=  strconv.Atoi(item.Closedby)
+			newschedule[strid] = ScheduleItem{newid, item.Title, item.Type, item.Start, item.End, item.Unique, item.IcalUnique, item.Nojoin, item.CostPerPerson, newspend, item.Open, UserId(newclosedby)}
 		}
 		newusers := make(map[string]UserSchedule)
 		for userId := range f[date].Users {
@@ -127,7 +129,7 @@ func parseLegacyData(data []byte) error {
 				newuserschedule[userItemId] = UserScheduleItem{item.Attending, neweating, newcooking, newfoodhelp, item.Paid}
 			}
 			i, _ := strconv.Atoi(userId)
-			newusers[userId] = UserSchedule{systemUserId(i), newuserschedule, f[date].Users[userId].Usertype, f[date].Users[userId].Comment, f[date].Users[userId].Modified, f[date].Users[userId].Name}
+			newusers[userId] = UserSchedule{UserId(i), newuserschedule, f[date].Users[userId].Usertype, f[date].Users[userId].Comment, f[date].Users[userId].Modified, f[date].Users[userId].Name}
 		}
 		r[date] = Meeting{f[date].Title, newschedule, f[date].Comment, newusers, f[date].Hidden, f[date].Locked, newtags, newdays}
 	}

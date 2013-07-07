@@ -7,12 +7,13 @@ import (
 	"io/ioutil"
 	"sort"
 	"regexp"
-	"strconv"
 )
 
 type scheduleItemType string
 type timeStamp int
 type userType string
+
+type Tag string
 
 type ScheduleItem struct {
 	Id scheduleItemId
@@ -26,6 +27,7 @@ type ScheduleItem struct {
 	CostPerPerson float32
 	Spend float32
 	Open bool
+	Closedby UserId
 }
 
 type UserScheduleItem struct {
@@ -37,16 +39,13 @@ type UserScheduleItem struct {
 }
 
 type UserSchedule struct {
-	Id systemUserId
+	Id UserId
 	Schedule map[string]UserScheduleItem
 	Usertype userType
 	Comment string
 	Modified timeStamp
 	Name string
 }
-
-type Tag string
-type UserId string
 
 type Meeting struct {
 	Title string

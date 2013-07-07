@@ -2,14 +2,20 @@ package db
 
 import (
 	"sort"
+	"io/ioutil"
+	"encoding/json"
+	"log"
+	"strconv"
+	"fmt"
+	"time"
 )
 
 // Functionality specifically related to users.json
 
 type User struct {
-	Id systemUserId
+	Id UserId
 	Name string
-	Register int
+	Register int64
 	Admin bool
 	Identity string
 	Nickname string
@@ -35,7 +41,7 @@ func loadUsers() {
 	for userId, user := range users {
 		if user.Id == 0 {
 			i, _ := strconv.Atoi(userId)
-			user.Id = systemUserId(i)
+			user.Id = UserId(i)
 		}
 	}
 	fmt.Println("Users loaded.")
@@ -56,6 +62,39 @@ func GetUsers() Users {
 		loadUsers()
 	}
 	return users
+}
+
+func UserExistsByDrupalId(uid string) bool {
+	if !usersLoaded {
+		loadUsers()
+	}
+	for userId := range users {
+		if users[userId].Identity == uid {
+			return true
+		}
+	}
+	return false
+}
+
+func CreateUser(uid, name, nickname string) {
+	id, _ := strconv.Atoi(uid)
+	t := time.Now()
+	users[uid] = &User{
+		Id: UserId(id),
+		Name: name,
+		Nickname: nickname,
+		Register: t.Unix(),
+		Admin: false,
+		Identity: uid,
+	}
+}
+
+func GetUser (uid UserId) *User {
+	user, ok := users[uid.String()]
+	if !ok {
+		return nil
+	}
+	return user
 }
 
 type UserSorter struct {

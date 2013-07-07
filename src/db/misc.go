@@ -10,7 +10,7 @@ import (
 
 type hourStamp string
 type scheduleItemId int
-type systemUserId int
+type UserId int
 
 func (h hourStamp) ToInt() int {
 	i, err := strconv.Atoi(strings.Replace(strings.Replace(string(h), " ", "", -1), ":", "", -1))
@@ -41,6 +41,14 @@ func (i scheduleItemId) String() string {
 	return strconv.Itoa(int(i))
 }
 
-func (i systemUserId) String() string {
+func (i scheduleItemId) Int() int {
+	return int(i)
+}
+
+func (i UserId) String() string {
 	return strconv.Itoa(int(i))
+}
+
+func (i UserId) IsEqual(test string) bool {
+	return i.String() == test
 }
