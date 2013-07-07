@@ -1,0 +1,11 @@
+Konfiguration
+=============
+
+I data-mappen, opret config.json med følgende konfiguration:
+
+{
+	"Dbhost": "kartotekaddresse"
+	"Dbname": "kartoteknavn",
+	"Dbuser": "kartoteksbruger",
+	"Dbpass": "kartoteksløsen"
+}
