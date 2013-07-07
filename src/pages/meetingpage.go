@@ -6,17 +6,18 @@ import (
 	"db"
 	"html/template"
 	"bytes"
-	//"fmt"
+	"auth"
 )
 
 type MeetingPage struct {
 	Page Page
 	req *http.Request
+	auth *auth.UserAuth
 	date string
 }
 
 func meetingPage (req *http.Request) HandlePage {
-	page := &MeetingPage{Page: newPage(), req: req}
+	page := &MeetingPage{Page: newPage(), req: req, auth: auth.GetAuth(req)}
 	page.Render()
 	return page.Page
 }
@@ -175,6 +176,59 @@ func (p *MeetingPage) makeTableScheduleTotals(meeting db.Meeting)  template.HTML
 	return template.HTML(content)
 }
 
+func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
+	var output string
+	for _, item := range db.SortSchedule(meeting.Schedule) {
+		if item.Type == "eat" {
+			if item.Open {
+				output, _ = msg.HtmlMsg(output, `<form method="post">
+	<fieldset>
+		<legend>{{.LabelCloseEatingLegend}}</legend>
+		<label for="closeeating-{{.Id}}-spend">{{.LabelSpent}}</label>
+		<input type="text" name="closeeating-{{.Id}}-spend" id="closeeating-{{.Id}}-spend" value="{{.SpendValue}}" />
+		<input type="submit" name="closeeating-{{.Id}}-submit" value="{{.LabelCloseEatingSubmit}}" />
+	</fieldset>
+</form>`, struct {
+					Id int
+					LabelCloseEatingLegend, LabelSpent, LabelCloseEatingSubmit string
+					SpendValue float32
+				}{
+					Id: item.Id.Int(),
+					LabelCloseEatingLegend: msg.Msg("meeting-closeeating-title"),
+					LabelSpent:             msg.Msg("meeting-closeeating-spent"),
+					LabelCloseEatingSubmit: msg.Msg("meeting-closeeating-submit"),
+					SpendValue: item.Spend,
+				})
+			} else if item.Closedby.IsEqual(p.auth.Uid) {
+				output, _ = msg.HtmlMsg(output, `<form method="post">
+	<fieldset>
+		<legend>{{.LabelOpenEatingLegend}}</legend>
+		<input type="submit" name="openeating-{{.Id}}-submit" value="{{.LabelOpenEatingSubmit}}" />
+	</fieldset>
+</form>`, struct {
+					Id int
+					LabelOpenEatingLegend, LabelOpenEatingSubmit string
+				}{
+					Id: item.Id.Int(),
+					LabelOpenEatingLegend: msg.Msg("meeting-openeating-title"),
+					LabelOpenEatingSubmit: msg.Msg("meeting-openeating-submit"),
+				})
+			} else {
+				closedByUser := db.GetUser(item.Closedby)
+				output, _ = msg.HtmlMsg(output, `<p>{{.LabelEatingClosedBy}}</p>`,
+				struct {
+					LabelEatingClosedBy string
+				}{
+					LabelEatingClosedBy: msg.Msg("meeting-eatclosedby", closedByUser.Name),
+				})
+			}
+		}
+	}
+	out := bytes.NewBufferString(content)
+	out.WriteString(output)
+	return out.String()
+}
+
 func (p *MeetingPage) Render() {
 	meeting, err := p.GetMeeting()
 	if err != nil {
@@ -206,7 +260,8 @@ func (p *MeetingPage) Render() {
 		table = out.String()
 	}
 	
-	contentWrapper, _ := template.New("contentWrapper").Parse(`<h1>{{.Title}}</h1>
+	sortedSchedule := db.SortSchedule(schedule)
+	content, err := msg.HtmlMsg("", `<h1>{{.Title}}</h1>
 {{if .SubTitle}}<h3>{{.SubTitle}}</h3>{{end}}<h2>{{.WrittenDate}}</h2>
 <table>
 	<tr>
@@ -225,10 +280,7 @@ func (p *MeetingPage) Render() {
 	<tr class="total">
 		<td>{{.UsersTotal}}</td>{{.ScheduleTotals}}
 	</tr>
-</table>`)
-	sortedSchedule := db.SortSchedule(schedule)
-	out := bytes.NewBuffer([]byte(""))
-	contentWrapper.Execute(out, struct {
+</table>`, struct {
 		Title, SubTitle, WrittenDate string
 		LabelSchedule, LabelComment, LabelUser, LabelRealNameToggle string
 		ScheduleTop, ScheduleMiddle, ScheduleBottom, ScheduleTotals template.HTML
@@ -249,6 +301,18 @@ func (p *MeetingPage) Render() {
 		UsersTotal:     len(meeting.Users),
 		Table:          template.HTML(table),
 	})
-	p.Page.content = out.String()
+	if err != nil {
+		return//log.Fatal(err)
+	}
+	
+	if p.auth.LoggedIn {
+		content = p.UserForms(content, meeting)
+	} else {
+		content, _ = msg.HtmlMsg(content, `<p>{{.LabelNotLoggedInMessage}}</p>`, struct{
+			LabelNotLoggedInMessage string
+		}{msg.Msg("meeting-notloggedin")})
+	}
+	
+	p.Page.content = content
 	p.Page.title = msg.Msg("meeting-title", meeting.Title)
 }
