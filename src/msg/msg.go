@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"bytes"
+	"html/template"
 )
 
 var messages map[string]string
@@ -57,4 +59,14 @@ func RawMsg(rawmsg string, a ...interface{}) string {
 		rawmsg = r.ReplaceAllString(rawmsg, repl)
 	}
 	return rawmsg
+}
+
+func HtmlMsg(existingContent string, tmplText string, data interface{}) (string, error) {
+	t, err := template.New("tmp").Parse(tmplText)
+	if err != nil {
+		return "", err
+	}
+	out := bytes.NewBufferString(existingContent)
+	t.Execute(out, data)
+	return out.String(), nil
 }
