@@ -46,13 +46,15 @@ func getUserAuthFromDb(cookieData string) *UserAuth {
 			LogInInfo.Dbuser, LogInInfo.Dbpass, LogInInfo.Dbname))
 	}
 	defer sqldb.Close()
-	row := sqldb.QueryRow(fmt.Sprintf(`SELECT s.uid, u.name, p.value
+	log.Println(cookieData)
+	row := sqldb.QueryRow(`SELECT s.uid, u.name, p.value
 		FROM drupal_sessions s
 		JOIN drupal_users u
 		ON s.uid = u.uid
 		LEFT JOIN drupal_profile_values p
 		ON p.uid = s.uid AND p.fid = 14
-		WHERE s.sid = '%s' AND s.uid != 0`, cookieData))
+		WHERE s.sid = ? AND s.uid != 0`, cookieData)
+	log.Println(row)
 	if row == nil {
 		return &UserAuth{LoggedIn:false}
 	}
