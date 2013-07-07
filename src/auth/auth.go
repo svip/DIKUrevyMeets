@@ -46,7 +46,6 @@ func getUserAuthFromDb(cookieData string) *UserAuth {
 			LogInInfo.Dbuser, LogInInfo.Dbpass, LogInInfo.Dbname))
 	}
 	defer sqldb.Close()
-	log.Println(cookieData)
 	row := sqldb.QueryRow(`SELECT s.uid, u.name, p.value
 		FROM drupal_sessions s
 		JOIN drupal_users u
@@ -54,7 +53,6 @@ func getUserAuthFromDb(cookieData string) *UserAuth {
 		LEFT JOIN drupal_profile_values p
 		ON p.uid = s.uid AND p.fid = 14
 		WHERE s.sid = ? AND s.uid != 0`, cookieData)
-	log.Println(row)
 	if row == nil {
 		return &UserAuth{LoggedIn:false}
 	}
