@@ -176,59 +176,6 @@ func (p *MeetingPage) makeTableScheduleTotals(meeting db.Meeting)  template.HTML
 	return template.HTML(content)
 }
 
-func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
-	var output string
-	for _, item := range db.SortSchedule(meeting.Schedule) {
-		if item.Type == "eat" {
-			if item.Open {
-				output, _ = msg.HtmlMsg(output, `<form method="post">
-	<fieldset>
-		<legend>{{.LabelCloseEatingLegend}}</legend>
-		<label for="closeeating-{{.Id}}-spend">{{.LabelSpent}}</label>
-		<input type="text" name="closeeating-{{.Id}}-spend" id="closeeating-{{.Id}}-spend" value="{{.SpendValue}}" />
-		<input type="submit" name="closeeating-{{.Id}}-submit" value="{{.LabelCloseEatingSubmit}}" />
-	</fieldset>
-</form>`, struct {
-					Id int
-					LabelCloseEatingLegend, LabelSpent, LabelCloseEatingSubmit string
-					SpendValue float32
-				}{
-					Id: item.Id.Int(),
-					LabelCloseEatingLegend: msg.Msg("meeting-closeeating-title"),
-					LabelSpent:             msg.Msg("meeting-closeeating-spent"),
-					LabelCloseEatingSubmit: msg.Msg("meeting-closeeating-submit"),
-					SpendValue: item.Spend,
-				})
-			} else if item.Closedby.IsEqual(p.auth.Uid) {
-				output, _ = msg.HtmlMsg(output, `<form method="post">
-	<fieldset>
-		<legend>{{.LabelOpenEatingLegend}}</legend>
-		<input type="submit" name="openeating-{{.Id}}-submit" value="{{.LabelOpenEatingSubmit}}" />
-	</fieldset>
-</form>`, struct {
-					Id int
-					LabelOpenEatingLegend, LabelOpenEatingSubmit string
-				}{
-					Id: item.Id.Int(),
-					LabelOpenEatingLegend: msg.Msg("meeting-openeating-title"),
-					LabelOpenEatingSubmit: msg.Msg("meeting-openeating-submit"),
-				})
-			} else {
-				closedByUser := db.GetUser(item.Closedby)
-				output, _ = msg.HtmlMsg(output, `<p>{{.LabelEatingClosedBy}}</p>`,
-				struct {
-					LabelEatingClosedBy string
-				}{
-					LabelEatingClosedBy: msg.Msg("meeting-eatclosedby", closedByUser.Name),
-				})
-			}
-		}
-	}
-	out := bytes.NewBufferString(content)
-	out.WriteString(output)
-	return out.String()
-}
-
 func (p *MeetingPage) Render() {
 	meeting, err := p.GetMeeting()
 	if err != nil {
