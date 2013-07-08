@@ -33,7 +33,12 @@ func Msg(msg string, a ...interface{}) string {
 	if _, ok := messages[msg]; !ok {
 		return fmt.Sprintf("<%s>", msg)
 	}
-	return RawMsg(messages[msg], a...)
+	if len(a) > 0 {
+		tmp, _ := HtmlMsg("", messages[msg], a[0])
+		return tmp
+	}
+	return messages[msg]
+	//return RawMsg(messages[msg], a...)
 }
 
 func RawMsg(rawmsg string, a ...interface{}) string {

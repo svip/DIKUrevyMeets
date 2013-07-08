@@ -81,10 +81,10 @@ func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
 	<input type="checkbox" name="meeting-{{.Id}}-cooking" id="meeting-{{.Id}}-cooking"{{if .Closed}} disabled="true"{{else}}{{if .CookingChecked}} checked="true"{{end}}{{end}} />
 	<label for="meeting-{{.Id}}-cooking">{{.LabelCooking}}</label>
 	<input type="checkbox" name="meeting-{{.Id}}-foodhelp" id="meeting-{{.Id}}-foodhelp"{{if .Closed}} disabled="true"{{else}}{{if .FoodhelpChecked}} checked="true"{{end}}{{end}} />
-	<label for="meeting-{{.Id}}-foodhelp">{{.LabelFoodhelp}}</label>`
+	<label for="meeting-{{.Id}}-foodhelp">{{.LabelFoodhelp}}</label><br />`
 	meetingForm := `<span class="scheduleform-item">{{.ItemTitle}}:</span>
 <input type="checkbox" name="meeting-{{.Id}}-attending" id="meeting-{{.Id}}-attending"{{if .Closed}} disabled="true"{{else}}{{if .AttendingChecked}} checked="true"{{end}}{{end}} />
-	<label for="meeting-{{.Id}}-attending">{{.LabelAttending}}</label>`
+	<label for="meeting-{{.Id}}-attending">{{.LabelAttending}}</label><br />`
 	for _, item := range db.SortSchedule(meeting.Schedule) {
 		if item.Nojoin {
 			continue
@@ -125,23 +125,33 @@ func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
 			})
 		}
 	}
+	var meetingFormTitle string
+	var meetingFormSubmit string
+	if responded {
+		meetingFormTitle = "meeting-form-title-change"
+		meetingFormSubmit = "meeting-form-submit-change"
+	} else {
+		meetingFormTitle = "meeting-form-title-new"
+		meetingFormSubmit = "meeting-form-submit-new"
+	}
 	output, _ = msg.HtmlMsg(output, `<form method="post">
 <fieldset>
 	<legend>{{.LabelMeetingForm}}</legend>
 	<input type="hidden" name="meeting-usertype" value="{{.UserType}}" />
-	{{.Form}}<br />
+	{{.Form}}
 	<label for="meeting-comment">{{.LabelComment}}</label>
 	<input type="text" name="meeting-comment" id="meeting-comment" />
 	<input type="submit" name="meeting-submit" value="{{.LabelSubmit}}" />
 </fieldset>
 </form>`, struct {
-		LabelMeetingForm, LabelComment, LabelSubmit string
+		LabelMeetingForm template.HTML
+		LabelComment, LabelSubmit string
 		UserType string
 		Form template.HTML
 	}{
-		LabelMeetingForm:   msg.Msg("meeting-form-title"),
+		LabelMeetingForm:   template.HTML(msg.Msg(meetingFormTitle, struct{Name string}{p.auth.Name})),
 		LabelComment:       msg.Msg("meeting-form-comment"),
-		LabelSubmit:        msg.Msg("meeting-form-submit"),
+		LabelSubmit:        msg.Msg(meetingFormSubmit),
 		UserType:           "self",
 		Form:               template.HTML(form),
 	})
