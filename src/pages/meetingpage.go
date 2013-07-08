@@ -261,5 +261,5 @@ func (p *MeetingPage) Render() {
 	}
 	
 	p.Page.content = content
-	p.Page.title = msg.Msg("meeting-title", meeting.Title)
+	p.Page.title = msg.Msg("meeting-title", struct{Title string}{meeting.Title})
 }
