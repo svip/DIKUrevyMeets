@@ -12,7 +12,7 @@ type hourStamp string
 type scheduleItemId int
 type UserId int
 
-func (h hourStamp) ToInt() int {
+func (h hourStamp) Int() int {
 	i, err := strconv.Atoi(strings.Replace(strings.Replace(string(h), " ", "", -1), ":", "", -1))
 	if err != nil {
 		i = 0
