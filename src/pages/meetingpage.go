@@ -183,12 +183,7 @@ func (p *MeetingPage) makeTableScheduleTotals(meeting db.Meeting)  template.HTML
 	return template.HTML(content)
 }
 
-func (p *MeetingPage) Render() {
-	meeting, err := p.GetMeeting()
-	if err != nil {
-		p.Page.redirect = "/"
-		return
-	}
+func (p *MeetingPage) createScheduleTable(meeting db.Meeting) string {
 	userRow, _ := template.New("userRow").Parse(`	<tr>
 		<td class="user"><span title="{{.UserRealName}}" class="username">{{.UserNickName}}</span></td>{{.UserSchedule}}<td class="comment">{{.Comment}}</td>
 	</tr>`)
@@ -216,9 +211,7 @@ func (p *MeetingPage) Render() {
 	}
 	
 	sortedSchedule := db.SortSchedule(schedule)
-	content, err := msg.HtmlMsg("", `<h1>{{.Title}}</h1>
-{{if .SubTitle}}<h3>{{.SubTitle}}</h3>{{end}}<h2>{{.WrittenDate}}</h2>
-<table>
+	content, _ := msg.HtmlMsg("", `<table>
 	<tr>
 		<th rowspan="2">{{.LabelSchedule}}</th>{{.ScheduleTop}}<th rowspan="3" class="comment">{{.LabelComment}}</th>
 	</tr>
@@ -236,9 +229,6 @@ func (p *MeetingPage) Render() {
 		<td>{{.UsersTotal}}</td>{{.ScheduleTotals}}
 	</tr>
 </table>`, map[string]interface{}{
-		"Title":         meeting.Title,
-		"SubTitle":      meeting.Comment,
-		"WrittenDate":   p.date,
 		"LabelSchedule": msg.Msg("meeting-table-schedule"), // LabelSchedule
 		"LabelComment":  msg.Msg("meeting-table-comment"),  // LabelComment
 		"LabelUser":     msg.Msg("meeting-table-user"),     // LabelUser
@@ -250,16 +240,46 @@ func (p *MeetingPage) Render() {
 		"UsersTotal":     len(meeting.Users),
 		"Table":          template.HTML(table),
 	})
+	return content
+}
+
+func (p *MeetingPage) Render() {
+	meeting, err := p.GetMeeting()
 	if err != nil {
-		return//log.Fatal(err)
+		p.Page.redirect = "/"
+		return
 	}
-	
-	if p.auth.LoggedIn {
-		content = p.UserForms(content, meeting)
+	tojoin := false
+	for _, item := range meeting.Schedule {
+		if !item.Nojoin {
+			tojoin = true
+			break
+		}
+	}
+	var content string
+	if !tojoin {
+		content, _ = msg.HtmlMsg("", `<p>{{.LabelNoProgramme}}</p>`,
+			map[string]interface{}{
+				"LabelNoProgramme": msg.Msg("meeting-noprogramme"),
+			})
 	} else {
-		content, _ = msg.HtmlMsg(content, `<p>{{.LabelNotLoggedInMessage}}</p>`, map[string]interface{}{
-			"LabelNotLoggedInMessage": msg.Msg("meeting-notloggedin")})
+		content = p.createScheduleTable(meeting)
+		if p.auth.LoggedIn {
+			content = p.UserForms(content, meeting)
+		} else {
+			content, _ = msg.HtmlMsg(content, `<p>{{.LabelNotLoggedInMessage}}</p>`, map[string]interface{}{
+				"LabelNotLoggedInMessage": msg.Msg("meeting-notloggedin")})
+		}
 	}
+	content, _ = msg.HtmlMsg("", `<h1>{{.Title}}</h1>
+{{if .SubTitle}}<h3>{{.SubTitle}}</h3>{{end}}<h2>{{.WrittenDate}}</h2>
+{{.Content}}`,
+		map[string]interface{}{
+		"Title":         meeting.Title,
+		"SubTitle":      meeting.Comment,
+		"WrittenDate":   p.date,
+		"Content":       template.HTML(content),
+	})
 	
 	p.Page.content = content
 	p.Page.title = msg.Msg("meeting-title", map[string]interface{}{"Title":meeting.Title})

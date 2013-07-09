@@ -13,6 +13,7 @@
 	"meeting-table-comment":   "Kommentar",
 	"meeting-table-foodclosed": "Lukket",
 	
+	"meeting-noprogramme":    "Intet program",
 	"meeting-isclosed":       "Der er lukket for tilmeldingen.",
 	"meeting-eatclosedby":    "Madtilmelding lukket af <b>{{.Name}}</b>.",
 	"meeting-closeeating-title": "Luk for madtilmeldingen",
