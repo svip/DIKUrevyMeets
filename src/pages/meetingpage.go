@@ -249,15 +249,8 @@ func (p *MeetingPage) Render() {
 		p.Page.redirect = "/"
 		return
 	}
-	tojoin := false
-	for _, item := range meeting.Schedule {
-		if !item.Nojoin {
-			tojoin = true
-			break
-		}
-	}
 	var content string
-	if !tojoin {
+	if meeting.Nojoin() {
 		content, _ = msg.HtmlMsg("", `<p>{{.LabelNoProgramme}}</p>`,
 			map[string]interface{}{
 				"LabelNoProgramme": msg.Msg("meeting-noprogramme"),

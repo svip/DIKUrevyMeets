@@ -164,3 +164,16 @@ func SortSchedule(schedule map[string]ScheduleItem) (sorted []ScheduleItem) {
 	sort.Sort(ss)
 	return sorted
 }
+
+// This function returns true if there are no events in its schedule that
+// have the nojoin set to false.  Otherwise false.
+func (m *Meeting) Nojoin() bool {
+	tojoin := false
+	for _, item := range m.Schedule {
+		if !item.Nojoin {
+			tojoin = true
+			break
+		}
+	}
+	return !tojoin
+}
