@@ -67,14 +67,14 @@ func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
 	}
 	var form string
 	diningForm := `<span class="scheduleform-item">{{.ItemTitle}}:</span>
-<input type="checkbox" name="meeting-{{.Id}}-eating" id="meeting-{{.Id}}-eating"{{if .Closed}} disabled="true"{{else}}{{if .EatingChecked}} checked="true"{{end}}{{end}} />
+<input type="checkbox" name="meeting-{{.Id}}-eating" id="meeting-{{.Id}}-eating"{{if .Closed}} disabled="true"{{end}}{{if .EatingChecked}} checked="true"{{end}} />
 	<label for="meeting-{{.Id}}-eating">{{.LabelEating}}</label>
-	<input type="checkbox" name="meeting-{{.Id}}-cooking" id="meeting-{{.Id}}-cooking"{{if .Closed}} disabled="true"{{else}}{{if .CookingChecked}} checked="true"{{end}}{{end}} />
+	<input type="checkbox" name="meeting-{{.Id}}-cooking" id="meeting-{{.Id}}-cooking"{{if .Closed}} disabled="true"{{end}}{{if .CookingChecked}} checked="true"{{end}} />
 	<label for="meeting-{{.Id}}-cooking">{{.LabelCooking}}</label>
-	<input type="checkbox" name="meeting-{{.Id}}-foodhelp" id="meeting-{{.Id}}-foodhelp"{{if .Closed}} disabled="true"{{else}}{{if .FoodhelpChecked}} checked="true"{{end}}{{end}} />
+	<input type="checkbox" name="meeting-{{.Id}}-foodhelp" id="meeting-{{.Id}}-foodhelp"{{if .Closed}} disabled="true"{{end}}{{if .FoodhelpChecked}} checked="true"{{end}} />
 	<label for="meeting-{{.Id}}-foodhelp">{{.LabelFoodhelp}}</label><br />`
 	meetingForm := `<span class="scheduleform-item">{{.ItemTitle}}:</span>
-<input type="checkbox" name="meeting-{{.Id}}-attending" id="meeting-{{.Id}}-attending"{{if .Closed}} disabled="true"{{else}}{{if .AttendingChecked}} checked="true"{{end}}{{end}} />
+<input type="checkbox" name="meeting-{{.Id}}-attending" id="meeting-{{.Id}}-attending"{{if .Closed}} disabled="true"{{end}}{{if .AttendingChecked}} checked="true"{{end}} />
 	<label for="meeting-{{.Id}}-attending">{{.LabelAttending}}</label><br />`
 	for _, item := range db.SortSchedule(meeting.Schedule) {
 		if item.Nojoin {
