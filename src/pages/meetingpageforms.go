@@ -24,16 +24,12 @@ func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) s
 		<input type="text" name="closeeating-{{.Id}}-spend" id="closeeating-{{.Id}}-spend" value="{{.SpendValue}}" />
 		<input type="submit" name="closeeating-{{.Id}}-submit" value="{{.LabelCloseEatingSubmit}}" />
 	</fieldset>
-</form>`, struct {
-					Id int
-					LabelCloseEatingLegend, LabelSpent, LabelCloseEatingSubmit string
-					SpendValue float32
-				}{
-					Id: item.Id.Int(),
-					LabelCloseEatingLegend: msg.Msg("meeting-closeeating-title"),
-					LabelSpent:             msg.Msg("meeting-closeeating-spent"),
-					LabelCloseEatingSubmit: msg.Msg("meeting-closeeating-submit"),
-					SpendValue: item.Spend,
+</form>`, map[string]interface{}{
+					"Id": item.Id.Int(),
+					"LabelCloseEatingLegend": msg.Msg("meeting-closeeating-title"),
+					"LabelSpent":             msg.Msg("meeting-closeeating-spent"),
+					"LabelCloseEatingSubmit": msg.Msg("meeting-closeeating-submit"),
+					"SpendValue": item.Spend,
 				})
 			} else if item.Closedby.IsEqual(p.auth.Uid) {
 				output, _ = msg.HtmlMsg(output, `<form method="post">
@@ -41,21 +37,16 @@ func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) s
 		<legend>{{.LabelOpenEatingLegend}}</legend>
 		<input type="submit" name="openeating-{{.Id}}-submit" value="{{.LabelOpenEatingSubmit}}" />
 	</fieldset>
-</form>`, struct {
-					Id int
-					LabelOpenEatingLegend, LabelOpenEatingSubmit string
-				}{
-					Id: item.Id.Int(),
-					LabelOpenEatingLegend: msg.Msg("meeting-openeating-title"),
-					LabelOpenEatingSubmit: msg.Msg("meeting-openeating-submit"),
+</form>`, map[string]interface{}{
+					"Id": item.Id.Int(),
+					"LabelOpenEatingLegend": msg.Msg("meeting-openeating-title"),
+					"LabelOpenEatingSubmit": msg.Msg("meeting-openeating-submit"),
 				})
 			} else {
 				closedByUser := db.GetUser(item.Closedby)
 				output, _ = msg.HtmlMsg(output, `<p>{{.LabelEatingClosedBy}}</p>`,
-				struct {
-					LabelEatingClosedBy string
-				}{
-					LabelEatingClosedBy: msg.Msg("meeting-eatclosedby", closedByUser.Name),
+				map[string]interface{}{
+					"LabelEatingClosedBy": msg.Msg("meeting-eatclosedby", map[string]interface{}{"Name":closedByUser.Name}),
 				})
 			}
 		}
@@ -91,37 +82,25 @@ func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
 		}
 		if item.Type == "eat" {
 			form, _ = msg.HtmlMsg(form, diningForm,
-				struct {
-					LabelEating, LabelCooking, LabelFoodhelp string
-					Id int
-					EatingChecked, CookingChecked, FoodhelpChecked bool
-					Closed bool
-					ItemTitle string
-				}{
-					LabelEating:   msg.Msg("meeting-form-eating"),
-					LabelCooking:  msg.Msg("meeting-form-cooking"),
-					LabelFoodhelp: msg.Msg("meeting-form-foodhelp"),
-					Id:  item.Id.Int(),
-					EatingChecked: meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Eating,
-					CookingChecked: meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Cooking,
-					FoodhelpChecked: meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Foodhelp,
-					Closed:        !item.Open,
-					ItemTitle:     item.Title,
+				map[string]interface{}{
+					"LabelEating":   msg.Msg("meeting-form-eating"),
+					"LabelCooking":  msg.Msg("meeting-form-cooking"),
+					"LabelFoodhelp": msg.Msg("meeting-form-foodhelp"),
+					"Id":  item.Id.Int(),
+					"EatingChecked": meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Eating,
+					"CookingChecked": meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Cooking,
+					"FoodhelpChecked": meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Foodhelp,
+					"Closed":        !item.Open,
+					"ItemTitle":     item.Title,
 			})
 		} else {
 			form, _ = msg.HtmlMsg(form, meetingForm,
-				struct {
-					LabelAttending string
-					Id int
-					AttendingChecked bool
-					Closed bool
-					ItemTitle string
-				}{
-					LabelAttending:   msg.Msg("meeting-form-attending"),
-					Id:  item.Id.Int(),
-					AttendingChecked: meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Attending,
-					Closed:        !item.Open,
-					ItemTitle:     item.Title,
+				map[string]interface{}{
+					"LabelAttending":   msg.Msg("meeting-form-attending"),
+					"Id":  item.Id.Int(),
+					"AttendingChecked": meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Attending,
+					"Closed":        !item.Open,
+					"ItemTitle":     item.Title,
 			})
 		}
 	}
@@ -143,17 +122,12 @@ func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
 	<input type="text" name="meeting-comment" id="meeting-comment" />
 	<input type="submit" name="meeting-submit" value="{{.LabelSubmit}}" />
 </fieldset>
-</form>`, struct {
-		LabelMeetingForm template.HTML
-		LabelComment, LabelSubmit string
-		UserType string
-		Form template.HTML
-	}{
-		LabelMeetingForm:   template.HTML(msg.Msg(meetingFormTitle, struct{Name string}{p.auth.Name})),
-		LabelComment:       msg.Msg("meeting-form-comment"),
-		LabelSubmit:        msg.Msg(meetingFormSubmit),
-		UserType:           "self",
-		Form:               template.HTML(form),
+</form>`, map[string]interface{}{
+		"LabelMeetingForm":   template.HTML(msg.Msg(meetingFormTitle, struct{Name string}{p.auth.Name})),
+		"LabelComment":       msg.Msg("meeting-form-comment"),
+		"LabelSubmit":        msg.Msg(meetingFormSubmit),
+		"UserType":           "self",
+		"Form":               template.HTML(form),
 	})
 	out := bytes.NewBufferString(content)
 	out.WriteString(output)

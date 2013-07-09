@@ -35,9 +35,11 @@ func (p *FrontPage) Render() {
 
 	for date := range meetings {
 		out := bytes.NewBufferString(content)
-		meetingRow.Execute(out, struct {
-			Dayname, Date, Writtendate string
-		}{"x", date, date})
+		meetingRow.Execute(out, map[string]interface{}{
+			"Dayname":     "x",
+			"Date":        date,
+			"Writtendate": date,
+		})
 		content = out.String()
 	}
 
@@ -50,11 +52,11 @@ func (p *FrontPage) Render() {
 	}
 	
 	out := bytes.NewBuffer([]byte(``))
-	meetingTable.Execute(out, struct {
-		Title    string
-		Table    template.HTML
-		UserNote string
-	}{msg.Msg("frontpage-h1"), template.HTML(content), ""})
+	meetingTable.Execute(out, map[string]interface{}{
+		"Title":    msg.Msg("frontpage-h1"),
+		"Table":    template.HTML(content),
+		"UserNote": "",
+	})
 	content = out.String()
 
 	p.Page.content = content

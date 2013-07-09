@@ -52,17 +52,21 @@ func (p *MeetingPage) createUserSchedule(userSchedule db.UserSchedule, schedule 
 		switch sItem.Type {
 			case "meet":
 				out := bytes.NewBufferString(content)
-				meetingCell.Execute(out, struct {
-					AttendingYesNo, Attending string
-				}{p.returnYesNo(item.Attending), p.returnTick(item.Attending)})
+				meetingCell.Execute(out, map[string]interface{}{
+					"AttendingYesNo": p.returnYesNo(item.Attending),
+					"Attending":      p.returnTick(item.Attending),
+				})
 				content = out.String()
 			case "eat":
 				out := bytes.NewBufferString(content)
-				diningCells.Execute(out, struct {
-					EatingYesNo, Eating string
-					CookingYesNo, Cooking string
-					FoodhelpYesNo, Foodhelp string
-				}{p.returnYesNo(item.Eating), p.returnTick(item.Eating), p.returnYesNo(item.Cooking), p.returnTick(item.Cooking), p.returnYesNo(item.Foodhelp), p.returnTick(item.Foodhelp)})
+				diningCells.Execute(out, map[string]interface{}{
+					"EatingYesNo":   p.returnYesNo(item.Eating),
+					"Eating":        p.returnTick(item.Eating),
+					"CookingYesNo":  p.returnYesNo(item.Cooking),
+					"Cooking":       p.returnTick(item.Cooking),
+					"FoodhelpYesNo": p.returnYesNo(item.Foodhelp),
+					"Foodhelp":      p.returnTick(item.Foodhelp),
+				})
 				content = out.String()
 		}
 	}
@@ -77,14 +81,15 @@ func (p *MeetingPage) makeTableScheduleTop(schedule []db.ScheduleItem) template.
 		out := bytes.NewBufferString(content)
 		switch item.Type {
 			case "eat":
-				diningCell.Execute(out, struct {
-					Title, LabelClosed string
-					Closed bool
-				}{item.Title, msg.Msg("meeting-table-foodclosed"), !item.Open})
+				diningCell.Execute(out, map[string]interface{}{
+					"Title":       item.Title,
+					"LabelClosed": msg.Msg("meeting-table-foodclosed"),
+					"Closed":      !item.Open,
+				})
 			case "meet":
-				meetingCell.Execute(out, struct {
-					Title string
-				}{item.Title})
+				meetingCell.Execute(out, map[string]interface{}{
+					"Title": item.Title,
+				})
 		}
 		content = out.String()
 	}
@@ -99,13 +104,13 @@ func (p *MeetingPage) makeTableScheduleMiddle(schedule []db.ScheduleItem) templa
 		out := bytes.NewBufferString(content)
 		switch item.Type {
 			case "eat":
-				diningCell.Execute(out, struct {
-					Time template.HTML
-				}{item.Start.HtmlWrite()})
+				diningCell.Execute(out, map[string]interface{}{
+					"Time":item.Start.HtmlWrite(),
+				})
 			case "meet":
-				meetingCell.Execute(out, struct {
-					Time template.HTML
-				}{item.Start.HtmlWrite()})
+				meetingCell.Execute(out, map[string]interface{}{
+					"Time": item.Start.HtmlWrite(),
+				})
 		}
 		content = out.String()
 	}
@@ -120,13 +125,15 @@ func (p *MeetingPage) makeTableScheduleBottom(schedule []db.ScheduleItem) templa
 		out := bytes.NewBufferString(content)
 		switch item.Type {
 			case "eat":
-				diningCells.Execute(out, struct {
-					LabelEating, LabelCooking, LabelFoodhelp string
-				}{msg.Msg("meeting-table-eating"), msg.Msg("meeting-table-cooking"), msg.Msg("meeting-table-foodhelp")})
+				diningCells.Execute(out, map[string]interface{}{
+					"LabelEating":   msg.Msg("meeting-table-eating"),
+					"LabelCooking":  msg.Msg("meeting-table-cooking"),
+					"LabelFoodhelp": msg.Msg("meeting-table-foodhelp"),
+				})
 			case "meet":
-				meetingCell.Execute(out, struct {
-					LabelAttending string
-				}{msg.Msg("meeting-table-attending")})
+				meetingCell.Execute(out, map[string]interface{}{
+					"LabelAttending": msg.Msg("meeting-table-attending"),
+				})
 		}
 		content = out.String()
 	}
@@ -200,10 +207,11 @@ func (p *MeetingPage) Render() {
 			user = users[userId]
 		}
 		out := bytes.NewBufferString(table)
-		userRow.Execute(out, struct {
-			UserRealName, UserNickName, Comment string
-			UserSchedule template.HTML
-		}{user.Name, user.Nickname, meetingItem.CleanComment(), p.createUserSchedule(meetingItem, schedule)})
+		userRow.Execute(out, map[string]interface{}{
+			"UserRealName": user.Name,
+			"UserNickName": user.Nickname,
+			"Comment":      meetingItem.CleanComment(),
+			"UserSchedule": p.createUserSchedule(meetingItem, schedule)})
 		table = out.String()
 	}
 	
@@ -227,26 +235,20 @@ func (p *MeetingPage) Render() {
 	<tr class="total">
 		<td>{{.UsersTotal}}</td>{{.ScheduleTotals}}
 	</tr>
-</table>`, struct {
-		Title, SubTitle, WrittenDate string
-		LabelSchedule, LabelComment, LabelUser, LabelRealNameToggle string
-		ScheduleTop, ScheduleMiddle, ScheduleBottom, ScheduleTotals template.HTML
-		UsersTotal int
-		Table template.HTML
-	}{
-		Title:         meeting.Title,
-		SubTitle:      meeting.Comment,
-		WrittenDate:   p.date,
-		LabelSchedule: msg.Msg("meeting-table-schedule"), // LabelSchedule
-		LabelComment:  msg.Msg("meeting-table-comment"),  // LabelComment
-		LabelUser:     msg.Msg("meeting-table-user"),     // LabelUser
-		LabelRealNameToggle: msg.Msg("meeting-table-realnametoggle"),
-		ScheduleTop:    p.makeTableScheduleTop(sortedSchedule),
-		ScheduleMiddle: p.makeTableScheduleMiddle(sortedSchedule),
-		ScheduleBottom: p.makeTableScheduleBottom(sortedSchedule),
-		ScheduleTotals: p.makeTableScheduleTotals(meeting),
-		UsersTotal:     len(meeting.Users),
-		Table:          template.HTML(table),
+</table>`, map[string]interface{}{
+		"Title":         meeting.Title,
+		"SubTitle":      meeting.Comment,
+		"WrittenDate":   p.date,
+		"LabelSchedule": msg.Msg("meeting-table-schedule"), // LabelSchedule
+		"LabelComment":  msg.Msg("meeting-table-comment"),  // LabelComment
+		"LabelUser":     msg.Msg("meeting-table-user"),     // LabelUser
+		"LabelRealNameToggle": msg.Msg("meeting-table-realnametoggle"),
+		"ScheduleTop":    p.makeTableScheduleTop(sortedSchedule),
+		"ScheduleMiddle": p.makeTableScheduleMiddle(sortedSchedule),
+		"ScheduleBottom": p.makeTableScheduleBottom(sortedSchedule),
+		"ScheduleTotals": p.makeTableScheduleTotals(meeting),
+		"UsersTotal":     len(meeting.Users),
+		"Table":          template.HTML(table),
 	})
 	if err != nil {
 		return//log.Fatal(err)
@@ -255,11 +257,10 @@ func (p *MeetingPage) Render() {
 	if p.auth.LoggedIn {
 		content = p.UserForms(content, meeting)
 	} else {
-		content, _ = msg.HtmlMsg(content, `<p>{{.LabelNotLoggedInMessage}}</p>`, struct{
-			LabelNotLoggedInMessage string
-		}{msg.Msg("meeting-notloggedin")})
+		content, _ = msg.HtmlMsg(content, `<p>{{.LabelNotLoggedInMessage}}</p>`, map[string]interface{}{
+			"LabelNotLoggedInMessage": msg.Msg("meeting-notloggedin")})
 	}
 	
 	p.Page.content = content
-	p.Page.title = msg.Msg("meeting-title", struct{Title string}{meeting.Title})
+	p.Page.title = msg.Msg("meeting-title", map[string]interface{}{"Title":meeting.Title})
 }

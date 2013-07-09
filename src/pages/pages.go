@@ -94,13 +94,13 @@ func HandleAction (w http.ResponseWriter, req *http.Request) {
 		log.Fatal(err)
 	}
 	out := bytes.NewBuffer([]byte(``))
-	mainhtml.Execute(out, struct {
-		Title string
-		Style string
-		Script string
-		Topmenu string
-		Content template.HTML
-	}{page.Title(), "", "", "", page.Content()})
+	mainhtml.Execute(out, map[string]interface{}{
+		"Title":   page.Title(),
+		"Style":   "",
+		"Script":  "",
+		"Topmenu": "",
+		"Content": page.Content(),
+	})
 	html := out.String()
 	io.WriteString(w, html)
 }
