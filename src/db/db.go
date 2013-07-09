@@ -150,7 +150,7 @@ type ScheduleSorter struct {
 func (s ScheduleSorter) Len() int { return len(s.schedule) }
 func (s ScheduleSorter) Swap(i, j int) { s.schedule[i], s.schedule[j] = s.schedule[j], s.schedule[i] }
 func (s ScheduleSorter) Less(i, j int) bool {
-	return s.schedule[i].Start.ToInt() < s.schedule[j].Start.ToInt()
+	return s.schedule[i].Start.Int() + s.schedule[i].Id.Int() < s.schedule[j].Start.Int() + s.schedule[j].Id.Int()
 }
 
 func SortSchedule(schedule map[string]ScheduleItem) (sorted []ScheduleItem) {
