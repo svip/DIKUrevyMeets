@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"fmt"
 	"time"
+	"strings"
 )
 
 // Functionality specifically related to users.json
@@ -104,7 +105,16 @@ type UserSorter struct {
 func (s UserSorter) Len() int { return len(s.users) }
 func (s UserSorter) Swap(i, j int) { s.users[i], s.users[j] = s.users[j], s.users[i] }
 func (s UserSorter) Less(i, j int) bool {
-	return s.users[i].Name < s.users[j].Name
+	nameI := s.users[i].Name
+	nameJ := s.users[j].Name
+	// Handle the cases where the user name are not set in the schedule...
+	if strings.Trim(nameI, " \n") == "" {
+		nameI = users[s.users[i].Id.String()].Name
+	}
+	if strings.Trim(nameJ, " \n") == "" {
+		nameJ = users[s.users[j].Id.String()].Name
+	}
+	return nameI < nameJ
 }
 
 func SortUsersByName(users map[string]UserSchedule) (sorted []UserSchedule) {
