@@ -141,8 +141,8 @@ func (p *MeetingPage) makeTableScheduleBottom(schedule []db.ScheduleItem) templa
 }
 
 func (p *MeetingPage) makeTableScheduleTotals(meeting db.Meeting)  template.HTML {
-	diningCells, _ := template.New("diningCells").Parse(`<th>{{.Eating}}</th><th>{{.Cooking}}</th><th>{{.Foodhelp}}</th>`)
-	meetingCell, _ := template.New("meetingCell").Parse(`<th>{{.Attending}}</th>`)
+	diningCells, _ := template.New("diningCells").Parse(`<td>{{.Eating}}</td><td>{{.Cooking}}</td><td>{{.Foodhelp}}</td>`)
+	meetingCell, _ := template.New("meetingCell").Parse(`<td>{{.Attending}}</td>`)
 	content := ""
 	type count struct {
 		Eating int
