@@ -145,16 +145,16 @@ func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responde
 
 func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
 	var output string
-	responded := false
-	for _, user := range meeting.Users {
-		if user.Id.IsEqual(p.auth.Uid) {
-			responded = true
-		}
-	}
-	if responded {
-		output = p.closeOpenMeetingForms(output, meeting)
-	}
 	if !meeting.Locked {
+		responded := false
+		for _, user := range meeting.Users {
+			if user.Id.IsEqual(p.auth.Uid) {
+				responded = true
+			}
+		}
+		if responded {
+			output = p.closeOpenMeetingForms(output, meeting)
+		}
 		output = p.commitmentForm(output, meeting, responded)
 	} else {
 		output, _ = msg.HtmlMsg(output, `<p>{{.LabelMeetingClosed}}</p>`, map[string]interface{}{
