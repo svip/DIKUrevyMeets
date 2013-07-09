@@ -10,7 +10,7 @@ import (
 )
 
 type scheduleItemType string
-type timeStamp int
+type timeStamp int64
 type userType string
 
 type Tag string
@@ -24,8 +24,8 @@ type ScheduleItem struct {
 	Unique bool
 	IcalUnique bool
 	Nojoin bool
-	CostPerPerson float32
-	Spend float32
+	CostPerPerson float64
+	Spend float64
 	Open bool
 	Closedby UserId
 }
@@ -35,7 +35,7 @@ type UserScheduleItem struct {
 	Eating bool
 	Cooking bool
 	Foodhelp bool
-	Paid float32
+	Paid float64
 }
 
 type UserSchedule struct {

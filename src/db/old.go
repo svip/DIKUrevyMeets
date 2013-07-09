@@ -21,7 +21,7 @@ type oldScheduleItem struct {
 	Unique bool
 	IcalUnique bool
 	Nojoin bool
-	CostPerPerson float32
+	CostPerPerson float64
 	Spend interface{}
 	Open bool
 	Closedby string
@@ -32,7 +32,7 @@ type oldUserScheduleItem struct {
 	Eating interface{}
 	Cooking interface{}
 	Foodhelp interface{}
-	Paid float32
+	Paid float64
 }
 
 type oldUserSchedule struct {
@@ -87,14 +87,18 @@ func parseLegacyData(data []byte) error {
 					newid = scheduleItemId(tmp)
 				case int:
 					newid = scheduleItemId(item.Id.(int))
+				case float64:
+					newid = scheduleItemId(int(item.Id.(float64)))
 			}
-			var newspend float32
+			var newspend float64
 			switch item.Spend.(type) {
 				case string:
 					tmp, _ := strconv.Atoi(item.Spend.(string))
-					newspend = float32(tmp)
+					newspend = float64(tmp)
 				case int:
-					newspend = float32(item.Spend.(int))
+					newspend = float64(item.Spend.(int))
+				case float64:
+					newspend = float64(item.Spend.(float64))
 			}
 			strid := fmt.Sprintf("%d", newid)
 			newclosedby, _ :=  strconv.Atoi(item.Closedby)

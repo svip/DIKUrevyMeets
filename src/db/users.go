@@ -15,7 +15,7 @@ import (
 type User struct {
 	Id UserId
 	Name string
-	Register int64
+	Register timeStamp
 	Admin bool
 	Identity string
 	Nickname string
@@ -83,7 +83,7 @@ func CreateUser(uid, name, nickname string) {
 		Id: UserId(id),
 		Name: name,
 		Nickname: nickname,
-		Register: t.Unix(),
+		Register: timeStamp(t.Unix()),
 		Admin: false,
 		Identity: uid,
 	}
