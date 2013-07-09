@@ -46,7 +46,7 @@ func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) s
 				closedByUser := db.GetUser(item.Closedby)
 				output, _ = msg.HtmlMsg(output, `<p>{{.LabelEatingClosedBy}}</p>`,
 				map[string]interface{}{
-					"LabelEatingClosedBy": msg.Msg("meeting-eatclosedby", map[string]interface{}{"Name":closedByUser.Name}),
+					"LabelEatingClosedBy": template.HTML(msg.Msg("meeting-eatclosedby", map[string]interface{}{"Name":closedByUser.Name})),
 				})
 			}
 		}
