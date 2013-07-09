@@ -13,7 +13,8 @@
 	"meeting-table-comment":   "Kommentar",
 	"meeting-table-foodclosed": "Lukket",
 	
-	"meeting-eatclosedby":    "Madtilmelding lukket af <b>{{.Name}}</b>",
+	"meeting-isclosed":       "Der er lukket for tilmeldingen.",
+	"meeting-eatclosedby":    "Madtilmelding lukket af <b>{{.Name}}</b>.",
 	"meeting-closeeating-title": "Luk for madtilmeldingen",
 	"meeting-closeeating-spent": "Beløb brugt på mad (i kroner):",
 	"meeting-closeeating-submit": "Luk",

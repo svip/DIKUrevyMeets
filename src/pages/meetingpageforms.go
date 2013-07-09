@@ -54,17 +54,7 @@ func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) s
 	return output
 }
 
-func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
-	var output string
-	responded := false
-	for _, user := range meeting.Users {
-		if user.Id.IsEqual(p.auth.Uid) {
-			responded = true
-		}
-	}
-	if responded {
-		output = p.closeOpenMeetingForms(output, meeting)
-	}
+func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responded bool) string {
 	var form string
 	diningForm := `<span class="scheduleform-item">{{.ItemTitle}}:</span>
 <input type="checkbox" name="meeting-{{.Id}}-eating" id="meeting-{{.Id}}-eating"{{if .Closed}} disabled="true"{{end}}{{if .EatingChecked}} checked="true"{{end}} />
@@ -81,29 +71,50 @@ func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
 			continue
 		}
 		if item.Type == "eat" {
+			// Per default we assume people will be eating, but not
+			// cooking or helping.
+			eating, cooking, foodhelp := true, false, false
+			if _, ok := meeting.Users[p.auth.Uid]; ok {
+				// Oh, they have already committed to this event?
+				// Then let's get their values.
+				eating = meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Eating
+				cooking = meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Cooking
+				foodhelp = meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Foodhelp
+			} else if !item.Open {
+				// But if there are no commitment and the meeting is
+				// closed, then 
+				eating, cooking, foodhelp = false, false, false
+			}
 			form, _ = msg.HtmlMsg(form, diningForm,
 				map[string]interface{}{
 					"LabelEating":   msg.Msg("meeting-form-eating"),
 					"LabelCooking":  msg.Msg("meeting-form-cooking"),
 					"LabelFoodhelp": msg.Msg("meeting-form-foodhelp"),
 					"Id":  item.Id.Int(),
-					"EatingChecked": meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Eating,
-					"CookingChecked": meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Cooking,
-					"FoodhelpChecked": meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Foodhelp,
+					"EatingChecked": eating,
+					"CookingChecked": cooking,
+					"FoodhelpChecked": foodhelp,
 					"Closed":        !item.Open,
 					"ItemTitle":     item.Title,
 			})
 		} else {
+			attending := true
+			if _, ok := meeting.Users[p.auth.Uid]; ok {
+				attending = meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Attending
+			} else if !item.Open {
+				attending = false
+			}
 			form, _ = msg.HtmlMsg(form, meetingForm,
 				map[string]interface{}{
 					"LabelAttending":   msg.Msg("meeting-form-attending"),
 					"Id":  item.Id.Int(),
-					"AttendingChecked": meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Attending,
+					"AttendingChecked": attending,
 					"Closed":        !item.Open,
 					"ItemTitle":     item.Title,
 			})
 		}
 	}
+	
 	var meetingFormTitle string
 	var meetingFormSubmit string
 	if responded {
@@ -129,6 +140,28 @@ func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
 		"UserType":           "self",
 		"Form":               template.HTML(form),
 	})
+	return output
+}
+
+func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
+	var output string
+	responded := false
+	for _, user := range meeting.Users {
+		if user.Id.IsEqual(p.auth.Uid) {
+			responded = true
+		}
+	}
+	if responded {
+		output = p.closeOpenMeetingForms(output, meeting)
+	}
+	if !meeting.Locked {
+		output = p.commitmentForm(output, meeting, responded)
+	} else {
+		output, _ = msg.HtmlMsg(output, `<p>{{.LabelMeetingClosed}}</p>`, map[string]interface{}{
+			"LabelMeetingClosed": msg.Msg("meeting-isclosed"),
+		})
+	}
+	
 	out := bytes.NewBufferString(content)
 	out.WriteString(output)
 	return out.String()
