@@ -5552,4 +5552,11 @@
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"<span style=\"color: red; font-weight: bold;\">PATTEORDSPIL ER P\u00c5KR\u00c6VET I KOMMENTARFELTET TIL POSTREVYEN.<\/span>","modified":1371204145,"name":"taus m\u00f8ller"}},
 "hidden":true,"locked":true,"tags":{"0":""},
+"days":false},
+"2013-09-15":{"title":"Generalforsamling","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 16:00","end":"0 17:00","unique":false,"nojoin":false,"id":"0"}},
+"comment":"","users":{"87":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1378018974,"name":"Daniel Egeberg"},
+"22":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1378023547}},
+"hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
