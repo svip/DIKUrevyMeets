@@ -5557,6 +5557,8 @@
 "comment":"","users":{"87":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1378018974,"name":"Daniel Egeberg"},
 "22":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1378023547}},
+"usertype":"normal","comment":"","modified":1378023547,"name":"Sebastian Paaske T\u00f8rholm"},
+"35":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1378567983}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
