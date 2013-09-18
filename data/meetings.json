@@ -5609,4 +5609,13 @@
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1379251812}},
 "hidden":false,"locked":false,"tags":{"0":""},
-"days":false}}
+"days":false},
+"2013-11-08":{"title":"Hyttetur","schedule":{"0":{"id":"0","title":"Hyttetur","type":"meet","start":"0 15:00","end":"0 23:59","unique":false,"nojoin":false},
+"1":{"id":"1","title":"Hyttetur","type":"meet","start":"1 00:00","end":"0 23:59","unique":false,"nojoin":false},
+"2":{"id":"2","title":"Hyttetur","type":"meet","start":"2 00:00","end":"0 16:00","unique":false,"nojoin":false}},
+"comment":"","users":{"87":{"schedule":{"0":{"attending":true},
+"1":{"attending":true},
+"2":{"attending":true}},
+"usertype":"normal","comment":"","modified":1379506290}},
+"hidden":false,"locked":false,"tags":{"0":""},
+"days":"2"}}
