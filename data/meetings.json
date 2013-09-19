@@ -5616,6 +5616,10 @@
 "comment":"","users":{"87":{"schedule":{"0":{"attending":true},
 "1":{"attending":true},
 "2":{"attending":true}},
-"usertype":"normal","comment":"","modified":1379506290}},
+"usertype":"normal","comment":"","modified":1379506290,"name":"Daniel Egeberg"},
+"35":{"schedule":{"0":{"attending":true},
+"1":{"attending":true},
+"2":{"attending":true}},
+"usertype":"normal","comment":"","modified":1379593532}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":"2"}}
