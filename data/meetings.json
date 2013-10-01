@@ -5620,6 +5620,10 @@
 "35":{"schedule":{"0":{"attending":true},
 "1":{"attending":true},
 "2":{"attending":true}},
-"usertype":"normal","comment":"","modified":1379593532}},
+"usertype":"normal","comment":"","modified":1379593532,"name":"Nana Girotti"},
+"22":{"schedule":{"0":{"attending":true},
+"1":{"attending":true},
+"2":{"attending":true}},
+"usertype":"normal","comment":"","modified":1380610969}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":"2"}}
