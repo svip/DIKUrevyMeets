@@ -5690,6 +5690,10 @@
 "24":{"schedule":{"0":{"attending":true},
 "1":{"attending":true},
 "2":{"attending":true}},
-"usertype":"normal","comment":"","modified":1381445925}},
+"usertype":"normal","comment":"","modified":1381445925,"name":"Mikkel Kj\u00e6r Jensen"},
+"114":{"schedule":{"0":{"attending":true},
+"1":{"attending":true},
+"2":{"attending":true}},
+"usertype":"normal","comment":"","modified":1381568695}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":"2"}}
