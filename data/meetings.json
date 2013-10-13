@@ -5694,6 +5694,10 @@
 "114":{"schedule":{"0":{"attending":true},
 "1":{"attending":true},
 "2":{"attending":true}},
-"usertype":"normal","comment":"","modified":1381568695}},
+"usertype":"normal","comment":"","modified":1381568695,"name":"Simon Skjerning Linneberg"},
+"149":{"schedule":{"0":{"attending":true},
+"1":{"attending":true},
+"2":{"attending":true}},
+"usertype":"normal","comment":"","modified":1381686587}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":"2"}}
