@@ -5682,7 +5682,7 @@
 "42":{"schedule":{"0":{"attending":true},
 "1":{"attending":true},
 "2":{"attending":true}},
-"usertype":"normal","comment":"Hypno-C og thaimassa-C. Hver dag.","modified":1381171730,"name":"Niels G. W. Serup"},
+"usertype":"normal","comment":"Hypno-C og thaimassa-C. Hver dag.  Revytkaffetur.","modified":1382045044},
 "115":{"schedule":{"0":{"attending":true},
 "1":{"attending":true},
 "2":{"attending":true}},
@@ -5698,6 +5698,6 @@
 "149":{"schedule":{"0":{"attending":true},
 "1":{"attending":true},
 "2":{"attending":true}},
-"usertype":"normal","comment":"","modified":1381686587}},
+"usertype":"normal","comment":"","modified":1381686587,"name":"Mia Louw V\u00e6rndal"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":"2"}}
