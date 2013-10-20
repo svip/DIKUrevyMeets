@@ -5650,7 +5650,7 @@
 "35":{"schedule":{"0":{"attending":true},
 "1":{"attending":true},
 "2":{"attending":true}},
-"usertype":"normal","comment":"","modified":1379593532,"name":"Nana Girotti"},
+"usertype":"normal","comment":"Er ikke i Jylland","modified":1382268764},
 "22":{"schedule":{"0":{"attending":true},
 "1":{"attending":true},
 "2":{"attending":true}},
@@ -5702,6 +5702,6 @@
 "116":{"schedule":{"0":{"attending":true},
 "1":{"attending":true},
 "2":{"attending":true}},
-"usertype":"normal","comment":"","modified":1382195032}},
+"usertype":"normal","comment":"","modified":1382195032,"name":"Maya Saietz"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":"2"}}
