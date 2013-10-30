@@ -5722,7 +5722,7 @@
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":"2"},
 "2013-10-30":{"title":"Forfatterm\u00f8de","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 19:00","end":"0 23:00","unique":false,"nojoin":false,"id":"0"},
-"1":{"title":"Aftensmad","type":"eat","start":"0 18:00","end":"0 19:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
+"1":{"title":"Aftensmad","type":"eat","start":"0 18:00","end":"0 19:00","open":false,"spend":"0","costperperson":0,"unique":false,"nojoin":false,"id":"1","closedby":"38"}},
 "comment":"Woooop","users":{"38":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":true,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"Er vi virkelig n\u00f8dt til at vente p\u00e5 Phillip ((2\\.((1[0-9]*[1-9])|[2-9][0-9]*))|([3-9](\\.[0-9]*[1-9])?)|([1-9][0-9]+(\\.[0-9]*[1-9])?)), f\u00f8r han vil lege?","modified":1382703358,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
@@ -5752,6 +5752,6 @@
 "usertype":"normal","comment":"","modified":1382815916,"name":"Julie Meinicke Nielsen"},
 "4":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1383060584}},
+"usertype":"normal","comment":"","modified":1383060584,"name":"Brainfuck"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
