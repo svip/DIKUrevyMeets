@@ -5778,6 +5778,12 @@
 "usertype":"normal","comment":"","modified":1384200955,"name":"Sebastian Paaske T\u00f8rholm"},
 "6":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":true,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1384201033}},
+"usertype":"normal","comment":"","modified":1384201033,"name":"Phillip Alexander Roschnowski"},
+"35":{"schedule":{"0":{"attending":false},
+"1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1384213537,"name":"Nana Girotti"},
+"42":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
+"usertype":"normal","comment":"Jeg lover at v\u00e6re sjov.","modified":1384214808}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
