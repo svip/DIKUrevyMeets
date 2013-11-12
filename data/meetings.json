@@ -5784,6 +5784,9 @@
 "usertype":"normal","comment":"","modified":1384213537,"name":"Nana Girotti"},
 "42":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"Jeg lover at v\u00e6re sjov.","modified":1384214808}},
+"usertype":"normal","comment":"Jeg lover at v\u00e6re sjov.","modified":1384214808,"name":"%"},
+"38":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Kan evt. lege madneger fra kl. 16-17.","modified":1384241759}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
