@@ -5784,7 +5784,7 @@
 "usertype":"normal","comment":"","modified":1384213537,"name":"Nana Girotti"},
 "42":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"Jeg lover at v\u00e6re sjov.","modified":1384214808,"name":"%"},
+"usertype":"normal","comment":"Jeg lover at Phillip er sjov.  Nana er derimod ikke sjov, for hun kommer ikke.  Spectrum er m\u00e5ske sjov.","modified":1384357813},
 "38":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"Kan evt. lege madneger fra kl. 16-17 og fremefter.","modified":1384265273,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
@@ -5793,6 +5793,6 @@
 "usertype":"normal","comment":"Kommer m\u00e5ske efter maden","modified":1384329074,"name":"Claus Appel (Spectrum)"},
 "65":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1384333804}},
+"usertype":"normal","comment":"","modified":1384333804,"name":"Julie Meinicke Nielsen"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
