@@ -5803,5 +5803,5 @@
 "387":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"Jeg lover. Ogs\u00e5 p\u00e5 sjov.","modified":1384431128,"name":"Mikkel Storgaard Knudsen"}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
