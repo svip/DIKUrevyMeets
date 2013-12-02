@@ -5839,6 +5839,9 @@
 "usertype":"normal","comment":"","modified":1385926832,"name":"Daniel Egeberg"},
 "65":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1385935223}},
+"usertype":"normal","comment":"","modified":1385935223,"name":"Julie Meinicke Nielsen"},
+"20":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1385969718}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
