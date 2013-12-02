@@ -5808,8 +5808,8 @@
 "2013-12-11":{"title":"Forfatterm\u00f8de","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 19:00","end":"0 23:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"0 18:00","end":"0 19:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
 "comment":"","users":{"38":{"schedule":{"0":{"attending":true},
-"1":{"eating":true,"cooking":true,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1385899977,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
+"1":{"eating":true,"cooking":true,"foodhelp":true,"paid":0}},
+"usertype":"normal","comment":"Jeg er min egen herre","modified":1385991473},
 "4":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1385900104,"name":"Brainfuck"},
@@ -5842,6 +5842,6 @@
 "usertype":"normal","comment":"","modified":1385935223,"name":"Julie Meinicke Nielsen"},
 "20":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1385969718}},
+"usertype":"normal","comment":"","modified":1385969718,"name":"Claus Appel (Spectrum)"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
