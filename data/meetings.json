@@ -5823,8 +5823,8 @@
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1385902458,"name":"Ejnar H\u00e5konsen"},
 "35":{"schedule":{"0":{"attending":true},
-"1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"","modified":1385904006,"name":"Nana Girotti"},
+"1":{"eating":true,"cooking":true,"foodhelp":true,"paid":0}},
+"usertype":"normal","comment":"Jeg vil ogs\u00e5 bestemme!","modified":1386636244},
 "22":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
 "usertype":"normal","comment":"","modified":1385905527,"name":"Sebastian Paaske T\u00f8rholm"},
@@ -5848,6 +5848,6 @@
 "usertype":"normal","comment":"","modified":1386076837,"name":"Martin Nicklas J\u00f8rgensen"},
 "114":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"","modified":1386082163}},
+"usertype":"normal","comment":"","modified":1386082163,"name":"Simon Skjerning Linneberg"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
