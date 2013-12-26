@@ -5867,6 +5867,9 @@
 "usertype":"normal","comment":"","modified":1388048088,"name":"Troels Henriksen"},
 "12":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Kan ikke mandage","modified":1388051911}},
+"usertype":"normal","comment":"Kan ikke mandage","modified":1388051911,"name":"Ejnar H\u00e5konsen"},
+"22":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1388070393}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
