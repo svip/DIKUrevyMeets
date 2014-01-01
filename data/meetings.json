@@ -5876,6 +5876,9 @@
 "usertype":"normal","comment":"","modified":1388091554,"name":"%"},
 "35":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1388443821}},
+"usertype":"normal","comment":"","modified":1388443821,"name":"Nana Girotti"},
+"38":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1388584114}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
