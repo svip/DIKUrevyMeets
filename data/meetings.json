@@ -5882,6 +5882,9 @@
 "usertype":"normal","comment":"","modified":1388584114,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
 "65":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1388609352}},
+"usertype":"normal","comment":"","modified":1388609352,"name":"Julie Meinicke Nielsen"},
+"6":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Jeg har tegnet det sm\u00e5landske flag","modified":1388725096}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
