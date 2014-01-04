@@ -5885,9 +5885,9 @@
 "usertype":"normal","comment":"","modified":1388609352,"name":"Julie Meinicke Nielsen"},
 "6":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Jeg har tegnet det sm\u00e5landske flag","modified":1388725096,"name":"Phillip Alexander Roschnowski"},
+"usertype":"normal","comment":"Jeg har tegnet det sm\u00e5landske flag (OPDATERING: nu har Brainfuck \u00f8delagt det)","modified":1388859081},
 "4":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1388741462}},
+"usertype":"normal","comment":"","modified":1388741462,"name":"Brainfuck"}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
