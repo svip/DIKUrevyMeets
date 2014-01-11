@@ -76,7 +76,7 @@
 "112":{"name":"Rasmus Bruun J\u00f8rgensen","register":1347400284,"admin":false,"identity":"112","nickname":"Rallemus"},
 "114":{"name":"Simon Skjerning Linneberg","register":1347401767,"admin":false,"identity":"114","nickname":"Simon S. Linneberg"},
 "115":{"name":"Camilla Maach Br\u00f8nnum Olsen","register":1347472254,"admin":false,"identity":"115","nickname":"Camilla"},
-"116":{"name":"Maya Saietz","register":1347879155,"admin":false,"identity":"116","nickname":"Tayacan"},
+"116":{"name":"Maya Saietz","register":1347879155,"admin":true,"identity":"116","nickname":"Tayacan"},
 "122":{"name":"Rasmus Klett Mortensen","register":1348221762,"admin":false,"identity":"122","nickname":"Rasmus Klett"},
 "126":{"name":"Sara Lee Naldal","register":1348472063,"admin":false,"identity":"126"},
 "127":{"name":"Nikolaj Pedersen","register":1348492831,"admin":false,"identity":"127"},
