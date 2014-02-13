@@ -5990,7 +5990,7 @@
 "24":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1392201058,"name":"Mikkel Kj\u00e6r Jensen"}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2014-03-23":{"title":"Materialedeadline","schedule":{"0":{"title":"Materialedeadline","type":"meet","start":"23:59","end":"23:59","unique":false,"nojoin":true}},
 "comment":"","users":{},
