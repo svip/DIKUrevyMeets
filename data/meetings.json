@@ -6311,6 +6311,9 @@
 "usertype":"normal","comment":"Jeg lover at v\u00e6re s\u00f8d.","modified":1392905519,"name":"%"},
 "38":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"Allergisk over for alt muligt","modified":1393084032}},
+"usertype":"normal","comment":"Allergisk over for alt muligt","modified":1393084032,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
+"114":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
+"usertype":"normal","comment":"","modified":1393329200}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
