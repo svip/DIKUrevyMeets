@@ -27,12 +27,12 @@ class Meeting extends Page {
 	private function userSort ( $a, $b ) {
 		$a = (isset($a->nickname)?$a->nickname:$a->name);
 		$b = (isset($b->nickname)?$b->nickname:$b->name);
-		if ( $a[0] == '#' ) $a[0] = 'Å';
-		if ( $b[0] == '#' ) $b[0] = 'Å';
+		if ( ord($a[0]) < ord('A') ) $a[0] = 'Å';
+		if ( ord($b[0]) < ord('A') ) $b[0] = 'Å';
 		$a = preg_replace('@[^a-zA-ZæøåÆØÅ]@i', '', $a);
 		$b = preg_replace('@[^a-zA-ZæøåÆØÅ]@i', '', $b);
-		if ( preg_match('@.*brainfuck.*@i', $a) ) $a = '########';
-		if ( preg_match('@.*brainfuck.*@i', $b) ) $b = '########';
+		if ( preg_match('@.*brainfuck.*@i', $a) ) $a = chr(10);
+		if ( preg_match('@.*brainfuck.*@i', $b) ) $b = chr(10);
 		return strncasecmp($a, $b, 4);
 	}
 	
