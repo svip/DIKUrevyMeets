@@ -6492,5 +6492,5 @@
 "22-2e01":{"name":"Nicolai Feh\u00e5r","usertype":"extra","schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "comment":"","modified":1394553779}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
