@@ -6517,8 +6517,10 @@
 "comment":"","modified":1394553779}},
 "hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
-"2014-03-30":{"title":"Legedag","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"12:00","end":"17:00","unique":false,"nojoin":false},
-"1":{"title":"Aftensmad","type":"eat","start":"18:00","end":"19:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false}},
-"comment":"Det bliver m\u00e5ske l\u00f8rdag d. 29 istedet.","users":{},
+"2014-03-30":{"title":"Legedag","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 12:00","end":"0 17:00","unique":false,"nojoin":false,"id":"0"},
+"1":{"title":"Aftensmad","type":"eat","start":"0 18:00","end":"0 19:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
+"comment":"Det bliver m\u00e5ske l\u00f8rdag d. 29 istedet.","users":{"116":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1395058210}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
