@@ -6765,5 +6765,5 @@
 "days":false},
 "2014-04-06":{"title":"Materialeudv\u00e6lgelse og rollefordeling","schedule":{"0":{"id":0,"title":"Materialeudv\u00e6lgelse og rollefordeling","type":"meet","start":"09:00","end":"20:00","unique":false,"nojoin":true}},
 "comment":"","users":{},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
