@@ -7186,6 +7186,8 @@
 "309":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1398764041,"name":"Mathias Svensson"},
 "309-cbc1":{"name":"Maria","usertype":"extra","schedule":{"0":{"attending":true}},
-"comment":"Ven af Idolf","modified":1398764061}},
+"comment":"Ven af Idolf","modified":1398764061},
+"148":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1398768444}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
