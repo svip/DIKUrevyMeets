@@ -7190,6 +7190,8 @@
 "148":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1398768444,"name":"Jonas Aaslet"},
 "8":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1398796803}},
+"usertype":"normal","comment":"","modified":1398796803,"name":"Jenny-Margrethe Vej"},
+"116-ff11":{"name":"Karl","usertype":"extra","schedule":{"0":{"attending":true}},
+"comment":"","modified":1398948956}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
