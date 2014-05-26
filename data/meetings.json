@@ -6538,7 +6538,7 @@
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0},
 "2":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"jeg ankommer omkring 30 minutter forsinket afh\u00e6ngigt af hvor lang tid det tager at komme igennem valhk\u00f8en","modified":1400978098}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2014-05-26":{"title":"4. \u00f8vedag","schedule":{"0":{"id":"0","title":"M\u00f8de","type":"meet","start":"0 18:30","end":"0 23:00","unique":false,"nojoin":false},
 "1":{"id":"1","title":"Aftensmad","type":"eat","start":"0 17:30","end":"0 18:30","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"closedby":null}},
