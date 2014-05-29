@@ -6937,7 +6937,7 @@
 "115-f77c":{"name":"Chi","usertype":"extra","schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "comment":"","modified":1401233664}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2014-05-29":{"title":"Generalpr\u00f8ve","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 18:30","end":"0 23:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"0 17:30","end":"0 18:30","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
