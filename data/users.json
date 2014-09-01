@@ -31,7 +31,7 @@
 "39":{"name":"Troels Hessner Hansen","register":1317410541,"admin":false,"identity":"39"},
 "40":{"name":"Tomas Nielsen","register":1317454643,"admin":false,"identity":"40"},
 "41":{"name":"Oskar Behrendt","register":1317475535,"admin":false,"identity":"41","nickname":"Oskar"},
-"42":{"name":"Niels G. W. Serup","register":1317563039,"admin":false,"identity":"42","nickname":"Niels"},
+"42":{"name":"Niels G. W. Serup","register":1317563039,"admin":true,"identity":"42","nickname":"Niels"},
 "43":{"name":"Rune Perstrup","register":1317574862,"admin":false,"identity":"43","nickname":"guldfisk"},
 "44":{"name":"sofia elena jakobsen manioudakis","register":1317629967,"admin":false,"identity":"44"},
 "45":{"name":"Jakob Jensen","register":1317722322,"admin":false,"identity":"45","nickname":"jakob"},
