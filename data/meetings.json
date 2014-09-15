@@ -7926,7 +7926,7 @@
 "usertype":"normal","comment":"","modified":1409681493,"name":"Mia Louw V\u00e6rndal"},
 "24":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1410200629,"name":"Mikkel Kj\u00e6r Jensen"}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2014-09-15":{"title":"Introarrangement","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 17:30","end":"0 20:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"0 18:00","end":"0 19:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
