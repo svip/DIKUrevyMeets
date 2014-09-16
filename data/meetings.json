@@ -7978,7 +7978,7 @@
 "2333":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1410729504,"name":"Sofie Aleksandra Borup Harning"}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2014-11-14":{"title":"Hyttetur","schedule":{"0":{"id":"0","title":"Hyttetur","type":"meet","start":"0 15:00","end":"0 23:59","unique":false,"nojoin":false},
 "1":{"id":"1","title":"Hyttetur","type":"meet","start":"1 00:00","end":"0 23:59","unique":false,"nojoin":false},
