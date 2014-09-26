@@ -8315,6 +8315,9 @@
 "usertype":"normal","comment":"","modified":1411589369,"name":"Simon Skjerning Linneberg"},
 "38":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"Allergisk over for det hele.","modified":1411595310}},
+"usertype":"normal","comment":"Allergisk over for det hele.","modified":1411595310,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
+"35":{"schedule":{"0":{"attending":false},
+"1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1411723975}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
