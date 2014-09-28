@@ -8324,6 +8324,9 @@
 "usertype":"normal","comment":"","modified":1411731266,"name":"Troels Henriksen"},
 "116":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1411732173}},
+"usertype":"normal","comment":"","modified":1411732173,"name":"Maya Saietz"},
+"24":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
+"usertype":"normal","comment":"","modified":1411887593}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
