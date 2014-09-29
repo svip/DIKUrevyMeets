@@ -8336,6 +8336,9 @@
 "usertype":"normal","comment":"","modified":1411988635,"name":"Sebastian Paaske T\u00f8rholm"},
 "57":{"schedule":{"0":{"attending":false},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1411996372,"name":"S\u00f8ren Pilg\u00e5rd"}},
+"usertype":"normal","comment":"","modified":1411996372,"name":"S\u00f8ren Pilg\u00e5rd"},
+"12":{"schedule":{"0":{"attending":true},
+"1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1412008354}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
