@@ -8372,6 +8372,9 @@
 "usertype":"normal","comment":"","modified":1413988377,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
 "114":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"Jubiii","modified":1414015811}},
+"usertype":"normal","comment":"Jubiii","modified":1414015811,"name":"Simon Skjerning Linneberg"},
+"22":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1414047950}},
 "hidden":false,"locked":false,"tags":{"0":"forfatterm\u00f8de"},
 "days":false}}
