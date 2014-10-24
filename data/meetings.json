@@ -8411,5 +8411,5 @@
 "12":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1414060160}},
-"hidden":false,"locked":false,"tags":{"0":"forfatterm\u00f8de"},
+"hidden":true,"locked":true,"tags":{"0":"forfatterm\u00f8de"},
 "days":false}}
