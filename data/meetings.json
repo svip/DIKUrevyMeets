@@ -8481,6 +8481,9 @@
 "usertype":"normal","comment":"","modified":1422500763,"name":"Ejnar H\u00e5konsen"},
 "37":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1422532988}},
+"usertype":"normal","comment":"","modified":1422532988,"name":"Mark Schor"},
+"7":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
+"usertype":"normal","comment":"","modified":1423130873}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":"3"}}
