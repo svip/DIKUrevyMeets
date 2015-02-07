@@ -8485,5 +8485,5 @@
 "7":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
 "usertype":"normal","comment":"","modified":1423130873,"name":"Troels Henriksen"}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":"3"}}
