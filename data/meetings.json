@@ -8497,6 +8497,12 @@
 "usertype":"normal","comment":"","modified":1424018493,"name":"Simon Skjerning Linneberg"},
 "22":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1424018730}},
+"usertype":"normal","comment":"","modified":1424018730,"name":"Sebastian Paaske T\u00f8rholm"},
+"24":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1424204164,"name":"Mikkel Kj\u00e6r Jensen"},
+"12":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1424207719}},
 "hidden":false,"locked":false,"tags":{"0":"forfatterm\u00f8de"},
 "days":false}}
