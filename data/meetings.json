@@ -8504,5 +8504,5 @@
 "12":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1424207719,"name":"Ejnar H\u00e5konsen"}},
-"hidden":false,"locked":false,"tags":{"0":"forfatterm\u00f8de"},
+"hidden":true,"locked":true,"tags":{"0":"forfatterm\u00f8de"},
 "days":false}}
