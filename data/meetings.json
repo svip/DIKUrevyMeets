@@ -8636,8 +8636,8 @@
 "1":{"eating":true,"cooking":true,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1425991597,"name":"Nana Girotti"},
 "22":{"schedule":{"0":{"attending":true},
-"1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"","modified":1425993541,"name":"Sebastian Paaske T\u00f8rholm"},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1426148824},
 "116":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
 "usertype":"normal","comment":"","modified":1425994079,"name":"Maya Saietz"},
@@ -8661,6 +8661,6 @@
 "usertype":"normal","comment":"Ogs\u00e5 Ejnar","modified":1426074306,"name":"Troels Henriksen"},
 "4":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Pseudo-Ejnar","modified":1426076417}},
+"usertype":"normal","comment":"Pseudo-Ejnar","modified":1426076417,"name":"Brainfuck"}},
 "hidden":false,"locked":false,"tags":{"0":"heldage"},
 "days":false}}
