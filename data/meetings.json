@@ -8667,6 +8667,9 @@
 "usertype":"normal","comment":"Pseudo-Ejnar","modified":1426076417,"name":"Brainfuck"},
 "20":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Anti-Ejnar","modified":1426326747}},
+"usertype":"normal","comment":"Anti-Ejnar","modified":1426326747,"name":"Claus Appel (Spectrum)"},
+"65":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1426347293}},
 "hidden":false,"locked":false,"tags":{"0":"heldage"},
 "days":false}}
