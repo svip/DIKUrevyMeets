@@ -8753,7 +8753,7 @@
 "11-349b":{"name":"S\u00f8ren","usertype":"extra","schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "comment":"","modified":1426891428}},
-"hidden":false,"locked":false,"tags":{"0":"heldage"},
+"hidden":true,"locked":true,"tags":{"0":"heldage"},
 "days":false},
 "2015-04-11":{"title":"Materiale- og rollefordeling","schedule":{"0":{"id":0,"title":"M\u00f8de","type":"meet","start":"09:00","end":"21:00","unique":false,"nojoin":true}},
 "comment":"","users":{},
