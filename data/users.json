@@ -1,6 +1,6 @@
 {"4":{"name":"Brainfuck","register":1316805316,"admin":true,"identity":"4","nickname":"Brainfuck"},
 "3":{"name":"Ronni Elken Lindsgaard","register":1316807433,"admin":true,"identity":"3","nickname":"ronnil"},
-"5":{"name":"Ahmed","register":1316811751,"admin":true,"identity":"5"},
+"5":{"name":"Ahmed","register":1316811751,"admin":false,"identity":"5"},
 "6":{"name":"Phillip Alexander Roschnowski","register":1316861488,"admin":true,"identity":"6","nickname":"Phillip 2.1"},
 "7":{"name":"Troels Henriksen","register":1316864071,"admin":false,"identity":"7","nickname":"Instruktorl\u00f8jtnanten"},
 "8":{"name":"Jenny-Margrethe Vej","register":1316865024,"admin":false,"identity":"8","nickname":"M\u00f8f"},
@@ -65,7 +65,7 @@
 "79":{"name":"Morten Br\u00f8ns-Pedersen","register":1337331573,"admin":false,"identity":"79"},
 "82":{"name":"Michael Andersen","register":1337343227,"admin":false,"identity":"82","nickname":"Michael Andersen"},
 "75":{"name":"Christina Heltoft","register":1337641899,"admin":false,"identity":"75","nickname":"chjip"},
-"87":{"name":"Daniel Egeberg","register":1337766832,"admin":true,"identity":"87","nickname":"degeberg"},
+"87":{"name":"Daniel Egeberg","register":1337766832,"admin":false,"identity":"87","nickname":"degeberg"},
 "85":{"name":"Toke Lyn\u00e6s Larsen","register":1337766854,"admin":false,"identity":"85"},
 "88":{"name":"Ulrik Rasmussen","register":1337767673,"admin":false,"identity":"88"},
 "91":{"name":"Ludvig Schr\u00f8der","register":1337778201,"admin":false,"identity":"91"},
@@ -112,4 +112,5 @@
 "2351":{"name":"Jens Christian Hillerup","nickname":"jchillerup","register":1401688232,"admin":false,"identity":"2351"},
 "2459":{"name":"Signe Scholer Jensen","nickname":"SScholer","register":1414420283,"admin":false,"identity":"2459"},
 "2465":{"name":"Sven Frenzel","nickname":"Orkeren","register":1414849476,"admin":false,"identity":"2465"},
-"2475":{"name":"Tor Skovsgaard","nickname":"Tor Skovsgaard","register":1414877308,"admin":false,"identity":"2475"}}
+"2475":{"name":"Tor Skovsgaard","nickname":"Tor Skovsgaard","register":1414877308,"admin":false,"identity":"2475"},
+"2551":{"name":"Thomas Broby Nielsen","nickname":"BlueGummy","register":1427406171,"admin":false,"identity":"2551"}}
