@@ -8732,7 +8732,7 @@
 "usertype":"normal","comment":"","modified":1427219916,"name":"Ejnar H\u00e5konsen"},
 "24":{"schedule":{"0":{"attending":false}},
 "usertype":"normal","comment":"","modified":1427301149}},
-"hidden":false,"locked":false,"tags":{"0":"forfatterm\u00f8de"},
+"hidden":true,"locked":true,"tags":{"0":"forfatterm\u00f8de"},
 "days":false},
 "2015-03-22":{"title":"Betadag","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 13:00","end":"0 23:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"0 18:00","end":"0 19:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
