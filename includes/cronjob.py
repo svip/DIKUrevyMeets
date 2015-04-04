@@ -74,7 +74,7 @@ class MailTask(object):
 			print subject
 			print s
 		else:
-			msg = MIMEText(s.encode('utf-8'))
+			msg = MIMEText(s.encode('utf-8'), 'plain', 'utf-8')
 			msg['Subject'] = subject
 			msg['From'] = 'boss@dikurevy.dk'
 			msg['Reply-To'] = 'revy@dikurevy.dk'
