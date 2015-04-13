@@ -9118,6 +9118,9 @@
 "usertype":"normal","comment":"B\u00e5t b\u00e5t!","modified":1428928531,"name":"Sven Frenzel"},
 "116":{"schedule":{"0":{"attending":true},
 "1":{"attending":true}},
-"usertype":"normal","comment":"","modified":1428928814}},
+"usertype":"normal","comment":"","modified":1428928814,"name":"Maya Saietz"},
+"387":{"schedule":{"0":{"attending":true},
+"1":{"attending":true}},
+"usertype":"normal","comment":"Skal de ikke have gr\u00f8ntsagsfrikadeller med pasta-pesto?","modified":1428952654}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
