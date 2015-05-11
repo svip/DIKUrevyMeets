@@ -9045,7 +9045,7 @@
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0},
 "2":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1431275132}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2015-05-31":{"title":"Hygge og oprydning","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 12:00","end":"0 18:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Brunch","type":"eat","start":"0 11:00","end":"0 12:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
