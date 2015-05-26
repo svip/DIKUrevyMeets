@@ -476,6 +476,9 @@ class SQLDatabase {
 	 */
 	function connect() {
 		$this->con_id = @mysql_connect($this->sql['host'], $this->sql['user'], $this->sql['pass']);
+		if ( $this->con_id === false ) {
+			return false;
+		}
 		if ( !mysql_select_db($this->sql['name'], $this->con_id) )
 		{
 			return false;
@@ -493,6 +496,9 @@ class SQLDatabase {
 	 * @return The query resource on succes, FALSE upon failure
 	 */
 	function query($sql, $store = 0) {
+		if ( $this->con_id === false ) {
+			return false;
+		}
 		//echo $sql."<br /><br /><br />\n";
 		if((is_numeric($store)) && ($store>0)) {
 				$this->query_array[$store] = "\0";
