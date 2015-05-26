@@ -133,7 +133,8 @@ EOF;
 									$participants['attending']++;
 									$names['attending'][] = $name;
 								}
-								if ( @$userSchedule->cooking ) {
+								if ( @$userSchedule->cooking
+									|| @$userSchedule->foodhelp ) {
 									$participants['cooking']++;
 									$names['cooking'][] = $name;
 								}
@@ -259,8 +260,8 @@ EOF;
 		foreach ( $schedule as $i => $item ) {
 			$item->start = $this->fixItemTime($item->start);
 			$item->end = $this->fixItemTime($item->end);
-			$tmp[intval(str_replace(array(':', ''), '', $item->start))] = $item;
-			$tmp[intval(str_replace(array(':', ''), '', $item->start))]->id = $i;
+			$tmp[intval(str_replace(array(':', ' '), '', $item->start))] = $item;
+			$tmp[intval(str_replace(array(':', ' '), '', $item->start))]->id = $i;
 		}
 		ksort($tmp);
 		return $tmp;
