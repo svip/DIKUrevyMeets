@@ -9600,7 +9600,7 @@
 "7-18b6":{"name":"Lea","usertype":"extra","schedule":{"0":{"attending":true},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
 "comment":"","modified":1433080464}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2014-09-29":{"title":"F\u00f8rste forfatterm\u00f8de","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 19:00","end":"0 23:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"0 18:00","end":"0 19:00","open":false,"spend":"0","costperperson":0,"unique":false,"nojoin":false,"id":"1","closedby":"42"}},
