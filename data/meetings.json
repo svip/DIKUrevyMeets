@@ -10219,6 +10219,8 @@
 "days":false},
 "2015-09-23":{"title":"Introduktion til Harlem Klub","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 17:20","end":"0 19:30","unique":false,"nojoin":false,"id":"0"}},
 "comment":"Det sker i 1-0-37.  Der vil v\u00e6re kage og Harlem-film!\r\n","users":{"42":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1440507886}},
+"usertype":"normal","comment":"","modified":1440507886,"name":"Niels G. W. Serup"},
+"22":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1440535843}},
 "hidden":false,"locked":false,"tags":{"0":"Harlem"},
 "days":false}}
