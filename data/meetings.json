@@ -10237,4 +10237,11 @@
 "114":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1441088485}},
 "hidden":false,"locked":false,"tags":{"0":"Harlem","1":"intro","2":"kage"},
+"days":false},
+"2015-09-30":{"title":"Introdag","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 17:20","end":"0 20:00","unique":false,"nojoin":false,"id":"0"}},
+"comment":"","users":{"4":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1441712059,"name":"Brainfuck"},
+"42":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"HVAAAAD","modified":1441716000}},
+"hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
