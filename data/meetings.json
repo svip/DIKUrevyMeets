@@ -10239,7 +10239,7 @@
 "usertype":"normal","comment":"","modified":1442836966,"name":"Caroline Miller"},
 "11-349b":{"name":"S\u00f8ren","usertype":"extra","schedule":{"0":{"attending":true}},
 "comment":"","modified":1442836986}},
-"hidden":false,"locked":false,"tags":{"0":"forening"},
+"hidden":true,"locked":true,"tags":{"0":"forening"},
 "days":false},
 "2016-05-28":{"title":"Forestilling","schedule":{"0":{"title":"Forestilling","type":"meet","start":"0 19:30","end":"0 23:59","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Aftensmad","type":"eat","start":"0 17:00","end":"0 18:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
