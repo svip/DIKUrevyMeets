@@ -10302,7 +10302,7 @@
 "usertype":"normal","comment":"","modified":1442826139,"name":"Ejnar H\u00e5konsen"},
 "4":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1442867331,"name":"Brainfuck"}},
-"hidden":false,"locked":false,"tags":{"0":"Harlem","1":"intro","2":"kage"},
+"hidden":true,"locked":true,"tags":{"0":"Harlem","1":"intro","2":"kage"},
 "days":false},
 "2015-09-30":{"title":"Introdag","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 17:20","end":"0 20:00","unique":false,"nojoin":false,"id":"0"}},
 "comment":"","users":{"4":{"schedule":{"0":{"attending":true}},
