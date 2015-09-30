@@ -10318,6 +10318,8 @@
 "12":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1442826146,"name":"Ejnar H\u00e5konsen"},
 "24":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1443590598}},
+"usertype":"normal","comment":"","modified":1443590598,"name":"Mikkel Kj\u00e6r Jensen"},
+"372":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1443616395}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
