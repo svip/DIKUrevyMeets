@@ -10316,6 +10316,8 @@
 "387":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1442244235,"name":"Mikkel Storgaard Knudsen"},
 "12":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":"","modified":1442826146}},
+"usertype":"normal","comment":"","modified":1442826146,"name":"Ejnar H\u00e5konsen"},
+"24":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1443590598}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
