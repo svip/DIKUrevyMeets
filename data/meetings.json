@@ -10362,6 +10362,12 @@
 "usertype":"normal","comment":"","modified":1443699045,"name":"Sebastian Paaske T\u00f8rholm"},
 "795":{"schedule":{"0":{"attending":true},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1443714368}},
+"usertype":"normal","comment":"","modified":1443714368,"name":"Jakob Uhd Jepsen"},
+"20":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1443717162,"name":"Claus Appel (Spectrum)"},
+"2346":{"schedule":{"0":{"attending":false},
+"1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Jeg kommer formentlig ikke, da min far kommer og vi skal pille mit nuv\u00e6rende k\u00f8kken ned og s\u00e6tte et nyt op. Men bliver der tid, s\u00e5 kan det godt v\u00e6re, at jeg kommer forbi. Hvis ikke, s\u00e5 smider jeg m\u00e5ske nogle id\u00e9er ud p\u00e5 listen. Burde beskeden her v\u00e6re endnu l\u00e6ngere? Ingen ved det.","modified":1443723432}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
