@@ -1,51 +1,79 @@
 package msg
 
 import (
-	"fmt"
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"log"
-	"bytes"
-	"html/template"
+	"os"
+	"path/filepath"
 )
 
-var messages map[string]string
-var messagesLoaded bool
+const (
+	defaultLanguage = "da_DK"
+)
 
-func loadMessages() {
-	data, err := ioutil.ReadFile("../data/messages-da.json")
+var currentLanguage = defaultLanguage
+var msgs map[string]map[string]string
+
+func init() {
+	msgs = make(map[string]map[string]string)
+}
+
+func loadMessages(path string, info os.FileInfo, err error) error {
+	if info.IsDir() {
+		return nil
+	}
+	file, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	data := make([]byte, info.Size())
+	_, err = file.Read(data)
+	if err != nil {
+		return err
+	}
+	var lMsgs map[string]string
+	err = json.Unmarshal(data, &lMsgs)
+	if err != nil {
+		return err
+	}
+	err = file.Close()
+	if err != nil {
+		return err
+	}
+	msgs[lMsgs["code"]] = lMsgs
+	return nil
+}
+
+func LoadMessages(baseDir string) {
+	err := filepath.Walk(baseDir, loadMessages)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = json.Unmarshal(data, &messages)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Messages loaded.")
-	messagesLoaded = true
 }
 
 func Msg(msg string, a ...interface{}) string {
-	if !messagesLoaded {
-		loadMessages()
-	}
-	if _, ok := messages[msg]; !ok {
+	s, ok := msgs[currentLanguage][msg]
+	if !ok {
 		return fmt.Sprintf("<%s>", msg)
+	} else {
+		return fmt.Sprintf(s, a...)
 	}
-	if len(a) > 0 {
-		tmp, _ := HtmlMsg("", messages[msg], a[0])
-		return tmp
-	}
-	return messages[msg]
-	//return RawMsg(messages[msg], a...)
 }
 
-func HtmlMsg(existingContent string, tmplText string, data interface{}) (string, error) {
-	t, err := template.New("tmp").Parse(tmplText)
+func LoadMessages(baseDir string) {
+	err := filepath.Walk(baseDir, loadMessages)
 	if err != nil {
-		return "", err
+		log.Fatal(err)
 	}
-	out := bytes.NewBufferString(existingContent)
-	t.Execute(out, data)
-	return out.String(), nil
 }
+
+func Msg(msg string, a ...interface{}) string {
+	s, ok := msgs[currentLanguage][msg]
+	if !ok {
+		return fmt.Sprintf("<%s>", msg)
+	} else {
+		return fmt.Sprintf(s, a...)
+	}
+}
+
