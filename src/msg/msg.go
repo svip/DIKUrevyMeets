@@ -1,9 +1,11 @@
 package msg
 
 import (
+	"bytes"
 	"conf"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"os"
 	"sort"
@@ -114,5 +116,19 @@ func (c *Container) Msg(msg string, a ...interface{}) string {
 		return fmt.Sprintf("<%s>", msg)
 	}
 	return fmt.Sprintf(s, a...)
+}
+
+func (c *Container) MsgTemplate(msg string, input interface{}) string {
+	s := c.Msg(msg)
+	t, err := template.New("msg").Parse(s)
+	if err != nil {
+		return fmt.Sprintf("<%s: %s>", msg, err.Error())
+	}
+	out := bytes.NewBufferString("")
+	err = t.Execute(out, input)
+	if err != nil {
+		return fmt.Sprintf("<%s: %s>", msg, err.Error())
+	}
+	return out.String()
 }
 
