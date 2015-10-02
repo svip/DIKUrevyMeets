@@ -60,20 +60,3 @@ func Msg(msg string, a ...interface{}) string {
 		return fmt.Sprintf(s, a...)
 	}
 }
-
-func LoadMessages(baseDir string) {
-	err := filepath.Walk(baseDir, loadMessages)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func Msg(msg string, a ...interface{}) string {
-	s, ok := msgs[currentLanguage][msg]
-	if !ok {
-		return fmt.Sprintf("<%s>", msg)
-	} else {
-		return fmt.Sprintf(s, a...)
-	}
-}
-

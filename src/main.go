@@ -4,9 +4,9 @@ import (
 	"conf"
 	"fmt"
 	"log"
+	"msg"
 	"net/http"
 	"pages"
-	"msg"
 )
 
 func main() {
@@ -15,13 +15,13 @@ func main() {
 		log.Fatal("Configuration load: ", err)
 	}
 	msg.LoadMessages(conf.MessageDirectory)
-	
+
 	http.Handle("/media/", http.StripPrefix("/media/", http.FileServer(http.Dir(conf.MediaDirectory))))
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, conf.MediaDirectory+"favicon.ico")
 	})
 	http.HandleFunc("/", pages.HandleAction)
-	
+
 	err := http.ListenAndServe(fmt.Sprintf("localhost:%d", conf.Port), nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
