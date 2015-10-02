@@ -2,6 +2,16 @@
 	"front-title":            "DIKUrevy-mødekalender",
 	"frontpage-h1":           "DIKUrevy-møder",
 	
+	"time-dayweek-1":         "mandag",
+	"time-dayweek-2":         "tirsdag",
+	"time-dayweek-3":         "onsdag",
+	"time-dayweek-4":         "torsdag",
+	"time-dayweek-5":         "fredag",
+	"time-dayweek-6":         "lørdag",
+	"time-dayweek-7":         "søndag",
+	"time-tofromday":         "%s<br />-<br />%s",
+	"time-format":            "02/01",
+	
 	"meeting-title":          "Møde: {{.Title}}",
 	"meeting-table-schedule": "Program",
 	"meeting-table-user":     "Revyt",

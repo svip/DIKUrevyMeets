@@ -7,7 +7,7 @@ import (
 )
 
 // These are specifically the forms on the meeting page, as the other file
-// was getting a big too big.
+// was getting a bit too big.
 
 func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) string {
 	for _, item := range db.SortSchedule(meeting.Schedule) {

@@ -74,6 +74,8 @@ func parseLegacyData(data []byte) error {
 		switch f[date].Days.(type) {
 			case int:
 				newdays = f[date].Days.(int)
+			case string:
+				newdays, _ = strconv.Atoi(f[date].Days.(string))
 			default:
 				newdays = 0
 		}
@@ -135,7 +137,7 @@ func parseLegacyData(data []byte) error {
 			i, _ := strconv.Atoi(userId)
 			newusers[userId] = UserSchedule{UserId(i), newuserschedule, f[date].Users[userId].Usertype, f[date].Users[userId].Comment, f[date].Users[userId].Modified, f[date].Users[userId].Name}
 		}
-		r[date] = Meeting{f[date].Title, newschedule, f[date].Comment, newusers, f[date].Hidden, f[date].Locked, newtags, newdays}
+		r[date] = Meeting{Date(date), f[date].Title, newschedule, f[date].Comment, newusers, f[date].Hidden, f[date].Locked, newtags, newdays}
 	}
 	meetings = r
 	return nil

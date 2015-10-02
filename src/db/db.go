@@ -2,11 +2,12 @@ package db
 
 import (
 	"encoding/json"
-	"log"
 	"fmt"
 	"io/ioutil"
-	"sort"
+	"log"
 	"regexp"
+	"sort"
+	"time"
 )
 
 type scheduleItemType string
@@ -16,46 +17,70 @@ type userType string
 type Tag string
 
 type ScheduleItem struct {
-	Id scheduleItemId
-	Title string
-	Type scheduleItemType
-	Start HourStamp
-	End HourStamp
-	Unique bool
-	IcalUnique bool
-	Nojoin bool
+	Id            scheduleItemId
+	Title         string
+	Type          scheduleItemType
+	Start         HourStamp
+	End           HourStamp
+	Unique        bool
+	IcalUnique    bool
+	Nojoin        bool
 	CostPerPerson float64
-	Spend float64
-	Open bool
-	Closedby UserId
+	Spend         float64
+	Open          bool
+	Closedby      UserId
 }
 
 type UserScheduleItem struct {
 	Attending bool
-	Eating bool
-	Cooking bool
-	Foodhelp bool
-	Paid float64
+	Eating    bool
+	Cooking   bool
+	Foodhelp  bool
+	Paid      float64
 }
 
 type UserSchedule struct {
-	Id UserId
+	Id       UserId
 	Schedule map[string]UserScheduleItem
 	Usertype userType
-	Comment string
+	Comment  string
 	Modified timeStamp
-	Name string
+	Name     string
+}
+
+type Date string
+
+func (d Date) String() string {
+	return string(d)
+}
+
+func (d Date) Time() time.Time {
+	t, err := time.Parse("2006-01-02", d.String())
+	if err != nil {
+		log.Fatal(err)
+	}
+	return t
+}
+
+func (d Date) DayOfTheWeek() int {
+	t := d.Time()
+	wd := t.Weekday()
+	if wd == time.Sunday {
+		wd = 7
+	}
+	return int(wd)
 }
 
 type Meeting struct {
-	Title string
+	Date     Date
+	Title    string
 	Schedule map[string]ScheduleItem
-	Comment string
-	Users map[string]UserSchedule
-	Hidden bool
-	Locked bool
-	Tags []Tag
-	Days int
+	Comment  string
+	Users    map[string]UserSchedule
+	Hidden   bool
+	Locked   bool
+	Tags     []Tag
+	Days     int
 }
 
 type Meetings map[string]Meeting
@@ -89,6 +114,10 @@ func loadMeetings() {
 		if err != nil {
 			log.Fatal(err)
 		}
+	}
+	for date, meeting := range meetings {
+		meeting.Date = Date(date)
+		meetings[date] = meeting
 	}
 	fmt.Println("Meetings loaded.")
 	meetingsLoaded = true
@@ -147,10 +176,10 @@ type ScheduleSorter struct {
 	schedule []ScheduleItem
 }
 
-func (s ScheduleSorter) Len() int { return len(s.schedule) }
+func (s ScheduleSorter) Len() int      { return len(s.schedule) }
 func (s ScheduleSorter) Swap(i, j int) { s.schedule[i], s.schedule[j] = s.schedule[j], s.schedule[i] }
 func (s ScheduleSorter) Less(i, j int) bool {
-	return s.schedule[i].Start.Int() + s.schedule[i].Id.Int() < s.schedule[j].Start.Int() + s.schedule[j].Id.Int()
+	return s.schedule[i].Start.Int()+s.schedule[i].Id.Int() < s.schedule[j].Start.Int()+s.schedule[j].Id.Int()
 }
 
 func SortSchedule(schedule map[string]ScheduleItem) (sorted []ScheduleItem) {
@@ -162,7 +191,42 @@ func SortSchedule(schedule map[string]ScheduleItem) (sorted []ScheduleItem) {
 	}
 	ss := &ScheduleSorter{sorted}
 	sort.Sort(ss)
-	return sorted
+	return 
+}
+
+type DateSorter struct {
+	dates []Date
+}
+
+func (s DateSorter) Len() int      { return len(s.dates) }
+func (s DateSorter) Swap(i, j int) { s.dates[i], s.dates[j] = s.dates[j], s.dates[i] }
+func (s DateSorter) Less(i, j int) bool {
+	ti, err := time.Parse("2006-01-02", s.dates[i].String())
+	if err != nil {
+		log.Fatal("Bad time: ", err)
+	}
+	tj, err := time.Parse("2006-01-02", s.dates[j].String())
+	if err != nil {
+		log.Fatal("Bad time: ", err)
+	}
+	return ti.Before(tj)
+}
+
+func (ms Meetings) GetSortedDates() (sorted []Date) {
+	for date := range ms {
+		sorted = append(sorted, Date(date))
+	}
+	ds := &DateSorter{sorted}
+	sort.Sort(ds)
+	return 
+}
+
+func (ms Meetings) GetMeeting(date Date) (Meeting, error) {
+	meeting, ok := ms[date.String()]
+	if !ok {
+		return Meeting{}, &DbError{"No such meeting"}
+	}
+	return meeting, nil
 }
 
 // This function returns true if there are no events in its schedule that
@@ -176,4 +240,18 @@ func (m *Meeting) Nojoin() bool {
 		}
 	}
 	return !tojoin
+}
+
+func (m *Meeting) StartTime() HourStamp {
+	schedule := SortSchedule(m.Schedule)
+	return schedule[0].Start
+}
+
+func (m *Meeting) GetEndDate() Date {
+	t, err := time.Parse("2006-01-02", m.Date.String())
+	if err != nil {
+		log.Fatal(err)
+	}
+	nt := t.AddDate(0, 0, m.Days)
+	return Date(nt.Format("2006-01-02"))
 }

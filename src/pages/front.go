@@ -3,6 +3,7 @@ package pages
 import (
 	"bytes"
 	"db"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -26,19 +27,34 @@ func (p *FrontPage) Render() {
 	var content string
 
 	meetingRow, err := template.New("meetingRow").Parse(`	<tr>
-		<td>{{.Dayname}}</td><td><a href="/møde/{{.Date}}">{{.Writtendate}}</a></td>
+		<td>{{.Dayname}}</td><td>{{.WrittenDate}}</td><td><a href="/møde/{{.Date}}">{{.MeetingName}}</a></td><td>{{.HourStamp}}</td>
 	</tr>
 `)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for date := range meetings {
+	dates := meetings.GetSortedDates()
+
+	for _, date := range dates {
+		meeting, _ := meetings.GetMeeting(date)
+		dayname := p.s.msg(fmt.Sprintf("time-dayweek-%d", date.DayOfTheWeek()))
+		datet := date.Time()
+		writtendate := datet.Format(p.s.msg("time-format"))
+		if meeting.Days > 1 {
+			enddate := meeting.GetEndDate()
+			enddayname := p.s.msg(fmt.Sprintf("time-dayweek-%d", enddate.DayOfTheWeek()))
+			dayname = p.s.msg("time-tofromday", dayname, enddayname)
+			enddatet := enddate.Time()
+			writtendate = p.s.msg("time-tofromday", writtendate, enddatet.Format(p.s.msg("time-format")))
+		}
 		out := bytes.NewBufferString(content)
 		meetingRow.Execute(out, map[string]interface{}{
-			"Dayname":     "x",
+			"Dayname":     template.HTML(dayname),
+			"WrittenDate": template.HTML(writtendate),
 			"Date":        date,
-			"Writtendate": date,
+			"MeetingName": meeting.Title,
+			"HourStamp":   p.s.writeHourStamp(meeting.StartTime()),
 		})
 		content = out.String()
 	}
