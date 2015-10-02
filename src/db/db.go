@@ -19,8 +19,8 @@ type ScheduleItem struct {
 	Id scheduleItemId
 	Title string
 	Type scheduleItemType
-	Start hourStamp
-	End hourStamp
+	Start HourStamp
+	End HourStamp
 	Unique bool
 	IcalUnique bool
 	Nojoin bool

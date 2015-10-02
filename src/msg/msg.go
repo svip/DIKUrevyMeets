@@ -79,18 +79,6 @@ func GetRawMessages(language string) []RawMessage {
 	return rawMessages
 }
 
-func GetRawDescriptions(language string) []RawMessage {
-	language = GetLegalLanguage(language)
-	var rawMessages []RawMessage
-	for name, str := range *descriptions[language] {
-		if _, ok := avoidMessages[name]; !ok {
-			rawMessages = append(rawMessages, RawMessage{name, str})
-		}
-	}
-	sort.Sort(RawMessages(rawMessages))
-	return rawMessages
-}
-
 func GetLanguages() []Language {
 	return []Language{Language{"da_DK"}}
 }

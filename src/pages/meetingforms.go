@@ -1,9 +1,8 @@
 package pages
 
 import (
-	"msg"
-	"db"
 	"bytes"
+	"db"
 	"html/template"
 )
 
@@ -17,7 +16,7 @@ func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) s
 		}
 		if item.Type == "eat" {
 			if item.Open {
-				output, _ = msg.HtmlMsg(output, `<form method="post">
+				output = htmlMsg(output, `<form method="post">
 	<fieldset>
 		<legend>{{.LabelCloseEatingLegend}}</legend>
 		<label for="closeeating-{{.Id}}-spend">{{.LabelSpent}}</label>
@@ -26,28 +25,28 @@ func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) s
 	</fieldset>
 </form>`, map[string]interface{}{
 					"Id": item.Id.Int(),
-					"LabelCloseEatingLegend": msg.Msg("meeting-closeeating-title"),
-					"LabelSpent":             msg.Msg("meeting-closeeating-spent"),
-					"LabelCloseEatingSubmit": msg.Msg("meeting-closeeating-submit"),
-					"SpendValue": item.Spend,
+					"LabelCloseEatingLegend": p.s.msg("meeting-closeeating-title"),
+					"LabelSpent":             p.s.msg("meeting-closeeating-spent"),
+					"LabelCloseEatingSubmit": p.s.msg("meeting-closeeating-submit"),
+					"SpendValue":             item.Spend,
 				})
 			} else if item.Closedby.IsEqual(p.auth.Uid) {
-				output, _ = msg.HtmlMsg(output, `<form method="post">
+				output = htmlMsg(output, `<form method="post">
 	<fieldset>
 		<legend>{{.LabelOpenEatingLegend}}</legend>
 		<input type="submit" name="openeating-{{.Id}}-submit" value="{{.LabelOpenEatingSubmit}}" />
 	</fieldset>
 </form>`, map[string]interface{}{
 					"Id": item.Id.Int(),
-					"LabelOpenEatingLegend": msg.Msg("meeting-openeating-title"),
-					"LabelOpenEatingSubmit": msg.Msg("meeting-openeating-submit"),
+					"LabelOpenEatingLegend": p.s.msg("meeting-openeating-title"),
+					"LabelOpenEatingSubmit": p.s.msg("meeting-openeating-submit"),
 				})
 			} else {
 				closedByUser := db.GetUser(item.Closedby)
-				output, _ = msg.HtmlMsg(output, `<p>{{.LabelEatingClosedBy}}</p>`,
-				map[string]interface{}{
-					"LabelEatingClosedBy": template.HTML(msg.Msg("meeting-eatclosedby", map[string]interface{}{"Name":closedByUser.Name})),
-				})
+				output = htmlMsg(output, `<p>{{.LabelEatingClosedBy}}</p>`,
+					map[string]interface{}{
+						"LabelEatingClosedBy": template.HTML(p.s.msg("meeting-eatclosedby", map[string]interface{}{"Name": closedByUser.Name})),
+					})
 			}
 		}
 	}
@@ -82,21 +81,21 @@ func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responde
 				foodhelp = meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Foodhelp
 			} else if !item.Open {
 				// But if there are no commitment and the meeting is
-				// closed, then 
+				// closed, then
 				eating, cooking, foodhelp = false, false, false
 			}
-			form, _ = msg.HtmlMsg(form, diningForm,
+			form = htmlMsg(form, diningForm,
 				map[string]interface{}{
-					"LabelEating":   msg.Msg("meeting-form-eating"),
-					"LabelCooking":  msg.Msg("meeting-form-cooking"),
-					"LabelFoodhelp": msg.Msg("meeting-form-foodhelp"),
-					"Id":  item.Id.Int(),
-					"EatingChecked": eating,
-					"CookingChecked": cooking,
+					"LabelEating":     p.s.msg("meeting-form-eating"),
+					"LabelCooking":    p.s.msg("meeting-form-cooking"),
+					"LabelFoodhelp":   p.s.msg("meeting-form-foodhelp"),
+					"Id":              item.Id.Int(),
+					"EatingChecked":   eating,
+					"CookingChecked":  cooking,
 					"FoodhelpChecked": foodhelp,
-					"Closed":        !item.Open,
-					"ItemTitle":     item.Title,
-			})
+					"Closed":          !item.Open,
+					"ItemTitle":       item.Title,
+				})
 		} else {
 			attending := true
 			if _, ok := meeting.Users[p.auth.Uid]; ok {
@@ -104,17 +103,17 @@ func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responde
 			} else if !item.Open {
 				attending = false
 			}
-			form, _ = msg.HtmlMsg(form, meetingForm,
+			form = htmlMsg(form, meetingForm,
 				map[string]interface{}{
-					"LabelAttending":   msg.Msg("meeting-form-attending"),
-					"Id":  item.Id.Int(),
+					"LabelAttending":   p.s.msg("meeting-form-attending"),
+					"Id":               item.Id.Int(),
 					"AttendingChecked": attending,
-					"Closed":        !item.Open,
-					"ItemTitle":     item.Title,
-			})
+					"Closed":           !item.Open,
+					"ItemTitle":        item.Title,
+				})
 		}
 	}
-	
+
 	var meetingFormTitle string
 	var meetingFormSubmit string
 	if responded {
@@ -124,7 +123,7 @@ func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responde
 		meetingFormTitle = "meeting-form-title-new"
 		meetingFormSubmit = "meeting-form-submit-new"
 	}
-	output, _ = msg.HtmlMsg(output, `<form method="post">
+	output = htmlMsg(output, `<form method="post">
 <fieldset>
 	<legend>{{.LabelMeetingForm}}</legend>
 	<input type="hidden" name="meeting-usertype" value="{{.UserType}}" />
@@ -134,11 +133,11 @@ func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responde
 	<input type="submit" name="meeting-submit" value="{{.LabelSubmit}}" />
 </fieldset>
 </form>`, map[string]interface{}{
-		"LabelMeetingForm":   template.HTML(msg.Msg(meetingFormTitle, struct{Name string}{p.auth.Name})),
-		"LabelComment":       msg.Msg("meeting-form-comment"),
-		"LabelSubmit":        msg.Msg(meetingFormSubmit),
-		"UserType":           "self",
-		"Form":               template.HTML(form),
+		"LabelMeetingForm": template.HTML(p.s.msg(meetingFormTitle, struct{ Name string }{p.auth.Name})),
+		"LabelComment":     p.s.msg("meeting-form-comment"),
+		"LabelSubmit":      p.s.msg(meetingFormSubmit),
+		"UserType":         "self",
+		"Form":             template.HTML(form),
 	})
 	return output
 }
@@ -157,12 +156,13 @@ func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
 		}
 		output = p.commitmentForm(output, meeting, responded)
 	} else {
-		output, _ = msg.HtmlMsg(output, `<p>{{.LabelMeetingClosed}}</p>`, map[string]interface{}{
-			"LabelMeetingClosed": msg.Msg("meeting-isclosed"),
+		output = htmlMsg(output, `<p>{{.LabelMeetingClosed}}</p>`, map[string]interface{}{
+			"LabelMeetingClosed": p.s.msg("meeting-isclosed"),
 		})
 	}
-	
+
 	out := bytes.NewBufferString(content)
 	out.WriteString(output)
 	return out.String()
 }
+

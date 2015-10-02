@@ -1,23 +1,23 @@
 package pages
 
 import (
-	"net/http"
-	"msg"
+	"auth"
+	"bytes"
 	"db"
 	"html/template"
-	"bytes"
-	"auth"
+	"net/http"
 )
 
 type MeetingPage struct {
 	Page Page
-	req *http.Request
+	s    *session
+	req  *http.Request
 	auth *auth.UserAuth
 	date string
 }
 
-func meetingPage (req *http.Request) HandlePage {
-	page := &MeetingPage{Page: newPage(), req: req, auth: auth.GetAuth(req)}
+func meetingPage(req *http.Request, s *session) HandlePage {
+	page := &MeetingPage{Page: newPage(), s: s, req: req, auth: auth.GetAuth(req)}
 	page.Render()
 	return page.Page
 }
@@ -37,9 +37,9 @@ func (p *MeetingPage) returnYesNo(value bool) string {
 
 func (p *MeetingPage) returnTick(value bool) string {
 	if value {
-		return msg.Msg("tick-yes")
+		return p.s.msg("tick-yes")
 	}
-	return msg.Msg("tick-no")
+	return p.s.msg("tick-no")
 }
 
 func (p *MeetingPage) createUserSchedule(userSchedule db.UserSchedule, schedule map[string]db.ScheduleItem) template.HTML {
@@ -50,24 +50,24 @@ func (p *MeetingPage) createUserSchedule(userSchedule db.UserSchedule, schedule 
 		itemId := sItem.Id.String()
 		item := userSchedule.Schedule[itemId]
 		switch sItem.Type {
-			case "meet":
-				out := bytes.NewBufferString(content)
-				meetingCell.Execute(out, map[string]interface{}{
-					"AttendingYesNo": p.returnYesNo(item.Attending),
-					"Attending":      p.returnTick(item.Attending),
-				})
-				content = out.String()
-			case "eat":
-				out := bytes.NewBufferString(content)
-				diningCells.Execute(out, map[string]interface{}{
-					"EatingYesNo":   p.returnYesNo(item.Eating),
-					"Eating":        p.returnTick(item.Eating),
-					"CookingYesNo":  p.returnYesNo(item.Cooking),
-					"Cooking":       p.returnTick(item.Cooking),
-					"FoodhelpYesNo": p.returnYesNo(item.Foodhelp),
-					"Foodhelp":      p.returnTick(item.Foodhelp),
-				})
-				content = out.String()
+		case "meet":
+			out := bytes.NewBufferString(content)
+			meetingCell.Execute(out, map[string]interface{}{
+				"AttendingYesNo": p.returnYesNo(item.Attending),
+				"Attending":      p.returnTick(item.Attending),
+			})
+			content = out.String()
+		case "eat":
+			out := bytes.NewBufferString(content)
+			diningCells.Execute(out, map[string]interface{}{
+				"EatingYesNo":   p.returnYesNo(item.Eating),
+				"Eating":        p.returnTick(item.Eating),
+				"CookingYesNo":  p.returnYesNo(item.Cooking),
+				"Cooking":       p.returnTick(item.Cooking),
+				"FoodhelpYesNo": p.returnYesNo(item.Foodhelp),
+				"Foodhelp":      p.returnTick(item.Foodhelp),
+			})
+			content = out.String()
 		}
 	}
 	return template.HTML(content)
@@ -80,16 +80,16 @@ func (p *MeetingPage) makeTableScheduleTop(schedule []db.ScheduleItem) template.
 	for _, item := range schedule {
 		out := bytes.NewBufferString(content)
 		switch item.Type {
-			case "eat":
-				diningCell.Execute(out, map[string]interface{}{
-					"Title":       item.Title,
-					"LabelClosed": msg.Msg("meeting-table-foodclosed"),
-					"Closed":      !item.Open,
-				})
-			case "meet":
-				meetingCell.Execute(out, map[string]interface{}{
-					"Title": item.Title,
-				})
+		case "eat":
+			diningCell.Execute(out, map[string]interface{}{
+				"Title":       item.Title,
+				"LabelClosed": p.s.msg("meeting-table-foodclosed"),
+				"Closed":      !item.Open,
+			})
+		case "meet":
+			meetingCell.Execute(out, map[string]interface{}{
+				"Title": item.Title,
+			})
 		}
 		content = out.String()
 	}
@@ -103,14 +103,14 @@ func (p *MeetingPage) makeTableScheduleMiddle(schedule []db.ScheduleItem) templa
 	for _, item := range schedule {
 		out := bytes.NewBufferString(content)
 		switch item.Type {
-			case "eat":
-				diningCell.Execute(out, map[string]interface{}{
-					"Time":item.Start.HtmlWrite(),
-				})
-			case "meet":
-				meetingCell.Execute(out, map[string]interface{}{
-					"Time": item.Start.HtmlWrite(),
-				})
+		case "eat":
+			diningCell.Execute(out, map[string]interface{}{
+				"Time": p.s.writeHourStamp(item.Start),
+			})
+		case "meet":
+			meetingCell.Execute(out, map[string]interface{}{
+				"Time": p.s.writeHourStamp(item.Start),
+			})
 		}
 		content = out.String()
 	}
@@ -124,35 +124,35 @@ func (p *MeetingPage) makeTableScheduleBottom(schedule []db.ScheduleItem) templa
 	for _, item := range schedule {
 		out := bytes.NewBufferString(content)
 		switch item.Type {
-			case "eat":
-				diningCells.Execute(out, map[string]interface{}{
-					"LabelEating":   msg.Msg("meeting-table-eating"),
-					"LabelCooking":  msg.Msg("meeting-table-cooking"),
-					"LabelFoodhelp": msg.Msg("meeting-table-foodhelp"),
-				})
-			case "meet":
-				meetingCell.Execute(out, map[string]interface{}{
-					"LabelAttending": msg.Msg("meeting-table-attending"),
-				})
+		case "eat":
+			diningCells.Execute(out, map[string]interface{}{
+				"LabelEating":   p.s.msg("meeting-table-eating"),
+				"LabelCooking":  p.s.msg("meeting-table-cooking"),
+				"LabelFoodhelp": p.s.msg("meeting-table-foodhelp"),
+			})
+		case "meet":
+			meetingCell.Execute(out, map[string]interface{}{
+				"LabelAttending": p.s.msg("meeting-table-attending"),
+			})
 		}
 		content = out.String()
 	}
 	return template.HTML(content)
 }
 
-func (p *MeetingPage) makeTableScheduleTotals(meeting db.Meeting)  template.HTML {
+func (p *MeetingPage) makeTableScheduleTotals(meeting db.Meeting) template.HTML {
 	diningCells, _ := template.New("diningCells").Parse(`<td>{{.Eating}}</td><td>{{.Cooking}}</td><td>{{.Foodhelp}}</td>`)
 	meetingCell, _ := template.New("meetingCell").Parse(`<td>{{.Attending}}</td>`)
 	content := ""
 	type count struct {
-		Eating int
-		Cooking int
-		Foodhelp int
+		Eating    int
+		Cooking   int
+		Foodhelp  int
 		Attending int
 	}
 	counts := make(map[string]*count, len(meeting.Schedule))
 	for itemId, _ := range meeting.Schedule {
-		counts[itemId] = &count{0,0,0,0}
+		counts[itemId] = &count{0, 0, 0, 0}
 	}
 	for _, user := range meeting.Users {
 		for itemId, item := range user.Schedule {
@@ -173,10 +173,10 @@ func (p *MeetingPage) makeTableScheduleTotals(meeting db.Meeting)  template.HTML
 	for _, item := range db.SortSchedule(meeting.Schedule) {
 		out := bytes.NewBufferString(content)
 		switch item.Type {
-			case "eat":
-				diningCells.Execute(out, counts[item.Id.String()])
-			case "meet":
-				meetingCell.Execute(out, counts[item.Id.String()])
+		case "eat":
+			diningCells.Execute(out, counts[item.Id.String()])
+		case "meet":
+			meetingCell.Execute(out, counts[item.Id.String()])
 		}
 		content = out.String()
 	}
@@ -195,7 +195,7 @@ func (p *MeetingPage) createScheduleTable(meeting db.Meeting) string {
 		var user *db.User
 		if meetingItem.Usertype == "extra" {
 			user = &db.User{
-				Name: meetingItem.Name,
+				Name:     meetingItem.Name,
 				Nickname: meetingItem.Name,
 			}
 		} else {
@@ -209,9 +209,9 @@ func (p *MeetingPage) createScheduleTable(meeting db.Meeting) string {
 			"UserSchedule": p.createUserSchedule(meetingItem, schedule)})
 		table = out.String()
 	}
-	
+
 	sortedSchedule := db.SortSchedule(schedule)
-	content, _ := msg.HtmlMsg("", `<table>
+	content := htmlMsg("", `<table>
 	<tr>
 		<th rowspan="2">{{.LabelSchedule}}</th>{{.ScheduleTop}}<th rowspan="3" class="comment">{{.LabelComment}}</th>
 	</tr>
@@ -229,16 +229,16 @@ func (p *MeetingPage) createScheduleTable(meeting db.Meeting) string {
 		<td>{{.UsersTotal}}</td>{{.ScheduleTotals}}
 	</tr>
 </table>`, map[string]interface{}{
-		"LabelSchedule": msg.Msg("meeting-table-schedule"), // LabelSchedule
-		"LabelComment":  msg.Msg("meeting-table-comment"),  // LabelComment
-		"LabelUser":     msg.Msg("meeting-table-user"),     // LabelUser
-		"LabelRealNameToggle": msg.Msg("meeting-table-realnametoggle"),
-		"ScheduleTop":    p.makeTableScheduleTop(sortedSchedule),
-		"ScheduleMiddle": p.makeTableScheduleMiddle(sortedSchedule),
-		"ScheduleBottom": p.makeTableScheduleBottom(sortedSchedule),
-		"ScheduleTotals": p.makeTableScheduleTotals(meeting),
-		"UsersTotal":     len(meeting.Users),
-		"Table":          template.HTML(table),
+		"LabelSchedule":       p.s.msg("meeting-table-schedule"), // LabelSchedule
+		"LabelComment":        p.s.msg("meeting-table-comment"),  // LabelComment
+		"LabelUser":           p.s.msg("meeting-table-user"),     // LabelUser
+		"LabelRealNameToggle": p.s.msg("meeting-table-realnametoggle"),
+		"ScheduleTop":         p.makeTableScheduleTop(sortedSchedule),
+		"ScheduleMiddle":      p.makeTableScheduleMiddle(sortedSchedule),
+		"ScheduleBottom":      p.makeTableScheduleBottom(sortedSchedule),
+		"ScheduleTotals":      p.makeTableScheduleTotals(meeting),
+		"UsersTotal":          len(meeting.Users),
+		"Table":               template.HTML(table),
 	})
 	return content
 }
@@ -251,29 +251,30 @@ func (p *MeetingPage) Render() {
 	}
 	var content string
 	if meeting.Nojoin() {
-		content, _ = msg.HtmlMsg("", `<p>{{.LabelNoProgramme}}</p>`,
+		content = htmlMsg("", `<p>{{.LabelNoProgramme}}</p>`,
 			map[string]interface{}{
-				"LabelNoProgramme": msg.Msg("meeting-noprogramme"),
+				"LabelNoProgramme": p.s.msg("meeting-noprogramme"),
 			})
 	} else {
 		content = p.createScheduleTable(meeting)
 		if p.auth.LoggedIn {
 			content = p.UserForms(content, meeting)
 		} else {
-			content, _ = msg.HtmlMsg(content, `<p>{{.LabelNotLoggedInMessage}}</p>`, map[string]interface{}{
-				"LabelNotLoggedInMessage": msg.Msg("meeting-notloggedin")})
+			content = htmlMsg(content, `<p>{{.LabelNotLoggedInMessage}}</p>`, map[string]interface{}{
+				"LabelNotLoggedInMessage": p.s.msg("meeting-notloggedin")})
 		}
 	}
-	content, _ = msg.HtmlMsg("", `<h1>{{.Title}}</h1>
+	content = htmlMsg("", `<h1>{{.Title}}</h1>
 {{if .SubTitle}}<h3>{{.SubTitle}}</h3>{{end}}<h2>{{.WrittenDate}}</h2>
 {{.Content}}`,
 		map[string]interface{}{
-		"Title":         meeting.Title,
-		"SubTitle":      meeting.Comment,
-		"WrittenDate":   p.date,
-		"Content":       template.HTML(content),
-	})
-	
+			"Title":       meeting.Title,
+			"SubTitle":    meeting.Comment,
+			"WrittenDate": p.date,
+			"Content":     template.HTML(content),
+		})
+
 	p.Page.content = content
-	p.Page.title = msg.Msg("meeting-title", map[string]interface{}{"Title":meeting.Title})
+	p.Page.title = p.s.msg("meeting-title", map[string]interface{}{"Title": meeting.Title})
 }
+

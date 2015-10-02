@@ -5,23 +5,23 @@ import (
 	"db"
 	"html/template"
 	"log"
-	"msg"
 	"net/http"
 )
 
 type FrontPage struct {
 	Page Page
+	s    *session
 }
 
-func frontPage(req *http.Request) HandlePage {
-	page := &FrontPage{newPage()}
+func frontPage(req *http.Request, s *session) HandlePage {
+	page := &FrontPage{newPage(), s}
 	page.Render()
 	return page.Page
 }
 
 func (p *FrontPage) Render() {
 	meetings := db.GetAvailableMeetings()
-	p.Page.title = msg.Msg("front-title")
+	p.Page.title = p.s.msg("front-title")
 
 	var content string
 
@@ -50,10 +50,10 @@ func (p *FrontPage) Render() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	out := bytes.NewBuffer([]byte(``))
 	meetingTable.Execute(out, map[string]interface{}{
-		"Title":    msg.Msg("frontpage-h1"),
+		"Title":    p.s.msg("frontpage-h1"),
 		"Table":    template.HTML(content),
 		"UserNote": "",
 	})
@@ -61,3 +61,4 @@ func (p *FrontPage) Render() {
 
 	p.Page.content = content
 }
+
