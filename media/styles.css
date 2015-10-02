@@ -20,7 +20,7 @@ table td { background: #fff; padding: 1px 4px; }
 table td.centre { text-align: center; }
 table .date { text-align: right; }
 table .title { font-weight: bold; }
-td.user { white-space: nowrap; }
+td.user { white-space: nowrap; max-width: 250px; overflow: hidden; }
 td.yes { background: #d1f3d1; color: #77cc77; font-weight: bold; }
 td.no { background: #ffccca; color: #8b5352; font-weight: bold; }
 td.nomatter { background: #daa; color: #fff; font-weight: bold; }
@@ -83,3 +83,4 @@ td.nojoin {
 #topmenu { position: absolute; top: 0; right: 0; padding: 5px; font-size: 90%; }
 #footer { width: 70%; margin: 0 auto; padding: 0 30px; border-top: 1px solid #ddd; font-size: 90%; }
 iframe { margin: 0 auto; width: 600px; }
+.comment { word-break: break-all; }
