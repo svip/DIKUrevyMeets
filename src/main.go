@@ -1,17 +1,30 @@
 package main
 
 import (
+	"conf"
+	"fmt"
 	"log"
 	"net/http"
 	"pages"
+	"msg"
 )
 
 func main() {
-	// Handle media requests (which are files in the media directory)
-	http.Handle("/media/", http.StripPrefix("/media/", http.FileServer(http.Dir("../media"))))
+	conf, err := conf.LoadConfiguration()
+	if err != nil {
+		log.Fatal("Configuration load: ", err)
+	}
+	msg.LoadMessages(conf.MessageDirectory)
+	
+	http.Handle("/media/", http.StripPrefix("/media/", http.FileServer(http.Dir(conf.MediaDirectory))))
+	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, conf.MediaDirectory+"favicon.ico")
+	})
 	http.HandleFunc("/", pages.HandleAction)
-	err := http.ListenAndServe(":8080", nil)
+	
+	err := http.ListenAndServe(fmt.Sprintf("localhost:%d", conf.Port), nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
+
