@@ -13,7 +13,7 @@ type MeetingPage struct {
 	s    *session
 	req  *http.Request
 	auth *auth.UserAuth
-	date string
+	date db.Date
 }
 
 func meetingPage(req *http.Request, s *session) HandlePage {
@@ -24,7 +24,7 @@ func meetingPage(req *http.Request, s *session) HandlePage {
 
 func (p *MeetingPage) GetMeeting() (db.Meeting, error) {
 	date := getPathSegment(p.req, 2, "meeting")
-	p.date = date
+	p.date = db.Date(date)
 	return db.GetMeeting(date)
 }
 
@@ -105,11 +105,11 @@ func (p *MeetingPage) makeTableScheduleMiddle(schedule []db.ScheduleItem) templa
 		switch item.Type {
 		case "eat":
 			diningCell.Execute(out, map[string]interface{}{
-				"Time": p.s.writeHourStamp(item.Start),
+				"Time": p.s.writeHourStamp(item.Start, p.date, true),
 			})
 		case "meet":
 			meetingCell.Execute(out, map[string]interface{}{
-				"Time": p.s.writeHourStamp(item.Start),
+				"Time": p.s.writeHourStamp(item.Start, p.date, true),
 			})
 		}
 		content = out.String()
@@ -275,6 +275,6 @@ func (p *MeetingPage) Render() {
 		})
 
 	p.Page.content = content
-	p.Page.title = p.s.msg("meeting-title", map[string]interface{}{"Title": meeting.Title})
+	p.Page.title = p.s.tmsg("meeting-title", map[string]interface{}{"Title": meeting.Title})
 }
 

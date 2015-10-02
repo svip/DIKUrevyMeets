@@ -10,7 +10,9 @@ import (
 	"msg"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
+	"time"
 )
 
 type HandlePage interface {
@@ -56,6 +58,10 @@ func newSession(w http.ResponseWriter, req *http.Request) *session {
 
 func (s *session) msg(msg string, a ...interface{}) string {
 	return s.m.Msg(msg, a...)
+}
+
+func (s *session) tmsg(msg string, input interface{}) string {
+	return s.m.MsgTemplate(msg, input)
 }
 
 func (s *session) createFooter() template.HTML {
@@ -118,20 +124,30 @@ func htmlMsg(base string, templ string, input interface{}) string {
 	return out.String()
 }
 
-func (s *session) writeHourStamp(h db.HourStamp) template.HTML {
+func (s *session) displayDate(date time.Time) string {
+	return date.Format(s.msg("time-format"))
+}
+
+func (s *session) writeHourStamp(h db.HourStamp, d db.Date, showDay bool) template.HTML {
 	str := strings.Split(string(h), " ")
 	if len(str) == 1 {
 		return template.HTML(str[0])
 	}
-	if str[0] == "0" {
+	if !showDay {
 		return template.HTML(str[1])
 	}
-	t, _ := template.New("t").Parse(`<b>{{.LabelDay}} {{.Day}}</b><br />
+	days, _ := strconv.Atoi(str[0])
+	dt, err := d.Add(days)
+	if err != nil {
+		log.Print(err)
+		return template.HTML(str[1])
+	}
+	t, _ := template.New("t").Parse(`<b>{{.Day}}</b><br />
 {{.HourStamp}}`)
 	out := bytes.NewBuffer([]byte(""))
 	t.Execute(out, struct {
-		LabelDay, Day, HourStamp string
-	}{s.msg("meeting-table-day"), str[0], str[1]})
+		Day, HourStamp string
+	}{s.displayDate(dt), str[1]})
 	return template.HTML(out.String())
 }
 

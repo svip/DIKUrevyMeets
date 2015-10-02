@@ -54,21 +54,32 @@ func (d Date) String() string {
 	return string(d)
 }
 
-func (d Date) Time() time.Time {
+func (d Date) Time() (time.Time, error) {
 	t, err := time.Parse("2006-01-02", d.String())
 	if err != nil {
-		log.Fatal(err)
+		return t, err
 	}
-	return t
+	return t, nil
 }
 
-func (d Date) DayOfTheWeek() int {
-	t := d.Time()
+func (d Date) Add(days int) (time.Time, error) {
+	t, err := d.Time()
+	if err != nil {
+		return t, err
+	}
+	return t.AddDate(0, 0, days), nil
+}
+
+func (d Date) DayOfTheWeek() (int, error) {
+	t, err := d.Time()
+	if err != nil {
+		return 0, err
+	}
 	wd := t.Weekday()
 	if wd == time.Sunday {
 		wd = 7
 	}
-	return int(wd)
+	return int(wd), nil
 }
 
 type Meeting struct {
@@ -247,11 +258,10 @@ func (m *Meeting) StartTime() HourStamp {
 	return schedule[0].Start
 }
 
-func (m *Meeting) GetEndDate() Date {
-	t, err := time.Parse("2006-01-02", m.Date.String())
+func (m *Meeting) GetEndDate() (Date, error) {
+	nt, err := m.Date.Add(m.Days)
 	if err != nil {
-		log.Fatal(err)
+		return m.Date, err
 	}
-	nt := t.AddDate(0, 0, m.Days)
-	return Date(nt.Format("2006-01-02"))
+	return Date(nt.Format("2006-01-02")), nil
 }

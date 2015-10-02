@@ -38,15 +38,37 @@ func (p *FrontPage) Render() {
 
 	for _, date := range dates {
 		meeting, _ := meetings.GetMeeting(date)
-		dayname := p.s.msg(fmt.Sprintf("time-dayweek-%d", date.DayOfTheWeek()))
-		datet := date.Time()
-		writtendate := datet.Format(p.s.msg("time-format"))
+		weekday, err := date.DayOfTheWeek()
+		if err != nil {
+			log.Print(err)
+			continue
+		}
+		dayname := p.s.msg(fmt.Sprintf("time-dayweek-%d", weekday))
+		datet, err := date.Time()
+		if err != nil {
+			log.Print(err)
+			continue
+		}
+		writtendate := p.s.displayDate(datet)
 		if meeting.Days > 1 {
-			enddate := meeting.GetEndDate()
-			enddayname := p.s.msg(fmt.Sprintf("time-dayweek-%d", enddate.DayOfTheWeek()))
+			enddate, err := meeting.GetEndDate()
+			if err != nil {
+				log.Print(err)
+				continue
+			}
+			weekday, err = enddate.DayOfTheWeek()
+			if err != nil {
+				log.Print(err)
+				continue
+			}
+			enddayname := p.s.msg(fmt.Sprintf("time-dayweek-%d", weekday))
 			dayname = p.s.msg("time-tofromday", dayname, enddayname)
-			enddatet := enddate.Time()
-			writtendate = p.s.msg("time-tofromday", writtendate, enddatet.Format(p.s.msg("time-format")))
+			enddatet, err := enddate.Time()
+			if err != nil {
+				log.Print(err)
+				continue
+			}
+			writtendate = p.s.msg("time-tofromday", writtendate, p.s.displayDate(enddatet))
 		}
 		out := bytes.NewBufferString(content)
 		meetingRow.Execute(out, map[string]interface{}{
@@ -54,7 +76,7 @@ func (p *FrontPage) Render() {
 			"WrittenDate": template.HTML(writtendate),
 			"Date":        date,
 			"MeetingName": meeting.Title,
-			"HourStamp":   p.s.writeHourStamp(meeting.StartTime()),
+			"HourStamp":   p.s.writeHourStamp(meeting.StartTime(), date, false),
 		})
 		content = out.String()
 	}
