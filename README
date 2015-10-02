@@ -1,10 +1,13 @@
 Konfiguration
 =============
 
-I data-mappen, opret config.json med følgende konfiguration:
+I src-mappen, opret serverconfig.json med følgende konfiguration:
 
 {
-	"Dbhost": "kartotekaddresse"
+	"Port": port,
+	"DataDirectory": "datasti",
+	"MediaDirectory": "mediesti",
+	"Dbhost": "kartotekadresse"
 	"Dbname": "kartoteknavn",
 	"Dbuser": "kartoteksbruger",
 	"Dbpass": "kartoteksløsen"
