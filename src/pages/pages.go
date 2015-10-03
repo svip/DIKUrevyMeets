@@ -13,23 +13,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"auth"
 )
-
-type HandlePage interface {
-	Content() template.HTML
-	Title() string
-	Redirect() string
-}
-
-type Page struct {
-	content  string
-	title    string
-	redirect string
-}
-
-func newPage() Page {
-	return Page{"", "", ""}
-}
 
 var ServerConfiguration conf.ServerConfig
 
@@ -41,6 +26,7 @@ type session struct {
 	w        http.ResponseWriter
 	req      *http.Request
 	m        *msg.Container
+	auth     *auth.UserAuth
 	language string
 }
 
@@ -53,7 +39,7 @@ func newSession(w http.ResponseWriter, req *http.Request) *session {
 		}
 	}*/
 	c := msg.NewContainer(language, ServerConfiguration.MessageDirectory)
-	return &session{w, req, c, language}
+	return &session{w, req, c, auth.GetAuth(req), language}
 }
 
 func (s *session) msg(msg string, a ...interface{}) string {
@@ -128,12 +114,12 @@ func (s *session) displayDate(date time.Time) string {
 	return date.Format(s.msg("time-format"))
 }
 
-func (s *session) writeHourStamp(h db.HourStamp, d db.Date, showDay bool) template.HTML {
+func (s *session) writeHourStamp(h db.HourStamp, d db.Date, multipleDays bool) template.HTML {
 	str := strings.Split(string(h), " ")
 	if len(str) == 1 {
 		return template.HTML(str[0])
 	}
-	if !showDay {
+	if !multipleDays {
 		return template.HTML(str[1])
 	}
 	days, _ := strconv.Atoi(str[0])

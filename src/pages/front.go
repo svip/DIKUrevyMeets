@@ -14,7 +14,7 @@ type FrontPage struct {
 	s    *session
 }
 
-func frontPage(req *http.Request, s *session) HandlePage {
+func frontPage(req *http.Request, s *session) Page {
 	page := &FrontPage{newPage(), s}
 	page.Render()
 	return page.Page
@@ -22,12 +22,12 @@ func frontPage(req *http.Request, s *session) HandlePage {
 
 func (p *FrontPage) Render() {
 	meetings := db.GetAvailableMeetings()
-	p.Page.title = p.s.msg("front-title")
+	p.Page.Title = p.s.msg("front-title")
 
 	var content string
 
 	meetingRow, err := template.New("meetingRow").Parse(`	<tr>
-		<td>{{.Dayname}}</td><td>{{.WrittenDate}}</td><td><a href="/møde/{{.Date}}">{{.MeetingName}}</a></td><td>{{.HourStamp}}</td>
+		<td>{{.Dayname}}</td><td class="date">{{.WrittenDate}}</td><td><a href="/møde/{{.Date}}">{{.MeetingName}}</a></td><td>{{.HourStamp}}</td>
 	</tr>
 `)
 	if err != nil {

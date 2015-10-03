@@ -1,7 +1,6 @@
 package pages
 
 import (
-	"auth"
 	"bytes"
 	"db"
 	"html/template"
@@ -11,21 +10,22 @@ import (
 type MeetingPage struct {
 	Page Page
 	s    *session
-	req  *http.Request
-	auth *auth.UserAuth
 	date db.Date
 }
 
-func meetingPage(req *http.Request, s *session) HandlePage {
-	page := &MeetingPage{Page: newPage(), s: s, req: req, auth: auth.GetAuth(req)}
+func meetingPage(req *http.Request, s *session) Page {
+	page := &MeetingPage{Page: newPage(), s: s}
 	page.Render()
 	return page.Page
 }
 
 func (p *MeetingPage) GetMeeting() (db.Meeting, error) {
-	date := getPathSegment(p.req, 2, "meeting")
+	if p.date.String() != "" {
+		return db.GetMeeting(p.date)
+	}
+	date := getPathSegment(p.s.req, 2, "meeting")
 	p.date = db.Date(date)
-	return db.GetMeeting(date)
+	return db.GetMeeting(p.date)
 }
 
 func (p *MeetingPage) returnYesNo(value bool) string {
@@ -100,16 +100,17 @@ func (p *MeetingPage) makeTableScheduleMiddle(schedule []db.ScheduleItem) templa
 	diningCell, _ := template.New("diningCell").Parse(`<th colspan="3">{{.Time}}</th>`)
 	meetingCell, _ := template.New("meetingCell").Parse(`<th>{{.Time}}</th>`)
 	content := ""
+	meeting, _ := p.GetMeeting()
 	for _, item := range schedule {
 		out := bytes.NewBufferString(content)
 		switch item.Type {
 		case "eat":
 			diningCell.Execute(out, map[string]interface{}{
-				"Time": p.s.writeHourStamp(item.Start, p.date, true),
+				"Time": p.s.writeHourStamp(item.Start, p.date, meeting.Days > 0),
 			})
 		case "meet":
 			meetingCell.Execute(out, map[string]interface{}{
-				"Time": p.s.writeHourStamp(item.Start, p.date, true),
+				"Time": p.s.writeHourStamp(item.Start, p.date, meeting.Days > 0),
 			})
 		}
 		content = out.String()
@@ -246,7 +247,7 @@ func (p *MeetingPage) createScheduleTable(meeting db.Meeting) string {
 func (p *MeetingPage) Render() {
 	meeting, err := p.GetMeeting()
 	if err != nil {
-		p.Page.redirect = "/"
+		p.Page.Redirect = "/"
 		return
 	}
 	var content string
@@ -257,11 +258,11 @@ func (p *MeetingPage) Render() {
 			})
 	} else {
 		content = p.createScheduleTable(meeting)
-		if p.auth.LoggedIn {
+		if p.s.auth.LoggedIn {
 			content = p.UserForms(content, meeting)
 		} else {
-			content = htmlMsg(content, `<p>{{.LabelNotLoggedInMessage}}</p>`, map[string]interface{}{
-				"LabelNotLoggedInMessage": p.s.msg("meeting-notloggedin")})
+			content = htmlMsg(content, `<form><h5>{{.LabelNotLoggedInMessage}}</h5></form>`, map[string]interface{}{
+				"LabelNotLoggedInMessage": template.HTML(p.s.msg("meeting-notloggedin"))})
 		}
 	}
 	content = htmlMsg("", `<h1>{{.Title}}</h1>
@@ -274,7 +275,8 @@ func (p *MeetingPage) Render() {
 			"Content":     template.HTML(content),
 		})
 
+	p.Page.Scripts = append(p.Page.Scripts, "/media/meeting.js")
 	p.Page.content = content
-	p.Page.title = p.s.tmsg("meeting-title", map[string]interface{}{"Title": meeting.Title})
+	p.Page.Title = p.s.tmsg("meeting-title", map[string]interface{}{"Title": meeting.Title})
 }
 

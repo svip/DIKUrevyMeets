@@ -2,9 +2,8 @@
 <html>
 <head>
 <title>{{.Title}}</title>
-<link rel="stylesheet" href="/media/styles.css" />
-{{.Style}}
-{{.Script}}
+{{range $e := .Style}}<link rel="stylesheet" href="{{$e}}" />{{end}}
+{{range $e := .Script}}<script src="{{$e}}"></script>{{end}}
 </head>
 <body>
 <div id="topmenu">{{.Topmenu}}</div>

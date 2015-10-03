@@ -11,6 +11,22 @@ import (
 	"strings"
 )
 
+type Page struct {
+	content  string
+	Styles   []string
+	Scripts  []string
+	Title    string
+	Redirect string
+}
+
+func newPage() Page {
+	return Page{"", []string{}, []string{}, "", ""}
+}
+
+func (p Page) Content() template.HTML {
+	return template.HTML(p.content)
+}
+
 // Gets the path segment (e.g. /1/2/3) or - if that fails - it tries to
 // get the specific query value defined (or none if not).
 // Blank should be treated as not set rather than an error.
@@ -31,9 +47,47 @@ func getPathSegment(req *http.Request, segment int, queryValue string) string {
 	return action
 }
 
+type menuItem struct {
+	Url string
+	Msg string
+}
+
+func (s *session) topMenu() template.HTML {
+	var menu []menuItem
+	if s.auth.IsAdmin {
+		menu = append(menu, menuItem{"/admin/", "mainmenu-admin"})
+	}
+	
+	menu = append(menu, []menuItem{
+		menuItem{"/ical/", "mainmenu-ical"},
+		menuItem{"/", "mainmenu-frontpage"},
+		menuItem{"http://dikurevy.dk/", "mainmenu-mainsite"},
+	}...)
+	
+	var content string
+	t, _ := template.New("menuitem").Parse(`<a href="{{.Url}}" title="{{.Title}}">{{.Title}}</a>`)
+	m, _ := template.New("middot").Parse(` &middot; `)
+	
+	for i, item := range menu {
+		out := bytes.NewBufferString(content)
+		if i > 0 {
+			m.Execute(out, nil)
+		}
+		t.Execute(out, struct{
+			Url string
+			Title string
+		}{
+			item.Url,
+			s.msg(item.Msg),
+		})
+		content = out.String()
+	}
+	return template.HTML(content)
+}
+
 func PageEntry(w http.ResponseWriter, req *http.Request) {
 	s := newSession(w, req)
-	var page HandlePage
+	var page Page
 	switch s.getPage() {
 	case "meeting":
 		page = meetingPage(req, s)
@@ -42,8 +96,8 @@ func PageEntry(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// If redirect is set, we should redirect there.
-	if page.Redirect() != "" {
-		http.Redirect(w, req, page.Redirect(), http.StatusFound)
+	if page.Redirect != "" {
+		http.Redirect(w, req, page.Redirect, http.StatusFound)
 		return
 	}
 
@@ -51,27 +105,15 @@ func PageEntry(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	page.Styles = append(page.Styles, "/media/styles.css")
 	out := bytes.NewBuffer([]byte(``))
 	mainhtml.Execute(out, map[string]interface{}{
-		"Title":   page.Title(),
-		"Style":   "",
-		"Script":  "",
-		"Topmenu": "",
+		"Title":   page.Title,
+		"Style":   page.Styles,
+		"Script":  page.Scripts,
+		"Topmenu": s.topMenu(),
 		"Content": page.Content(),
 	})
 	html := out.String()
 	io.WriteString(w, html)
 }
-
-func (p Page) Content() template.HTML {
-	return template.HTML(p.content)
-}
-
-func (p Page) Title() string {
-	return p.title
-}
-
-func (p Page) Redirect() string {
-	return p.redirect
-}
-

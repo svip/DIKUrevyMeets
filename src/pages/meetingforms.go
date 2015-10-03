@@ -30,7 +30,7 @@ func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) s
 					"LabelCloseEatingSubmit": p.s.msg("meeting-closeeating-submit"),
 					"SpendValue":             item.Spend,
 				})
-			} else if item.Closedby.IsEqual(p.auth.Uid) {
+			} else if item.Closedby.IsEqual(p.s.auth.Uid) {
 				output = htmlMsg(output, `<form method="post">
 	<fieldset>
 		<legend>{{.LabelOpenEatingLegend}}</legend>
@@ -73,12 +73,12 @@ func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responde
 			// Per default we assume people will be eating, but not
 			// cooking or helping.
 			eating, cooking, foodhelp := true, false, false
-			if _, ok := meeting.Users[p.auth.Uid]; ok {
+			if _, ok := meeting.Users[p.s.auth.Uid]; ok {
 				// Oh, they have already committed to this event?
 				// Then let's get their values.
-				eating = meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Eating
-				cooking = meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Cooking
-				foodhelp = meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Foodhelp
+				eating = meeting.Users[p.s.auth.Uid].Schedule[item.Id.String()].Eating
+				cooking = meeting.Users[p.s.auth.Uid].Schedule[item.Id.String()].Cooking
+				foodhelp = meeting.Users[p.s.auth.Uid].Schedule[item.Id.String()].Foodhelp
 			} else if !item.Open {
 				// But if there are no commitment and the meeting is
 				// closed, then
@@ -98,8 +98,8 @@ func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responde
 				})
 		} else {
 			attending := true
-			if _, ok := meeting.Users[p.auth.Uid]; ok {
-				attending = meeting.Users[p.auth.Uid].Schedule[item.Id.String()].Attending
+			if _, ok := meeting.Users[p.s.auth.Uid]; ok {
+				attending = meeting.Users[p.s.auth.Uid].Schedule[item.Id.String()].Attending
 			} else if !item.Open {
 				attending = false
 			}
@@ -133,7 +133,7 @@ func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responde
 	<input type="submit" name="meeting-submit" value="{{.LabelSubmit}}" />
 </fieldset>
 </form>`, map[string]interface{}{
-		"LabelMeetingForm": template.HTML(p.s.msg(meetingFormTitle, struct{ Name string }{p.auth.Name})),
+		"LabelMeetingForm": template.HTML(p.s.msg(meetingFormTitle, struct{ Name string }{p.s.auth.Name})),
 		"LabelComment":     p.s.msg("meeting-form-comment"),
 		"LabelSubmit":      p.s.msg(meetingFormSubmit),
 		"UserType":         "self",
@@ -147,7 +147,7 @@ func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
 	if !meeting.Locked {
 		responded := false
 		for _, user := range meeting.Users {
-			if user.Id.IsEqual(p.auth.Uid) {
+			if user.Id.IsEqual(p.s.auth.Uid) {
 				responded = true
 			}
 		}

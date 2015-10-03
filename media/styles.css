@@ -16,6 +16,7 @@ table, form {
 }
 table { background: #eee; margin-bottom: 15px; }
 table th { background: #3385e4; color: #fff; font-weight: normal; padding: 1px 5px; vertical-align: bottom; }
+table th a { color: #fff; font-size: 90%; }
 table td { background: #fff; padding: 1px 4px; }
 table td.centre { text-align: center; }
 table .date { text-align: right; }
