@@ -166,11 +166,11 @@ func GetMeetings() Meetings {
 	return Meetings{}
 }
 
-func GetMeeting(date string) (Meeting, error) {
+func GetMeeting(date Date) (Meeting, error) {
 	if !meetingsLoaded {
 		loadMeetings()
 	}
-	meeting, ok := meetings[date]
+	meeting, ok := meetings[date.String()]
 	if !ok {
 		return Meeting{}, &DbError{"No such meeting"}
 	}

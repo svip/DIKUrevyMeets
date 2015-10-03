@@ -77,6 +77,18 @@ func UserExistsByDrupalId(uid string) bool {
 	return false
 }
 
+func GetUserByDrupalId(uid string) *User {
+	if !usersLoaded {
+		loadUsers()
+	}
+	for userId := range users {
+		if users[userId].Identity == uid {
+			return users[userId]
+		}
+	}
+	return nil
+}
+
 func CreateUser(uid, name, nickname string) {
 	id, _ := strconv.Atoi(uid)
 	t := time.Now()
