@@ -43,6 +43,10 @@
 	"meeting-form-comment":   "Eventuelle kommentarer:",
 	"meeting-form-submit-new": "Tilmeld",
 	"meeting-form-submit-change": "Ændr",
+	"meeting-form-extra-title-new": "Tilmeld en <b>extra person</b>",
+	"meeting-form-extra-title-change": "Ændre <b>{{.Name}}</b>s tilmelding",
+	"meeting-form-extra-intro": "I stedet for at tilmelde mere end én person per linje, så tilmeld derimod en ekstra person (De kan altid ændre denne tilmelding senere, da tilmeldingen vil blive bundet til Deres konto).",
+	"meeting-form-extra-name": "Navn på person:",
 	
 	"meeting-closeeating-title": "Luk for madtilmeldingen",
 	"meeting-closeeating-spent": "Beløb brugt på mad (i kroner):",

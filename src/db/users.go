@@ -128,7 +128,7 @@ func (s UserSorter) Less(i, j int) bool {
 	return nameI < nameJ
 }
 
-func SortUsersByName(users map[UserId]UserSchedule) (sorted []UserSchedule) {
+func SortUsersByName(users map[string]UserSchedule) (sorted []UserSchedule) {
 	for userId := range users {
 		sorted = append(sorted, users[userId])
 	}

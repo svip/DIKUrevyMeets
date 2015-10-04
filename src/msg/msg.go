@@ -121,16 +121,16 @@ func (c *Container) Msg(msg string, a ...interface{}) string {
 func (c *Container) MsgTemplate(msg string, input interface{}) string {
 	s, ok := c.msgs[msg]
 	if !ok {
-		return fmt.Sprintf("<%s>", msg)
+		return fmt.Sprintf("&lt;%s&gt;", msg)
 	}
 	t, err := template.New("msg").Parse(s)
 	if err != nil {
-		return fmt.Sprintf("<%s: %s>", msg, err.Error())
+		return fmt.Sprintf("&lt;%s: %s&gt;", msg, err.Error())
 	}
 	out := bytes.NewBufferString("")
 	err = t.Execute(out, input)
 	if err != nil {
-		return fmt.Sprintf("<%s: %s>", msg, err.Error())
+		return fmt.Sprintf("&lt;%s: %s&gt;", msg, err.Error())
 	}
 	return out.String()
 }

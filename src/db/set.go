@@ -1,6 +1,9 @@
 package db
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 func getMeetingAndScheduleItem(date Date, scheduleId int) (string, Meeting, string, ScheduleItem, error) {
 	for mdate, meeting := range meetings {
@@ -59,16 +62,20 @@ func newUserSchedule(userId UserId, utype userType, comment string) UserSchedule
 	}
 }
 
-func CommitUserToSchedule(date Date, userId UserId, comment string) error {
+func CommitPersonToSchedule(date Date, userId UserId, extraId string, comment string) error {
+	id := userId.String()
+	if extraId != "" {
+		id = fmt.Sprintf("%s-%s", id, extraId)
+	}
 	for mdate, meeting := range meetings {
 		if meeting.Date == date {
-			schedule, ok := meeting.Users[userId]
+			schedule, ok := meeting.Users[id]
 			if !ok {
 				schedule = newUserSchedule(userId, "self", comment)
 			} else {
 				schedule.Comment = comment
 			}
-			meeting.Users[userId] = schedule
+			meeting.Users[id] = schedule
 			meetings[mdate] = meeting
 			return nil
 		}
@@ -76,14 +83,22 @@ func CommitUserToSchedule(date Date, userId UserId, comment string) error {
 	return &DbError{"No such meeting."}
 }
 
-func CommitUserToEatingItem(date Date, userId UserId, scheduleId int, eating bool, cooking bool, foodhelp bool) error {
+func CommitUserToSchedule(date Date, userId UserId, comment string) error {
+	return CommitPersonToSchedule(date, userId, "", comment)
+}
+
+func CommitPersonToEatingItem(date Date, userId UserId, extraId string, scheduleId int, eating bool, cooking bool, foodhelp bool) error {
 	mdate, meeting, sid, _, err := getMeetingAndScheduleItem(date, scheduleId)
 	if err != nil {
 		return err
 	}
-	schedule, ok := meeting.Users[userId]
+	id := userId.String()
+	if extraId != "" {
+		id = fmt.Sprintf("%s-%s", id, extraId)
+	}
+	schedule, ok := meeting.Users[id]
 	if !ok {
-		return &DbError{"Call CommitUserToSchedule() first."}
+		return &DbError{"Call CommitPersonToSchedule() first."}
 	} else {
 		item := schedule.Schedule[sid]
 		item.Eating = eating
@@ -91,26 +106,38 @@ func CommitUserToEatingItem(date Date, userId UserId, scheduleId int, eating boo
 		item.Foodhelp = foodhelp
 		schedule.Schedule[sid] = item
 	}
-	meeting.Users[userId] = schedule
+	meeting.Users[id] = schedule
 	meetings[mdate] = meeting
 	return nil
 }
 
-func CommitUserToMeetingItem(date Date, userId UserId, scheduleId int, attending bool) error {
+func CommitUserToEatingItem(date Date, userId UserId, scheduleId int, eating bool, cooking bool, foodhelp bool) error {
+	return CommitPersonToEatingItem(date, userId, "", scheduleId, eating, cooking, foodhelp)
+}
+
+func CommitPersonToMeetingItem(date Date, userId UserId, extraId string, scheduleId int, attending bool) error {
 	mdate, meeting, sid, _, err := getMeetingAndScheduleItem(date, scheduleId)
 	if err != nil {
 		return err
 	}
-	schedule, ok := meeting.Users[userId]
+	id := userId.String()
+	if extraId != "" {
+		id = fmt.Sprintf("%s-%s", id, extraId)
+	}
+	schedule, ok := meeting.Users[id]
 	if !ok {
-		return &DbError{"Call CommitUserToSchedule() first."}
+		return &DbError{"Call CommitPersonToSchedule() first."}
 	} else {
 		item := schedule.Schedule[sid]
 		item.Attending = attending
 		schedule.Schedule[sid] = item
 	}
-	meeting.Users[userId] = schedule
+	meeting.Users[id] = schedule
 	meetings[mdate] = meeting
 	return nil
+}
+
+func CommitUserToMeetingItem(date Date, userId UserId, scheduleId int, attending bool) error {
+	return CommitPersonToMeetingItem(date, userId, "", scheduleId, attending)
 }
 

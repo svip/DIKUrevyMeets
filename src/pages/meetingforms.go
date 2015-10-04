@@ -3,7 +3,9 @@ package pages
 import (
 	"bytes"
 	"db"
+	"fmt"
 	"html/template"
+	"strings"
 )
 
 // These are specifically the forms on the meeting page, as the other file
@@ -54,7 +56,7 @@ func (p *MeetingPage) closeOpenMeetingForms(output string) string {
 	return output
 }
 
-func (p *MeetingPage) commitmentForm(output string, responded bool) string {
+func (p *MeetingPage) commitmentForm(output string, responded bool, extraId, extraName string) string {
 	meeting := p.GetMeeting()
 	var form string
 	diningForm := `<span class="scheduleform-item">{{.ItemTitle}}:</span>
@@ -67,20 +69,30 @@ func (p *MeetingPage) commitmentForm(output string, responded bool) string {
 	meetingForm := `<span class="scheduleform-item">{{.ItemTitle}}:</span>
 <input type="checkbox" name="meeting-{{.Id}}-attending" id="meeting-{{.Id}}-attending"{{if .Closed}} disabled="true"{{end}}{{if .AttendingChecked}} checked="true"{{end}} />
 	<label for="meeting-{{.Id}}-attending">{{.LabelAttending}}</label><br />`
+
+	userId := p.s.auth.Uid.String()
+	if extraId != "" {
+		userId = fmt.Sprintf("%s-%s", userId, extraId)
+	}
+
 	for _, item := range db.SortSchedule(meeting.Schedule) {
 		if item.Nojoin {
 			continue
+		}
+		itemId := item.Id.String()
+		if extraId != "" {
+			itemId = fmt.Sprint("%s-%s", extraId, itemId)
 		}
 		if item.Type == "eat" {
 			// Per default we assume people will be eating, but not
 			// cooking or helping.
 			eating, cooking, foodhelp := true, false, false
-			if _, ok := meeting.Users[p.s.auth.Uid]; ok {
+			if _, ok := meeting.Users[userId]; ok {
 				// Oh, they have already committed to this event?
 				// Then let's get their values.
-				eating = meeting.Users[p.s.auth.Uid].Schedule[item.Id.String()].Eating
-				cooking = meeting.Users[p.s.auth.Uid].Schedule[item.Id.String()].Cooking
-				foodhelp = meeting.Users[p.s.auth.Uid].Schedule[item.Id.String()].Foodhelp
+				eating = meeting.Users[userId].Schedule[item.Id.String()].Eating
+				cooking = meeting.Users[userId].Schedule[item.Id.String()].Cooking
+				foodhelp = meeting.Users[userId].Schedule[item.Id.String()].Foodhelp
 			} else if !item.Open {
 				// But if there are no commitment and the meeting is
 				// closed, then
@@ -91,7 +103,7 @@ func (p *MeetingPage) commitmentForm(output string, responded bool) string {
 					"LabelEating":     p.s.msg("meeting-form-eating"),
 					"LabelCooking":    p.s.msg("meeting-form-cooking"),
 					"LabelFoodhelp":   p.s.msg("meeting-form-foodhelp"),
-					"Id":              item.Id.Int(),
+					"Id":              itemId,
 					"EatingChecked":   eating,
 					"CookingChecked":  cooking,
 					"FoodhelpChecked": foodhelp,
@@ -100,35 +112,51 @@ func (p *MeetingPage) commitmentForm(output string, responded bool) string {
 				})
 		} else {
 			attending := true
-			if _, ok := meeting.Users[p.s.auth.Uid]; ok {
-				attending = meeting.Users[p.s.auth.Uid].Schedule[item.Id.String()].Attending
+			if _, ok := meeting.Users[userId]; ok {
+				attending = meeting.Users[userId].Schedule[item.Id.String()].Attending
 			} else if !item.Open {
 				attending = false
 			}
 			form = htmlMsg(form, meetingForm,
 				map[string]interface{}{
 					"LabelAttending":   p.s.msg("meeting-form-attending"),
-					"Id":               item.Id.Int(),
+					"Id":               itemId,
 					"AttendingChecked": attending,
 					"Closed":           !item.Open,
 					"ItemTitle":        item.Title,
 				})
 		}
 	}
-
 	var meetingFormTitle string
 	var meetingFormSubmit string
-	if responded {
-		meetingFormTitle = "meeting-form-title-change"
-		meetingFormSubmit = "meeting-form-submit-change"
+	if extraId != "" {
+		if responded {
+			meetingFormTitle = "meeting-form-extra-title-change"
+			meetingFormSubmit = "meeting-form-submit-change"
+		} else {
+			meetingFormTitle = "meeting-form-extra-title-new"
+			meetingFormSubmit = "meeting-form-submit-new"
+		}
 	} else {
-		meetingFormTitle = "meeting-form-title-new"
-		meetingFormSubmit = "meeting-form-submit-new"
+		if responded {
+			meetingFormTitle = "meeting-form-title-change"
+			meetingFormSubmit = "meeting-form-submit-change"
+		} else {
+			meetingFormTitle = "meeting-form-title-new"
+			meetingFormSubmit = "meeting-form-submit-new"
+		}
 	}
 	output = htmlMsg(output, `<form method="post">
 <fieldset>
 	<legend>{{.LabelMeetingForm}}</legend>
-	<input type="hidden" name="meeting-usertype" value="{{.UserType}}" />
+	{{if .ExtraPerson}}
+	<p>{{.DescriptionExtraPerson}}</p>
+	<input type="hidden" name="meeting-usertype" value="extra" />
+	<label for="meeting-name">{{.LabelExtraPersonName}}</label>
+	<input type="text" name="meeting-name" id="meeting-name" class="distanceitself" />
+	{{else}}
+	<input type="hidden" name="meeting-usertype" value="self" />
+	{{end}}
 	{{.Form}}
 	<br />
 	<label for="meeting-comment">{{.LabelComment}}</label>
@@ -139,14 +167,24 @@ func (p *MeetingPage) commitmentForm(output string, responded bool) string {
 		"LabelMeetingForm": template.HTML(p.s.tmsg(meetingFormTitle,
 			struct {
 				Name string
-			}{p.s.auth.GetName()})),
-		"LabelComment": p.s.msg("meeting-form-comment"),
-		"Comment":      meeting.Users[p.s.auth.Uid].Comment,
-		"LabelSubmit":  p.s.msg(meetingFormSubmit),
-		"UserType":     "self",
-		"Form":         template.HTML(form),
+			}{meeting.Users[userId].Name})),
+		"LabelComment":           p.s.msg("meeting-form-comment"),
+		"Comment":                meeting.Users[userId].Comment,
+		"LabelSubmit":            p.s.msg(meetingFormSubmit),
+		"ExtraPerson":            extraId != "",
+		"DescriptionExtraPerson": p.s.msg("meeting-form-extra-intro"),
+		"LabelExtraPersonName":   p.s.msg("meeting-form-extra-name"),
+		"Form":                   template.HTML(form),
 	})
 	return output
+}
+
+func (p *MeetingPage) userCommitmentForm(output string, responded bool) string {
+	return p.commitmentForm(output, responded, "", "")
+}
+
+func (p *MeetingPage) extraCommitmentForm(output string, responded bool, extraId, extraName string) string {
+	return p.commitmentForm(output, responded, extraId, extraName)
 }
 
 func (p *MeetingPage) userForms(content string) string {
@@ -159,10 +197,17 @@ func (p *MeetingPage) userForms(content string) string {
 				responded = true
 			}
 		}
-		output = p.commitmentForm(output, responded)
+		output = p.userCommitmentForm(output, responded)
 		if responded {
 			output = p.closeOpenMeetingForms(output)
 		}
+		for id, user := range meeting.Users {
+			sid := strings.Split(id, "-")
+			if len(sid) == 2 && sid[0] == p.s.auth.Uid.String() {
+				output = p.extraCommitmentForm(output, true, sid[1], user.Name)
+			}
+		}
+		output = p.extraCommitmentForm(output, false, "1", "")
 	} else {
 		output = htmlMsg(output, `<p>{{.LabelMeetingClosed}}</p>`, map[string]interface{}{
 			"LabelMeetingClosed": p.s.msg("meeting-isclosed"),

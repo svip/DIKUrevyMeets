@@ -112,7 +112,7 @@ func parseLegacyData(data []byte) error {
 			newclosedby, _ := strconv.Atoi(item.Closedby)
 			newschedule[strid] = ScheduleItem{newid, item.Title, item.Type, item.Start, item.End, item.Unique, item.IcalUnique, item.Nojoin, item.CostPerPerson, newspend, newopen, UserId(newclosedby)}
 		}
-		newusers := make(map[UserId]UserSchedule)
+		newusers := make(map[string]UserSchedule)
 		for userId := range f[date].Users {
 			newuserschedule := make(map[string]UserScheduleItem)
 			for userItemId := range f[date].Users[userId].Schedule {
@@ -141,7 +141,7 @@ func parseLegacyData(data []byte) error {
 				newuserschedule[userItemId] = UserScheduleItem{item.Attending, neweating, newcooking, newfoodhelp, item.Paid}
 			}
 			i, _ := strconv.Atoi(userId)
-			newusers[UserId(i)] = UserSchedule{UserId(i), newuserschedule, f[date].Users[userId].Usertype, f[date].Users[userId].Comment, f[date].Users[userId].Modified, f[date].Users[userId].Name}
+			newusers[userId] = UserSchedule{UserId(i), newuserschedule, f[date].Users[userId].Usertype, f[date].Users[userId].Comment, f[date].Users[userId].Modified, f[date].Users[userId].Name}
 		}
 		r[date] = Meeting{Date(date), f[date].Title, newschedule, f[date].Comment, newusers, f[date].Hidden, f[date].Locked, newtags, newdays}
 	}
