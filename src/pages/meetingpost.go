@@ -8,6 +8,25 @@ import (
 	"strings"
 )
 
+func (p *MeetingPage) commitToMeeting() {
+	vals := p.s.req.PostForm
+	log.Println(vals)
+	meeting := p.GetMeeting()
+	comment := vals.Get("meeting-comment")
+	db.CommitUserToSchedule(meeting.Date, p.s.auth.Uid, comment)
+	for _, item := range meeting.Schedule {
+		if item.Type == "eat" {
+			eating := vals.Get(fmt.Sprintf("meeting-%d-eating", item.Id)) == "on"
+			cooking := vals.Get(fmt.Sprintf("meeting-%d-cooking", item.Id)) == "on"
+			foodhelp := vals.Get(fmt.Sprintf("meeting-%d-foodhelp", item.Id)) == "on"
+			db.CommitUserToEatingItem(meeting.Date, p.s.auth.Uid, item.Id.Int(), eating, cooking, foodhelp)
+		} else {
+			attending := vals.Get(fmt.Sprintf("meeting-%d-attending", item.Id)) == "on"
+			db.CommitUserToMeetingItem(meeting.Date, p.s.auth.Uid, item.Id.Int(), attending)
+		}
+	}
+}
+
 func (p *MeetingPage) closeEating(id int) {
 	formid := fmt.Sprintf("closeeating-%d-spend", id)
 	val := p.s.req.PostForm.Get(formid)
@@ -33,7 +52,7 @@ func (p *MeetingPage) handlePost() {
 	p.s.req.ParseForm()
 	vals := p.s.req.PostForm
 	if vals.Get("meeting-submit") != "" {
-		log.Println(vals)
+		p.commitToMeeting()
 		return
 	}
 	meeting := p.GetMeeting()
@@ -45,6 +64,7 @@ func (p *MeetingPage) handlePost() {
 			}
 			if vals.Get(fmt.Sprintf("openeating-%d-submit", item.Id)) != "" {
 				p.openEating(item.Id.Int())
+				return
 			}
 		}
 	}

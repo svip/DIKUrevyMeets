@@ -132,7 +132,7 @@ func (p *MeetingPage) commitmentForm(output string, responded bool) string {
 	{{.Form}}
 	<br />
 	<label for="meeting-comment">{{.LabelComment}}</label>
-	<input type="text" name="meeting-comment" id="meeting-comment" />
+	<input type="text" name="meeting-comment" id="meeting-comment"{{if .Comment}} value="{{.Comment}}"{{end}} />
 	<input type="submit" name="meeting-submit" value="{{.LabelSubmit}}" />
 </fieldset>
 </form>`, map[string]interface{}{
@@ -141,6 +141,7 @@ func (p *MeetingPage) commitmentForm(output string, responded bool) string {
 				Name string
 			}{p.s.auth.GetName()})),
 		"LabelComment": p.s.msg("meeting-form-comment"),
+		"Comment":      meeting.Users[p.s.auth.Uid].Comment,
 		"LabelSubmit":  p.s.msg(meetingFormSubmit),
 		"UserType":     "self",
 		"Form":         template.HTML(form),
