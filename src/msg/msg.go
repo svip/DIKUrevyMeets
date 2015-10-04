@@ -119,7 +119,10 @@ func (c *Container) Msg(msg string, a ...interface{}) string {
 }
 
 func (c *Container) MsgTemplate(msg string, input interface{}) string {
-	s := c.Msg(msg)
+	s, ok := c.msgs[msg]
+	if !ok {
+		return fmt.Sprintf("<%s>", msg)
+	}
 	t, err := template.New("msg").Parse(s)
 	if err != nil {
 		return fmt.Sprintf("<%s: %s>", msg, err.Error())
