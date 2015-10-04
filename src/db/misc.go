@@ -37,3 +37,9 @@ func (i UserId) IsEqual(test string) bool {
 	return i.String() == test
 }
 
+func (i UserId) GetUser() User {
+	if !usersLoaded {
+		loadUsers()
+	}
+	return users[i]
+}
