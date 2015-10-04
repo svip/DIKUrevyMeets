@@ -9,7 +9,8 @@ import (
 // These are specifically the forms on the meeting page, as the other file
 // was getting a bit too big.
 
-func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) string {
+func (p *MeetingPage) closeOpenMeetingForms(output string) string {
+	meeting := p.GetMeeting()
 	for _, item := range db.SortSchedule(meeting.Schedule) {
 		if item.Nojoin {
 			continue
@@ -30,7 +31,7 @@ func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) s
 					"LabelCloseEatingSubmit": p.s.msg("meeting-closeeating-submit"),
 					"SpendValue":             item.Spend,
 				})
-			} else if item.Closedby.IsEqual(p.s.auth.Uid) {
+			} else if item.Closedby == p.s.auth.Uid {
 				output = htmlMsg(output, `<form method="post">
 	<fieldset>
 		<legend>{{.LabelOpenEatingLegend}}</legend>
@@ -53,7 +54,8 @@ func (p *MeetingPage) closeOpenMeetingForms(output string, meeting db.Meeting) s
 	return output
 }
 
-func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responded bool) string {
+func (p *MeetingPage) commitmentForm(output string, responded bool) string {
+	meeting := p.GetMeeting()
 	var form string
 	diningForm := `<span class="scheduleform-item">{{.ItemTitle}}:</span>
 <input type="checkbox" name="meeting-{{.Id}}-eating" id="meeting-{{.Id}}-eating"{{if .Closed}} disabled="true"{{end}}{{if .EatingChecked}} checked="true"{{end}} />
@@ -128,33 +130,38 @@ func (p *MeetingPage) commitmentForm(output string, meeting db.Meeting, responde
 	<legend>{{.LabelMeetingForm}}</legend>
 	<input type="hidden" name="meeting-usertype" value="{{.UserType}}" />
 	{{.Form}}
+	<br />
 	<label for="meeting-comment">{{.LabelComment}}</label>
 	<input type="text" name="meeting-comment" id="meeting-comment" />
 	<input type="submit" name="meeting-submit" value="{{.LabelSubmit}}" />
 </fieldset>
 </form>`, map[string]interface{}{
-		"LabelMeetingForm": template.HTML(p.s.msg(meetingFormTitle, struct{ Name string }{p.s.auth.Name})),
-		"LabelComment":     p.s.msg("meeting-form-comment"),
-		"LabelSubmit":      p.s.msg(meetingFormSubmit),
-		"UserType":         "self",
-		"Form":             template.HTML(form),
+		"LabelMeetingForm": template.HTML(p.s.tmsg(meetingFormTitle,
+			struct {
+				Name string
+			}{p.s.auth.GetName()})),
+		"LabelComment": p.s.msg("meeting-form-comment"),
+		"LabelSubmit":  p.s.msg(meetingFormSubmit),
+		"UserType":     "self",
+		"Form":         template.HTML(form),
 	})
 	return output
 }
 
-func (p *MeetingPage) UserForms(content string, meeting db.Meeting) string {
+func (p *MeetingPage) userForms(content string) string {
+	meeting := p.GetMeeting()
 	var output string
 	if !meeting.Locked {
 		responded := false
 		for _, user := range meeting.Users {
-			if user.Id.IsEqual(p.s.auth.Uid) {
+			if user.Id == p.s.auth.Uid {
 				responded = true
 			}
 		}
+		output = p.commitmentForm(output, responded)
 		if responded {
-			output = p.closeOpenMeetingForms(output, meeting)
+			output = p.closeOpenMeetingForms(output)
 		}
-		output = p.commitmentForm(output, meeting, responded)
 	} else {
 		output = htmlMsg(output, `<p>{{.LabelMeetingClosed}}</p>`, map[string]interface{}{
 			"LabelMeetingClosed": p.s.msg("meeting-isclosed"),

@@ -29,6 +29,10 @@ func (i UserId) String() string {
 	return strconv.Itoa(int(i))
 }
 
+func (i UserId) Int() int {
+	return int(i)
+}
+
 func (i UserId) IsEqual(test string) bool {
 	return i.String() == test
 }

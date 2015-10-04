@@ -8,9 +8,10 @@ import (
 )
 
 type MeetingPage struct {
-	Page Page
-	s    *session
-	date db.Date
+	Page    Page
+	s       *session
+	date    db.Date
+	meeting db.Meeting
 }
 
 func meetingPage(req *http.Request, s *session) Page {
@@ -19,13 +20,20 @@ func meetingPage(req *http.Request, s *session) Page {
 	return page.Page
 }
 
-func (p *MeetingPage) GetMeeting() (db.Meeting, error) {
+func (p *MeetingPage) GetMeeting() db.Meeting {
 	if p.date.String() != "" {
-		return db.GetMeeting(p.date)
+		return p.meeting
 	}
 	date := getPathSegment(p.s.req, 2, "meeting")
 	p.date = db.Date(date)
-	return db.GetMeeting(p.date)
+	meeting, err := db.GetMeeting(p.date)
+	if err != nil {
+		// No such meeting?  Return to the front page
+		p.Page.Redirect = "/"
+		return db.Meeting{}
+	}
+	p.meeting = meeting
+	return meeting
 }
 
 func (p *MeetingPage) returnYesNo(value bool) string {
@@ -100,7 +108,7 @@ func (p *MeetingPage) makeTableScheduleMiddle(schedule []db.ScheduleItem) templa
 	diningCell, _ := template.New("diningCell").Parse(`<th colspan="3">{{.Time}}</th>`)
 	meetingCell, _ := template.New("meetingCell").Parse(`<th>{{.Time}}</th>`)
 	content := ""
-	meeting, _ := p.GetMeeting()
+	meeting := p.GetMeeting()
 	for _, item := range schedule {
 		out := bytes.NewBufferString(content)
 		switch item.Type {
@@ -192,7 +200,6 @@ func (p *MeetingPage) createScheduleTable(meeting db.Meeting) string {
 	table := ""
 	users := db.GetUsers()
 	for _, meetingItem := range db.SortUsersByName(meeting.Users) {
-		userId := meetingItem.Id.String()
 		var user *db.User
 		if meetingItem.Usertype == "extra" {
 			user = &db.User{
@@ -200,7 +207,8 @@ func (p *MeetingPage) createScheduleTable(meeting db.Meeting) string {
 				Nickname: meetingItem.Name,
 			}
 		} else {
-			user = users[userId]
+			tuser := users[meetingItem.Id]
+			user = &tuser
 		}
 		out := bytes.NewBufferString(table)
 		userRow.Execute(out, map[string]interface{}{
@@ -245,9 +253,8 @@ func (p *MeetingPage) createScheduleTable(meeting db.Meeting) string {
 }
 
 func (p *MeetingPage) Render() {
-	meeting, err := p.GetMeeting()
-	if err != nil {
-		p.Page.Redirect = "/"
+	meeting := p.GetMeeting()
+	if meeting.Date == "" {
 		return
 	}
 	var content string
@@ -257,9 +264,14 @@ func (p *MeetingPage) Render() {
 				"LabelNoProgramme": p.s.msg("meeting-noprogramme"),
 			})
 	} else {
+		if p.s.req.Method == "POST" {
+			p.handlePost()
+			p.Page.SetRedirect("møde", meeting.Date.String())
+			return
+		}
 		content = p.createScheduleTable(meeting)
 		if p.s.auth.LoggedIn {
-			content = p.UserForms(content, meeting)
+			content = p.userForms(content)
 		} else {
 			content = htmlMsg(content, `<form><h5>{{.LabelNotLoggedInMessage}}</h5></form>`, map[string]interface{}{
 				"LabelNotLoggedInMessage": template.HTML(p.s.msg("meeting-notloggedin"))})

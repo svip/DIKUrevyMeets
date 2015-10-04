@@ -1,28 +1,26 @@
 package db
 
 import (
-	"sort"
-	"io/ioutil"
 	"encoding/json"
+	"io/ioutil"
 	"log"
-	"strconv"
-	"fmt"
-	"time"
+	"sort"
 	"strings"
+	"time"
 )
 
 // Functionality specifically related to users.json
 
 type User struct {
-	Id UserId
-	Name string
+	Id       UserId
+	Name     string
 	Register timeStamp
-	Admin bool
-	Identity string
+	Admin    bool
+	Identity int
 	Nickname string
 }
 
-type Users map[string]*User
+type Users map[UserId]User
 
 var users Users
 var usersLoaded bool
@@ -37,15 +35,13 @@ func loadUsers() {
 	}
 	err = json.Unmarshal(data, &users)
 	if err != nil {
-		log.Fatal(err)
-	}
-	for userId, user := range users {
-		if user.Id == 0 {
-			i, _ := strconv.Atoi(userId)
-			user.Id = UserId(i)
+		// Might be old data, let's
+		err = parseLegacyUserData(data)
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
-	fmt.Println("Users loaded.")
+	log.Println("Users loaded.")
 	usersLoaded = true
 }
 
@@ -53,9 +49,9 @@ func WriteUsers() {
 	if !<-readyToWriteUsers {
 		return
 	}
-//	data, err := json.Marshal(users)
-//	ioutil.WriteFile(usersFile, data, 0777)
-//	log.Println("Users file written.")
+	//	data, err := json.Marshal(users)
+	//	ioutil.WriteFile(usersFile, data, 0777)
+	//	log.Println("Users file written.")
 }
 
 func GetUsers() Users {
@@ -65,7 +61,7 @@ func GetUsers() Users {
 	return users
 }
 
-func UserExistsByDrupalId(uid string) bool {
+func UserExistsByDrupalId(uid int) bool {
 	if !usersLoaded {
 		loadUsers()
 	}
@@ -77,59 +73,62 @@ func UserExistsByDrupalId(uid string) bool {
 	return false
 }
 
-func GetUserByDrupalId(uid string) *User {
+func GetUserByDrupalId(uid int) *User {
 	if !usersLoaded {
 		loadUsers()
 	}
 	for userId := range users {
 		if users[userId].Identity == uid {
-			return users[userId]
+			user := users[userId]
+			return &user
 		}
 	}
 	return nil
 }
 
-func CreateUser(uid, name, nickname string) {
-	id, _ := strconv.Atoi(uid)
+func CreateUser(uid int, name, nickname string) {
 	t := time.Now()
-	users[uid] = &User{
-		Id: UserId(id),
-		Name: name,
+	users[UserId(uid)] = User{
+		Id:       UserId(uid),
+		Name:     name,
 		Nickname: nickname,
 		Register: timeStamp(t.Unix()),
-		Admin: false,
+		Admin:    false,
 		Identity: uid,
 	}
 }
 
-func GetUser (uid UserId) *User {
-	user, ok := users[uid.String()]
+func GetUser(uid UserId) *User {
+	if !usersLoaded {
+		loadUsers()
+	}
+	user, ok := users[uid]
 	if !ok {
 		return nil
 	}
-	return user
+	return &user
 }
 
 type UserSorter struct {
 	users []UserSchedule
 }
 
-func (s UserSorter) Len() int { return len(s.users) }
+func (s UserSorter) Len() int      { return len(s.users) }
 func (s UserSorter) Swap(i, j int) { s.users[i], s.users[j] = s.users[j], s.users[i] }
 func (s UserSorter) Less(i, j int) bool {
 	nameI := s.users[i].Name
 	nameJ := s.users[j].Name
 	// Handle the cases where the user name are not set in the schedule...
 	if strings.Trim(nameI, " \n") == "" {
-		nameI = users[s.users[i].Id.String()].Name
+		nameI = users[s.users[i].Id].Name
 	}
 	if strings.Trim(nameJ, " \n") == "" {
-		nameJ = users[s.users[j].Id.String()].Name
+		nameJ = users[s.users[j].Id].Name
 	}
 	return nameI < nameJ
 }
 
-func SortUsersByName(users map[string]UserSchedule) (sorted []UserSchedule) {
+func SortUsersByName(users map[UserId]UserSchedule) (sorted []UserSchedule) {
 	for userId := range users {
 		sorted = append(sorted, users[userId])
 	}
@@ -137,3 +136,4 @@ func SortUsersByName(users map[string]UserSchedule) (sorted []UserSchedule) {
 	sort.Sort(us)
 	return sorted
 }
+

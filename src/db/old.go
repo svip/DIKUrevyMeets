@@ -2,9 +2,9 @@ package db
 
 import (
 	"encoding/json"
-	"strconv"
-	"log"
 	"fmt"
+	"log"
+	"strconv"
 )
 
 // This file handles the old legacy JSON data format.
@@ -13,46 +13,46 @@ import (
 // remains sane), this file should be deleted.
 
 type oldScheduleItem struct {
-	Id interface{}
-	Title string
-	Type scheduleItemType
-	Start HourStamp
-	End HourStamp
-	Unique bool
-	IcalUnique bool
-	Nojoin bool
+	Id            interface{}
+	Title         string
+	Type          scheduleItemType
+	Start         HourStamp
+	End           HourStamp
+	Unique        bool
+	IcalUnique    bool
+	Nojoin        bool
 	CostPerPerson float64
-	Spend interface{}
-	Open bool
-	Closedby string
+	Spend         interface{}
+	Open          *bool
+	Closedby      string
 }
 
 type oldUserScheduleItem struct {
 	Attending bool
-	Eating interface{}
-	Cooking interface{}
-	Foodhelp interface{}
-	Paid float64
+	Eating    interface{}
+	Cooking   interface{}
+	Foodhelp  interface{}
+	Paid      float64
 }
 
 type oldUserSchedule struct {
-	Id interface{}
+	Id       interface{}
 	Schedule map[string]oldUserScheduleItem
 	Usertype userType
-	Comment string
+	Comment  string
 	Modified timeStamp
-	Name string
+	Name     string
 }
 
 type oldMeeting struct {
-	Title string
+	Title    string
 	Schedule map[string]oldScheduleItem
-	Comment string
-	Users map[string]oldUserSchedule
-	Hidden bool
-	Locked bool
-	Tags map[string]string
-	Days interface{}
+	Comment  string
+	Users    map[string]oldUserSchedule
+	Hidden   bool
+	Locked   bool
+	Tags     map[string]string
+	Days     interface{}
 }
 
 // This is a hack, don't bother understanding it
@@ -72,41 +72,47 @@ func parseLegacyData(data []byte) error {
 		}
 		var newdays int
 		switch f[date].Days.(type) {
-			case int:
-				newdays = f[date].Days.(int)
-			case string:
-				newdays, _ = strconv.Atoi(f[date].Days.(string))
-			default:
-				newdays = 0
+		case int:
+			newdays = f[date].Days.(int)
+		case string:
+			newdays, _ = strconv.Atoi(f[date].Days.(string))
+		default:
+			newdays = 0
 		}
 		newschedule := make(map[string]ScheduleItem)
 		for itemId := range f[date].Schedule {
 			item := f[date].Schedule[itemId]
 			var newid scheduleItemId
 			switch item.Id.(type) {
-				case string:
-					tmp, _ := strconv.Atoi(item.Id.(string))
-					newid = scheduleItemId(tmp)
-				case int:
-					newid = scheduleItemId(item.Id.(int))
-				case float64:
-					newid = scheduleItemId(int(item.Id.(float64)))
+			case string:
+				tmp, _ := strconv.Atoi(item.Id.(string))
+				newid = scheduleItemId(tmp)
+			case int:
+				newid = scheduleItemId(item.Id.(int))
+			case float64:
+				newid = scheduleItemId(int(item.Id.(float64)))
 			}
 			var newspend float64
 			switch item.Spend.(type) {
-				case string:
-					tmp, _ := strconv.Atoi(item.Spend.(string))
-					newspend = float64(tmp)
-				case int:
-					newspend = float64(item.Spend.(int))
-				case float64:
-					newspend = float64(item.Spend.(float64))
+			case string:
+				tmp, _ := strconv.Atoi(item.Spend.(string))
+				newspend = float64(tmp)
+			case int:
+				newspend = float64(item.Spend.(int))
+			case float64:
+				newspend = float64(item.Spend.(float64))
+			}
+			var newopen bool
+			if item.Open == nil {
+				newopen = true
+			} else {
+				newopen = *item.Open
 			}
 			strid := fmt.Sprintf("%d", newid)
-			newclosedby, _ :=  strconv.Atoi(item.Closedby)
-			newschedule[strid] = ScheduleItem{newid, item.Title, item.Type, item.Start, item.End, item.Unique, item.IcalUnique, item.Nojoin, item.CostPerPerson, newspend, item.Open, UserId(newclosedby)}
+			newclosedby, _ := strconv.Atoi(item.Closedby)
+			newschedule[strid] = ScheduleItem{newid, item.Title, item.Type, item.Start, item.End, item.Unique, item.IcalUnique, item.Nojoin, item.CostPerPerson, newspend, newopen, UserId(newclosedby)}
 		}
-		newusers := make(map[string]UserSchedule)
+		newusers := make(map[UserId]UserSchedule)
 		for userId := range f[date].Users {
 			newuserschedule := make(map[string]UserScheduleItem)
 			for userItemId := range f[date].Users[userId].Schedule {
@@ -115,30 +121,56 @@ func parseLegacyData(data []byte) error {
 				newcooking := false
 				newfoodhelp := false
 				switch item.Eating.(type) {
-					case bool:
-						if item.Eating.(bool) {
-							neweating = true
-						}
+				case bool:
+					if item.Eating.(bool) {
+						neweating = true
+					}
 				}
 				switch item.Cooking.(type) {
-					case bool:
-						if item.Cooking.(bool) {
-							newcooking = true
-						}
+				case bool:
+					if item.Cooking.(bool) {
+						newcooking = true
+					}
 				}
 				switch item.Foodhelp.(type) {
-					case bool:
-						if item.Foodhelp.(bool) {
-							newfoodhelp = true
-						}
+				case bool:
+					if item.Foodhelp.(bool) {
+						newfoodhelp = true
+					}
 				}
 				newuserschedule[userItemId] = UserScheduleItem{item.Attending, neweating, newcooking, newfoodhelp, item.Paid}
 			}
 			i, _ := strconv.Atoi(userId)
-			newusers[userId] = UserSchedule{UserId(i), newuserschedule, f[date].Users[userId].Usertype, f[date].Users[userId].Comment, f[date].Users[userId].Modified, f[date].Users[userId].Name}
+			newusers[UserId(i)] = UserSchedule{UserId(i), newuserschedule, f[date].Users[userId].Usertype, f[date].Users[userId].Comment, f[date].Users[userId].Modified, f[date].Users[userId].Name}
 		}
 		r[date] = Meeting{Date(date), f[date].Title, newschedule, f[date].Comment, newusers, f[date].Hidden, f[date].Locked, newtags, newdays}
 	}
 	meetings = r
+	return nil
+}
+
+type oldUser struct {
+	Name     string
+	Register timeStamp
+	Admin    bool
+	Identity string
+	Nickname string
+}
+
+func parseLegacyUserData(data []byte) error {
+	var f map[string]oldUser
+	r := make(Users)
+	err := json.Unmarshal(data, &f)
+	if err != nil {
+		log.Println("Attempt failed")
+		return err
+	}
+	for idstr, user := range f {
+		i, _ := strconv.Atoi(idstr)
+		id, _ := strconv.Atoi(user.Identity)
+		r[UserId(i)] = User{UserId(i), user.Name, user.Register, user.Admin,
+			id, user.Nickname}
+	}
+	users = r
 	return nil
 }

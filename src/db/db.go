@@ -87,7 +87,7 @@ type Meeting struct {
 	Title    string
 	Schedule map[string]ScheduleItem
 	Comment  string
-	Users    map[string]UserSchedule
+	Users    map[UserId]UserSchedule
 	Hidden   bool
 	Locked   bool
 	Tags     []Tag
