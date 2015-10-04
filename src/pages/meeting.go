@@ -200,15 +200,14 @@ func (p *MeetingPage) createScheduleTable(meeting db.Meeting) string {
 	table := ""
 	users := db.GetUsers()
 	for _, meetingItem := range db.SortUsersByName(meeting.Users) {
-		var user *db.User
+		var user db.User
 		if meetingItem.Usertype == "extra" {
-			user = &db.User{
+			user = db.User{
 				Name:     meetingItem.Name,
 				Nickname: meetingItem.Name,
 			}
 		} else {
-			tuser := users[meetingItem.Id]
-			user = &tuser
+			user = users[meetingItem.Id]
 		}
 		out := bytes.NewBufferString(table)
 		userRow.Execute(out, map[string]interface{}{
