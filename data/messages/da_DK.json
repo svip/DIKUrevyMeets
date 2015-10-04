@@ -31,9 +31,6 @@
 	"meeting-noprogramme":    "Intet program",
 	"meeting-isclosed":       "Der er lukket for tilmeldingen.",
 	"meeting-eatclosedby":    "Madtilmelding lukket af <b>{{.Name}}</b>.",
-	"meeting-closeeating-title": "Luk for madtilmeldingen",
-	"meeting-closeeating-spent": "Beløb brugt på mad (i kroner):",
-	"meeting-closeeating-submit": "Luk",
 	
 	"meeting-notloggedin":    "For at kunne tilmelde Dem dette og andre revymøder, skal De først logge ind igennem vor <a href=\"http://dikurevy.dk/\">Drupal system</a>. Vend her tilbage når De har logget ind.",
 	
@@ -46,6 +43,14 @@
 	"meeting-form-comment":   "Eventuelle kommentarer:",
 	"meeting-form-submit-new": "Tilmeld",
 	"meeting-form-submit-change": "Ændr",
+	
+	"meeting-closeeating-title": "Luk for madtilmeldingen",
+	"meeting-closeeating-spent": "Beløb brugt på mad (i kroner):",
+	"meeting-closeeating-spent-error-invalid": "Ugyldigt tal",
+	"meeting-closeeating-submit": "Luk",
+	
+	"meeting-openeating-title": "Åbn for madtilmeldingen",
+	"meeting-openeating-submit": "Åbn",
 	
 	"tick-yes":               "✔",
 	"tick-no":                "✘"

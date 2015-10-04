@@ -24,6 +24,11 @@ func (p *MeetingPage) closeEating(id int) {
 	db.CloseEating(meeting.Date, id, p.s.auth.Uid, spend)
 }
 
+func (p *MeetingPage) openEating(id int) {
+	meeting := p.GetMeeting()
+	db.OpenEating(meeting.Date, id)
+}
+
 func (p *MeetingPage) handlePost() {
 	p.s.req.ParseForm()
 	vals := p.s.req.PostForm
@@ -37,6 +42,9 @@ func (p *MeetingPage) handlePost() {
 			if vals.Get(fmt.Sprintf("closeeating-%d-submit", item.Id)) != "" {
 				p.closeEating(item.Id.Int())
 				return
+			}
+			if vals.Get(fmt.Sprintf("openeating-%d-submit", item.Id)) != "" {
+				p.openEating(item.Id.Int())
 			}
 		}
 	}
