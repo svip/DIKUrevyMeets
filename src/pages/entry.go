@@ -23,6 +23,13 @@ func newPage() Page {
 	return Page{"", []string{}, []string{}, "", ""}
 }
 
+func (p *Page) SetRedirect(path ...string) {
+	p.Redirect = "/"
+	for i := 0; i < len(path); i++ {
+		p.Redirect = fmt.Sprintf("%s%s/", p.Redirect, path[i])
+	}
+}
+
 func (p Page) Content() template.HTML {
 	return template.HTML(p.content)
 }
