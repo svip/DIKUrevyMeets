@@ -10348,7 +10348,7 @@
 "usertype":"normal","comment":"","modified":1443646934,"name":"Brainfuck"},
 "35":{"schedule":{"0":{"attending":true},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1443912235},
+"usertype":"normal","comment":"","modified":1443996994},
 "387":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":true,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1443682342,"name":"Mikkel Storgaard Knudsen"},
