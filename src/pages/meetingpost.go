@@ -13,16 +13,34 @@ func (p *MeetingPage) commitToMeeting() {
 	log.Println(vals)
 	meeting := p.GetMeeting()
 	comment := vals.Get("meeting-comment")
-	db.CommitUserToSchedule(meeting.Date, p.s.auth.Uid, comment)
+	userType := vals.Get("meeting-usertype")
+	extraId := vals.Get("meeting-extraid")
+	if userType == "self" {
+		db.CommitUserToSchedule(meeting.Date, p.s.auth.Uid, comment)
+	} else {
+		if extraId == "" {
+			extraId = db.GenerateExtraId(meeting)
+		}
+		name := vals.Get("meeting-name")
+		db.CommitPersonToSchedule(meeting.Date, p.s.auth.Uid, extraId, name, comment)
+	}
 	for _, item := range meeting.Schedule {
 		if item.Type == "eat" {
 			eating := vals.Get(fmt.Sprintf("meeting-%d-eating", item.Id)) == "on"
 			cooking := vals.Get(fmt.Sprintf("meeting-%d-cooking", item.Id)) == "on"
 			foodhelp := vals.Get(fmt.Sprintf("meeting-%d-foodhelp", item.Id)) == "on"
-			db.CommitUserToEatingItem(meeting.Date, p.s.auth.Uid, item.Id.Int(), eating, cooking, foodhelp)
+			if userType == "self" {
+				db.CommitUserToEatingItem(meeting.Date, p.s.auth.Uid, item.Id.Int(), eating, cooking, foodhelp)
+			} else {
+				db.CommitPersonToEatingItem(meeting.Date, p.s.auth.Uid, extraId, item.Id.Int(), eating, cooking, foodhelp)
+			}
 		} else {
 			attending := vals.Get(fmt.Sprintf("meeting-%d-attending", item.Id)) == "on"
-			db.CommitUserToMeetingItem(meeting.Date, p.s.auth.Uid, item.Id.Int(), attending)
+			if userType == "self" {
+				db.CommitUserToMeetingItem(meeting.Date, p.s.auth.Uid, item.Id.Int(), attending)
+			} else {
+				db.CommitPersonToMeetingItem(meeting.Date, p.s.auth.Uid, extraId, item.Id.Int(), attending)
+			}
 		}
 	}
 }
@@ -66,6 +84,12 @@ func (p *MeetingPage) handlePost() {
 				p.openEating(item.Id.Int())
 				return
 			}
+		}
+	}
+	for id := range meeting.Users {
+		sid := strings.Split(id, "-")
+		if sid[0] == p.s.auth.Uid.String() && len(sid) > 1 {
+			
 		}
 	}
 }

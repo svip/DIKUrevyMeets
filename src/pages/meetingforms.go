@@ -56,19 +56,19 @@ func (p *MeetingPage) closeOpenMeetingForms(output string) string {
 	return output
 }
 
-func (p *MeetingPage) commitmentForm(output string, responded bool, extraId, extraName string) string {
+func (p *MeetingPage) commitmentForm(output string, responded bool, index int, extraId, extraName string) string {
 	meeting := p.GetMeeting()
 	var form string
 	diningForm := `<span class="scheduleform-item">{{.ItemTitle}}:</span>
-<input type="checkbox" name="meeting-{{.Id}}-eating" id="meeting-{{.Id}}-eating"{{if .Closed}} disabled="true"{{end}}{{if .EatingChecked}} checked="true"{{end}} />
-	<label for="meeting-{{.Id}}-eating">{{.LabelEating}}</label>
-	<input type="checkbox" name="meeting-{{.Id}}-cooking" id="meeting-{{.Id}}-cooking"{{if .Closed}} disabled="true"{{end}}{{if .CookingChecked}} checked="true"{{end}} />
-	<label for="meeting-{{.Id}}-cooking">{{.LabelCooking}}</label>
-	<input type="checkbox" name="meeting-{{.Id}}-foodhelp" id="meeting-{{.Id}}-foodhelp"{{if .Closed}} disabled="true"{{end}}{{if .FoodhelpChecked}} checked="true"{{end}} />
-	<label for="meeting-{{.Id}}-foodhelp">{{.LabelFoodhelp}}</label><br />`
+<input type="checkbox" name="meeting-{{.Id}}-eating" id="meeting-{{.LabelId}}-eating"{{if .Closed}} disabled="true"{{end}}{{if .EatingChecked}} checked="true"{{end}} />
+	<label for="meeting-{{.LabelId}}-eating">{{.LabelEating}}</label>
+	<input type="checkbox" name="meeting-{{.Id}}-cooking" id="meeting-{{.LabelId}}-cooking"{{if .Closed}} disabled="true"{{end}}{{if .CookingChecked}} checked="true"{{end}} />
+	<label for="meeting-{{.LabelId}}-cooking">{{.LabelCooking}}</label>
+	<input type="checkbox" name="meeting-{{.Id}}-foodhelp" id="meeting-{{.LabelId}}-foodhelp"{{if .Closed}} disabled="true"{{end}}{{if .FoodhelpChecked}} checked="true"{{end}} />
+	<label for="meeting-{{.LabelId}}-foodhelp">{{.LabelFoodhelp}}</label><br />`
 	meetingForm := `<span class="scheduleform-item">{{.ItemTitle}}:</span>
-<input type="checkbox" name="meeting-{{.Id}}-attending" id="meeting-{{.Id}}-attending"{{if .Closed}} disabled="true"{{end}}{{if .AttendingChecked}} checked="true"{{end}} />
-	<label for="meeting-{{.Id}}-attending">{{.LabelAttending}}</label><br />`
+<input type="checkbox" name="meeting-{{.Id}}-attending" id="meeting-{{.LabelId}}-attending"{{if .Closed}} disabled="true"{{end}}{{if .AttendingChecked}} checked="true"{{end}} />
+	<label for="meeting-{{.LabelId}}-attending">{{.LabelAttending}}</label><br />`
 
 	userId := p.s.auth.Uid.String()
 	if extraId != "" {
@@ -79,9 +79,9 @@ func (p *MeetingPage) commitmentForm(output string, responded bool, extraId, ext
 		if item.Nojoin {
 			continue
 		}
-		itemId := item.Id.String()
-		if extraId != "" {
-			itemId = fmt.Sprint("%s-%s", extraId, itemId)
+		labelId := item.Id.String()
+		if index > 0 {
+			labelId = fmt.Sprintf("%d-%s", index, labelId)
 		}
 		if item.Type == "eat" {
 			// Per default we assume people will be eating, but not
@@ -103,7 +103,8 @@ func (p *MeetingPage) commitmentForm(output string, responded bool, extraId, ext
 					"LabelEating":     p.s.msg("meeting-form-eating"),
 					"LabelCooking":    p.s.msg("meeting-form-cooking"),
 					"LabelFoodhelp":   p.s.msg("meeting-form-foodhelp"),
-					"Id":              itemId,
+					"Id":              item.Id.String(),
+					"LabelId":         labelId,
 					"EatingChecked":   eating,
 					"CookingChecked":  cooking,
 					"FoodhelpChecked": foodhelp,
@@ -120,7 +121,8 @@ func (p *MeetingPage) commitmentForm(output string, responded bool, extraId, ext
 			form = htmlMsg(form, meetingForm,
 				map[string]interface{}{
 					"LabelAttending":   p.s.msg("meeting-form-attending"),
-					"Id":               itemId,
+					"Id":               item.Id.String(),
+					"LabelId":          labelId,
 					"AttendingChecked": attending,
 					"Closed":           !item.Open,
 					"ItemTitle":        item.Title,
@@ -129,7 +131,7 @@ func (p *MeetingPage) commitmentForm(output string, responded bool, extraId, ext
 	}
 	var meetingFormTitle string
 	var meetingFormSubmit string
-	if extraId != "" {
+	if index > 0 {
 		if responded {
 			meetingFormTitle = "meeting-form-extra-title-change"
 			meetingFormSubmit = "meeting-form-submit-change"
@@ -146,14 +148,21 @@ func (p *MeetingPage) commitmentForm(output string, responded bool, extraId, ext
 			meetingFormSubmit = "meeting-form-submit-new"
 		}
 	}
+	name := ""
+	if index == 0 {
+		name = p.s.auth.Uid.GetUser().Name
+	} else if responded {
+		name = meeting.Users[userId].Name
+	}
 	output = htmlMsg(output, `<form method="post">
 <fieldset>
 	<legend>{{.LabelMeetingForm}}</legend>
 	{{if .ExtraPerson}}
 	<p>{{.DescriptionExtraPerson}}</p>
 	<input type="hidden" name="meeting-usertype" value="extra" />
+	{{if .ExtraPersonId}}<input type="hidden" name="meeting-extraid" value="{{.ExtraPersonId}}" />{{end}}
 	<label for="meeting-name">{{.LabelExtraPersonName}}</label>
-	<input type="text" name="meeting-name" id="meeting-name" class="distanceitself" />
+	<input type="text" name="meeting-name" id="meeting-name"{{if .UserName}} value="{{.UserName}}"{{end}} class="distanceitself" />
 	{{else}}
 	<input type="hidden" name="meeting-usertype" value="self" />
 	{{end}}
@@ -167,11 +176,15 @@ func (p *MeetingPage) commitmentForm(output string, responded bool, extraId, ext
 		"LabelMeetingForm": template.HTML(p.s.tmsg(meetingFormTitle,
 			struct {
 				Name string
-			}{meeting.Users[userId].Name})),
+			}{
+				name,
+			})),
 		"LabelComment":           p.s.msg("meeting-form-comment"),
 		"Comment":                meeting.Users[userId].Comment,
 		"LabelSubmit":            p.s.msg(meetingFormSubmit),
-		"ExtraPerson":            extraId != "",
+		"UserName":               name,
+		"ExtraPerson":            index > 0,
+		"ExtraPersonId":          extraId,
 		"DescriptionExtraPerson": p.s.msg("meeting-form-extra-intro"),
 		"LabelExtraPersonName":   p.s.msg("meeting-form-extra-name"),
 		"Form":                   template.HTML(form),
@@ -180,11 +193,11 @@ func (p *MeetingPage) commitmentForm(output string, responded bool, extraId, ext
 }
 
 func (p *MeetingPage) userCommitmentForm(output string, responded bool) string {
-	return p.commitmentForm(output, responded, "", "")
+	return p.commitmentForm(output, responded, 0, "", "")
 }
 
-func (p *MeetingPage) extraCommitmentForm(output string, responded bool, extraId, extraName string) string {
-	return p.commitmentForm(output, responded, extraId, extraName)
+func (p *MeetingPage) extraCommitmentForm(output string, responded bool, index int, extraId, extraName string) string {
+	return p.commitmentForm(output, responded, index, extraId, extraName)
 }
 
 func (p *MeetingPage) userForms(content string) string {
@@ -193,7 +206,7 @@ func (p *MeetingPage) userForms(content string) string {
 	if !meeting.Locked {
 		responded := false
 		for _, user := range meeting.Users {
-			if user.Id == p.s.auth.Uid {
+			if user.Id == p.s.auth.Uid && user.IsUser() {
 				responded = true
 			}
 		}
@@ -201,13 +214,15 @@ func (p *MeetingPage) userForms(content string) string {
 		if responded {
 			output = p.closeOpenMeetingForms(output)
 		}
+		i := 1
 		for id, user := range meeting.Users {
 			sid := strings.Split(id, "-")
 			if len(sid) == 2 && sid[0] == p.s.auth.Uid.String() {
-				output = p.extraCommitmentForm(output, true, sid[1], user.Name)
+				output = p.extraCommitmentForm(output, true, i, sid[1], user.Name)
+				i++
 			}
 		}
-		output = p.extraCommitmentForm(output, false, "1", "")
+		output = p.extraCommitmentForm(output, false, i, "", "")
 	} else {
 		output = htmlMsg(output, `<p>{{.LabelMeetingClosed}}</p>`, map[string]interface{}{
 			"LabelMeetingClosed": p.s.msg("meeting-isclosed"),

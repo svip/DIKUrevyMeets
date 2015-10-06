@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -51,27 +52,29 @@ func OpenEating(date Date, scheduleId int) error {
 	return nil
 }
 
-func newUserSchedule(userId UserId, utype userType, comment string) UserSchedule {
+func newUserSchedule(userId UserId, name string, utype userType, comment string) UserSchedule {
 	return UserSchedule{
 		userId,
 		map[string]UserScheduleItem{},
 		utype,
 		comment,
 		timeStamp(time.Now().Unix()),
-		userId.GetUser().Name,
+		name,
 	}
 }
 
-func CommitPersonToSchedule(date Date, userId UserId, extraId string, comment string) error {
+func CommitPersonToSchedule(date Date, userId UserId, extraId string, name string, comment string) error {
 	id := userId.String()
+	utype := "self"
 	if extraId != "" {
 		id = fmt.Sprintf("%s-%s", id, extraId)
+		utype = "extra"
 	}
 	for mdate, meeting := range meetings {
 		if meeting.Date == date {
 			schedule, ok := meeting.Users[id]
 			if !ok {
-				schedule = newUserSchedule(userId, "self", comment)
+				schedule = newUserSchedule(userId, name, userType(utype), comment)
 			} else {
 				schedule.Comment = comment
 			}
@@ -84,7 +87,7 @@ func CommitPersonToSchedule(date Date, userId UserId, extraId string, comment st
 }
 
 func CommitUserToSchedule(date Date, userId UserId, comment string) error {
-	return CommitPersonToSchedule(date, userId, "", comment)
+	return CommitPersonToSchedule(date, userId, "", userId.GetUser().Name, comment)
 }
 
 func CommitPersonToEatingItem(date Date, userId UserId, extraId string, scheduleId int, eating bool, cooking bool, foodhelp bool) error {
@@ -139,5 +142,16 @@ func CommitPersonToMeetingItem(date Date, userId UserId, extraId string, schedul
 
 func CommitUserToMeetingItem(date Date, userId UserId, scheduleId int, attending bool) error {
 	return CommitPersonToMeetingItem(date, userId, "", scheduleId, attending)
+}
+
+func GenerateExtraId(meeting Meeting) string {
+	var ids []string
+	for id := range meeting.Users {
+		sid := strings.Split(id, "-")
+		if len(sid) > 1 {
+			ids = append(ids, sid[1])
+		}
+	}
+	return fmt.Sprintf("%d", len(ids))
 }
 

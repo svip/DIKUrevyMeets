@@ -48,6 +48,10 @@ type UserSchedule struct {
 	Name     string
 }
 
+func (us *UserSchedule) IsUser() bool {
+	return us.Usertype == "self"
+}
+
 type Date string
 
 func (d Date) String() string {
