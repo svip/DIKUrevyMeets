@@ -10392,5 +10392,5 @@
 "usertype":"normal","comment":"","modified":1443778386,"name":"Niels G. W. Serup"},
 "114":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"","modified":1443778478}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false}}
