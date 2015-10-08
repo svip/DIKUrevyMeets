@@ -10428,6 +10428,9 @@
 "usertype":"normal","comment":"","modified":1444249944,"name":"Nana Girotti"},
 "42":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Humor.","modified":1444250536}},
+"usertype":"normal","comment":"Humor.","modified":1444250536,"name":"Niels G. W. Serup"},
+"22":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Det er Back to the Future-dag!","modified":1444292252}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
