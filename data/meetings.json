@@ -10522,6 +10522,9 @@
 "usertype":"normal","comment":"","modified":1445240722,"name":"Jakob Uhd Jepsen"},
 "24":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1445325819}},
+"usertype":"normal","comment":"","modified":1445325819,"name":"Mikkel Kj\u00e6r Jensen"},
+"114":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1445369504}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
