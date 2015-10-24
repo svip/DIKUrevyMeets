@@ -10257,7 +10257,7 @@
 "3":{"attending":false},
 "4":{"attending":true}},
 "comment":"","modified":1445589052}},
-"hidden":false,"locked":false,"tags":{"0":"hyttetur"},
+"hidden":true,"locked":true,"tags":{"0":"hyttetur"},
 "days":"2"},
 "2016-04-22":{"title":"Hyttetur","schedule":{"0":{"id":"0","title":"Hyttetur","type":"meet","start":"0 15:00","end":"0 23:59","unique":false,"nojoin":false},
 "1":{"id":"1","title":"Hyttetur","type":"meet","start":"1 00:00","end":"0 23:59","unique":false,"nojoin":false},
