@@ -10547,6 +10547,9 @@
 "usertype":"normal","comment":"","modified":1445879751,"name":"Nana Girotti"},
 "42":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Jeg kommer kun hvis Brainfuck kan hj\u00e6lpe mig med at forberede mig til AADS-eksamen dagen efter.","modified":1445882524}},
+"usertype":"normal","comment":"Jeg kommer kun hvis Brainfuck kan hj\u00e6lpe mig med at forberede mig til AADS-eksamen dagen efter.","modified":1445882524,"name":"Niels G. W. Serup"},
+"38":{"schedule":{"0":{"attending":true},
+"1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1446056093}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
