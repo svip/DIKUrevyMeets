@@ -10550,6 +10550,9 @@
 "usertype":"normal","comment":"Jeg kommer kun hvis Brainfuck kan hj\u00e6lpe mig med at forberede mig til AADS-eksamen dagen efter.","modified":1445882524,"name":"Niels G. W. Serup"},
 "38":{"schedule":{"0":{"attending":true},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1446056093}},
+"usertype":"normal","comment":"","modified":1446056093,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
+"2346":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Det er godt nok i eksamensugen, men jeg er vel f\u00e6rdig med AP der.","modified":1446239840}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
