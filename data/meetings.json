@@ -10566,7 +10566,7 @@
 "114":{"schedule":{"0":{"attending":true},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1446651923,"name":"Simon Skjerning Linneberg"}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2015-11-17":{"title":"Madlavning til Biorevy","schedule":{"0":{"id":"0","title":"Madlavning","type":"eat","start":"0 17:00","end":"0 18:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"closedby":null}},
 "comment":"","users":{"4":{"schedule":{"0":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
