@@ -10589,6 +10589,9 @@
 "usertype":"normal","comment":"Er aldrig p\u00e5 ferie","modified":1446674991,"name":"Niels G. W. Serup"},
 "387":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Hvis vi laver feriemad nok til bio om ferie-tirsdagen, kan vi spise rester f\u00f8r forfatterferiem\u00f8det onsdag","modified":1446675167}},
+"usertype":"normal","comment":"Hvis vi laver feriemad nok til bio om ferie-tirsdagen, kan vi spise rester f\u00f8r forfatterferiem\u00f8det onsdag","modified":1446675167,"name":"Mikkel Storgaard Knudsen"},
+"22":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1447084788}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
