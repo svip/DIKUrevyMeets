@@ -10620,7 +10620,7 @@
 "20":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1447838620,"name":"Claus Appel (Spectrum)"}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2015-11-24":{"title":"Madlavning til Matematikrevy","schedule":{"0":{"title":"Indk\u00f8b","type":"meet","start":"0 12:00","end":"0 13:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Madlavning","type":"eat","start":"0 14:00","end":"0 17:30","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
