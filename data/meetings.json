@@ -10664,6 +10664,9 @@
 "usertype":"normal","comment":"","modified":1448135226,"name":"Brainfuck"},
 "42":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Jeg er nok i gang med at forberede julefrokost.","modified":1448205473}},
+"usertype":"normal","comment":"Jeg er nok i gang med at forberede julefrokost.","modified":1448205473,"name":"Niels G. W. Serup"},
+"22":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1448397053}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
