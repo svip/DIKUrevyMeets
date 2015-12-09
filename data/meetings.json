@@ -10756,6 +10756,8 @@
 "22":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"Woo!","modified":1449483512,"name":"Sebastian Paaske T\u00f8rholm"},
 "2346":{"schedule":{"0":{"attending":true}},
-"usertype":"normal","comment":":D","modified":1449483777}},
+"usertype":"normal","comment":":D","modified":1449483777,"name":"Ren\u00e9 L\u00f8we Jacobsen"},
+"114":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"Hej!","modified":1449617679}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
