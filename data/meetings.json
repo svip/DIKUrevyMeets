@@ -10799,4 +10799,8 @@
 "114":{"schedule":{"0":{"attending":true}},
 "usertype":"normal","comment":"Hej!","modified":1449617679}},
 "hidden":true,"locked":true,"tags":{"0":""},
+"days":false},
+"2016-04-01":{"title":"Materialedeadline","schedule":{},
+"comment":"","users":{},
+"hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
