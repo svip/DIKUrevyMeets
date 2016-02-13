@@ -65,10 +65,10 @@ func newUserSchedule(userId UserId, name string, utype userType, comment string)
 
 func CommitPersonToSchedule(date Date, userId UserId, extraId string, name string, comment string) error {
 	id := userId.String()
-	utype := "self"
+	utype := UserTypeUser
 	if extraId != "" {
 		id = fmt.Sprintf("%s-%s", id, extraId)
-		utype = "extra"
+		utype = UserTypeExtra
 	}
 	for mdate, meeting := range meetings {
 		if meeting.Date == date {

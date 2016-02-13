@@ -14,6 +14,24 @@ type scheduleItemType string
 type timeStamp int64
 type userType string
 
+const (
+	UserTypeUser    = "self"
+	UserTypeExtra   = "extra"
+	UserTypeNonUser = "unregistered"
+)
+
+func (ut userType) IsUser() bool {
+	return ut == UserTypeUser
+}
+
+func (ut userType) IsExtraPerson() bool {
+	return ut == UserTypeExtra
+}
+
+func (ut userType) IsNonUser() bool {
+	return ut == UserTypeNonUser
+}
+
 type Tag string
 
 type ScheduleItem struct {
@@ -49,7 +67,7 @@ type UserSchedule struct {
 }
 
 func (us *UserSchedule) IsUser() bool {
-	return us.Usertype == "self"
+	return us.Usertype.IsUser()
 }
 
 type Date string

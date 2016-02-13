@@ -21,11 +21,18 @@ func init() {
 const logininfoFile = "../data/config.json"
 
 type UserAuth struct {
-	Uid      string
+	Uid      db.UserId
 	Name     string
 	Nickname string
 	IsAdmin  bool
 	LoggedIn bool
+}
+
+func (a *UserAuth) GetName() string {
+	if a.Name == "" {
+		return a.Nickname
+	}
+	return a.Name
 }
 
 // Contact the Drupal sessions table to see if the user is logged in
@@ -57,7 +64,7 @@ func getUserAuthFromDb(cookieData string) *UserAuth {
 	}
 	// Since neither uid or nickname can be NULL, they are regular
 	// strings, but since name could be NULL, we make it to a pointer.
-	var uid string
+	var uid int
 	var nickname string
 	var name *string
 	if err := row.Scan(&uid, &nickname, &name); err != nil {
@@ -75,13 +82,16 @@ func getUserAuthFromDb(cookieData string) *UserAuth {
 	return &UserAuth{
 		LoggedIn: true,
 		IsAdmin:  db.GetUserByDrupalId(uid).Admin,
-		Uid:      uid,
+		Uid:      db.UserId(uid),
 		Nickname: nickname,
 		Name:     *name,
 	}
 }
 
 func GetAuth(req *http.Request) *UserAuth {
+	log.Println("Skip cookie checking for now, no SQL connection; always logged out")
+	// Do not commit this!
+	return &UserAuth{LoggedIn: true, Uid: 4, Nickname: "Brainfuck"}
 	r, _ := regexp.Compile("SESS.*")
 	for _, cookie := range req.Cookies() {
 		if r.MatchString(cookie.Name) {

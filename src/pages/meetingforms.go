@@ -159,12 +159,12 @@ func (p *MeetingPage) commitmentForm(output string, responded bool, index int, e
 	<legend>{{.LabelMeetingForm}}</legend>
 	{{if .ExtraPerson}}
 	<p>{{.DescriptionExtraPerson}}</p>
-	<input type="hidden" name="meeting-usertype" value="extra" />
+	<input type="hidden" name="meeting-usertype" value="{{.TypeExtra}}" />
 	{{if .ExtraPersonId}}<input type="hidden" name="meeting-extraid" value="{{.ExtraPersonId}}" />{{end}}
 	<label for="meeting-name">{{.LabelExtraPersonName}}</label>
 	<input type="text" name="meeting-name" id="meeting-name"{{if .UserName}} value="{{.UserName}}"{{end}} class="distanceitself" />
 	{{else}}
-	<input type="hidden" name="meeting-usertype" value="self" />
+	<input type="hidden" name="meeting-usertype" value="{{.TypeUser}}" />
 	{{end}}
 	{{.Form}}
 	<br />
@@ -179,6 +179,8 @@ func (p *MeetingPage) commitmentForm(output string, responded bool, index int, e
 			}{
 				name,
 			})),
+		"TypeUser":               db.UserTypeUser,
+		"TypeExtra":              db.UserTypeExtra,
 		"LabelComment":           p.s.msg("meeting-form-comment"),
 		"Comment":                meeting.Users[userId].Comment,
 		"LabelSubmit":            p.s.msg(meetingFormSubmit),
