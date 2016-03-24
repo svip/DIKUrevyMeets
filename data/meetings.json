@@ -11065,6 +11065,9 @@
 "usertype":"normal","comment":"","modified":1458771731,"name":"Sebastian Paaske T\u00f8rholm"},
 "42":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"For pape, der er arbejdsweekend i min andelsboligforening!","modified":1458771941}},
+"usertype":"normal","comment":"For pape, der er arbejdsweekend i min andelsboligforening!","modified":1458771941,"name":"Niels G. W. Serup"},
+"12":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Ankommer nok f\u00f8rst senere.","modified":1458818089}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
