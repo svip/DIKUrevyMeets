@@ -11068,6 +11068,9 @@
 "usertype":"normal","comment":"For pape, der er arbejdsweekend i min andelsboligforening!","modified":1458771941,"name":"Niels G. W. Serup"},
 "12":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Ankommer nok f\u00f8rst senere.","modified":1458818089}},
+"usertype":"normal","comment":"Ankommer nok f\u00f8rst senere.","modified":1458818089,"name":"Ejnar H\u00e5konsen"},
+"114":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Kommer m\u00e5ske senere","modified":1459071191}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
