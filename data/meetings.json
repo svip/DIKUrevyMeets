@@ -11108,6 +11108,9 @@
 "usertype":"normal","comment":"","modified":1459314268,"name":"Mikkel Kj\u00e6r Jensen"},
 "116":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1459445595}},
+"usertype":"normal","comment":"","modified":1459445595,"name":"Maya Saietz"},
+"149":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"What the Buff man said","modified":1459461700}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
