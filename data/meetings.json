@@ -10396,7 +10396,7 @@
 "3":{"attending":false},
 "4":{"attending":true}},
 "usertype":"normal","comment":"Kommer nok sent fradag aften","modified":1461274461}},
-"hidden":false,"locked":false,"tags":{"0":"hyttetur"},
+"hidden":true,"locked":true,"tags":{"0":"hyttetur"},
 "days":"2"},
 "2015-09-21":{"title":"Generalforsamling","schedule":{"0":{"id":"0","title":"M\u00f8de","type":"meet","start":"0 17:00","end":"0 20:00","unique":false,"nojoin":false}},
 "comment":"Der vil v\u00e6re kage","users":{"4":{"schedule":{"0":{"attending":true}},
