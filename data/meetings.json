@@ -11428,7 +11428,7 @@
 "11":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1463221875}},
-"hidden":false,"locked":false,"tags":{"0":""},
+"hidden":true,"locked":true,"tags":{"0":""},
 "days":false},
 "2016-05-15":{"title":"Hygge\u00f8vning #1","schedule":{"0":{"title":"\u00d8vning","type":"meet","start":"0 11:00","end":"0 18:00","unique":false,"nojoin":false,"id":"0"},
 "1":{"title":"Brunch","type":"eat","start":"0 10:00","end":"0 11:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"id":"1"}},
