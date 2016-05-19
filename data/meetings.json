@@ -12310,6 +12310,9 @@
 "usertype":"normal","comment":"","modified":1463586255,"name":"Theis Egesby Ibsen"},
 "33":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1463586879}},
+"usertype":"normal","comment":"","modified":1463586879,"name":"Markus Lund Wittorf"},
+"3":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1463649902}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
