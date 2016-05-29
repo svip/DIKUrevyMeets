@@ -10572,7 +10572,7 @@
 "2349":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1464426148}},
-"hidden":false,"locked":false,"tags":{"0":"revy"},
+"hidden":true,"locked":true,"tags":{"0":"revy"},
 "days":false},
 "2016-05-29":{"title":"Oprydning og hygge","schedule":{"0":{"id":"0","title":"Oprydning","type":"meet","start":"0 12:00","end":"0 19:00","unique":false,"nojoin":false},
 "1":{"id":"1","title":"Brunch","type":"eat","start":"0 11:00","end":"0 12:00","open":true,"spend":0,"costperperson":0,"unique":false,"nojoin":false,"closedby":null},
