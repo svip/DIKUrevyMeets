@@ -12579,6 +12579,9 @@
 "usertype":"normal","comment":"","modified":1466944124,"name":"Ejnar H\u00e5konsen"},
 "24":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1466951457}},
+"usertype":"normal","comment":"","modified":1466951457,"name":"Mikkel Kj\u00e6r Jensen"},
+"22":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
+"usertype":"normal","comment":"","modified":1466977484}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
