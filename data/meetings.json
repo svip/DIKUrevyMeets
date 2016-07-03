@@ -12588,6 +12588,9 @@
 "usertype":"normal","comment":"","modified":1467303203,"name":"Brainfuck"},
 "2459":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"","modified":1467320479}},
+"usertype":"normal","comment":"","modified":1467320479,"name":"Signe Scholer Jensen"},
+"42":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1467554218}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
