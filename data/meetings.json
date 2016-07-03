@@ -12591,6 +12591,9 @@
 "usertype":"normal","comment":"","modified":1467320479,"name":"Signe Scholer Jensen"},
 "42":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1467554218}},
+"usertype":"normal","comment":"","modified":1467554218,"name":"Niels G. W. Serup"},
+"8":{"schedule":{"0":{"attending":false},
+"1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Sender en hilsen fra USA","modified":1467562620}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
