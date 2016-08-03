@@ -12622,6 +12622,9 @@
 "usertype":"normal","comment":"","modified":1470155560,"name":"Ren\u00e9 L\u00f8we Jacobsen"},
 "38":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":true,"paid":0}},
-"usertype":"normal","comment":"","modified":1470170930}},
+"usertype":"normal","comment":"","modified":1470170930,"name":"Andreas Malmkj\u00e6r-M\u00f8rch"},
+"2613":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1470176091}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
