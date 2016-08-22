@@ -74,7 +74,7 @@
 "96":{"name":"Ioana Balas","register":1340455426,"admin":false,"identity":"96"},
 "94":{"name":"Simon Shine","register":1345650034,"admin":false,"identity":"94","nickname":"Simon Shine"},
 "112":{"name":"Rasmus Bruun J\u00f8rgensen","register":1347400284,"admin":false,"identity":"112","nickname":"Rallemus"},
-"114":{"name":"Simon Skjerning Linneberg","register":1347401767,"admin":false,"identity":"114","nickname":"Simon S. Linneberg"},
+"114":{"name":"Simon Skjerning Linneberg","register":1347401767,"admin":true,"identity":"114","nickname":"Simon S. Linneberg"},
 "115":{"name":"Camilla Maach Br\u00f8nnum Olsen","register":1347472254,"admin":false,"identity":"115","nickname":"Camilla"},
 "116":{"name":"Maya Saietz","register":1347879155,"admin":true,"identity":"116","nickname":"Tayacan"},
 "122":{"name":"Rasmus Klett Mortensen","register":1348221762,"admin":false,"identity":"122","nickname":"Rasmus Klett"},
