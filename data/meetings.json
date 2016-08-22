@@ -12627,4 +12627,9 @@
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"","modified":1470176091}},
 "hidden":true,"locked":true,"tags":{"0":""},
+"days":false},
+"2016-09-17":{"title":"Ordin\u00e6r generalforsamling","schedule":{"0":{"title":"M\u00f8de","type":"meet","start":"0 18:00","end":"0 20:00","unique":false,"nojoin":false,"id":"0"}},
+"comment":"","users":{"4":{"schedule":{"0":{"attending":true}},
+"usertype":"normal","comment":"","modified":1471902652}},
+"hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
