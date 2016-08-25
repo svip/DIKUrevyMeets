@@ -12646,6 +12646,9 @@
 "usertype":"normal","comment":"","modified":1472064463,"name":"Sebastian Paaske T\u00f8rholm"},
 "42":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1472070181}},
+"usertype":"normal","comment":"","modified":1472070181,"name":"Niels G. W. Serup"},
+"38":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"","modified":1472078241}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
