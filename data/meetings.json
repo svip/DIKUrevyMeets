@@ -12591,7 +12591,7 @@
 "usertype":"normal","comment":"","modified":1467320479,"name":"Signe Scholer Jensen"},
 "42":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"Jeg vil hellere have frostrevy.","modified":1472246880,"name":"Niels G. W. Serup"},
+"usertype":"normal","comment":"Jeg kom kun en time for sent.","modified":1472298871},
 "8":{"schedule":{"0":{"attending":false},
 "1":{"eating":false,"cooking":false,"foodhelp":false,"paid":0}},
 "usertype":"normal","comment":"Sender en hilsen fra USA","modified":1467562620,"name":"Jenny-Margrethe Vej"},
