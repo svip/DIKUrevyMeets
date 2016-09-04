@@ -25,15 +25,15 @@ class Authentication {
 		foreach ( $this->database->getUsers() as $user ) {
 			if ( $user->identity == $identity
 				&& $user->service == $service ) {
-				return $user->signature;	
+				return $user->signature;
 			}
 		}
 		return null;
 	}
 	
-	private function drupalRegister ( $uid, $name, $nickname ) {
+	private function mojoliciousRegister ( $uid, $name, $nickname ) {
 		global $Debug;
-		if ( $this->database->insertUser ( $name, $nickname, 'drupal', $uid, null ) ) {
+		if ( $this->database->insertUser ( $name, $nickname, 'mojolicious', $uid, null ) ) {
 			if ( !$Debug ) // Never redirect in debug mode.
 				if ( !empty($_SERVER['HTTP_REFERER']) )
 					header('Location: '.$_SERVER['HTTP_REFERER']);
@@ -42,36 +42,38 @@ class Authentication {
 		}
 	}
 	
-	private function drupalCookie ( ) {
+	private function mojoliciousCookie ( ) {
 		foreach ( $_COOKIE as $name => $cookie ) {
-			if ( preg_match("@SESS.*@is", $name ) ) {
-				$data = $cookie;
-				$i = gfDBQuery ( "SELECT s.`uid`, u.`name`, p.`value`
-					FROM `drupal_sessions` s
-						JOIN `drupal_users` u
-							ON s.`uid` = u.`uid`
-						LEFT JOIN `drupal_profile_values` p
-							ON p.`uid` = s.`uid` AND p.`fid` = 14
-					WHERE s.`sid` = '$data' AND s.`uid` != 0" );
-				if ( gfDBGetNumRows($i) > 0 ) {
-					$result = gfDBGetResult($i);
-					foreach ( $this->database->getUsers() as $user ) {
-						if ( is_object($user)
-							&& $user->{'identity'} == $result['uid'] ) {
-							$this->userinfo = $user;
-							$this->loginChecked = true;
-							$this->login = true;
-							if ( ($result['value'] != null || !is_null($result['name']))
-								&& ($result['value'] != $user->name
-									|| $result['name'] != @$user->nickname) ) {
-								$this->database->updateUser ( $result['uid'],
-									array ( 'realname' => $result['value'],
-										'nickname' => $result['name']) );
+			if ( preg_match("@mojolicious@is", $name ) ) {
+				list($data, $check) = explode('--', $cookie);
+				if ( hash_hmac('sha1', $data, $CookieSecret) === $check ) {
+					$userdata = json_decode(base64_decode($data));
+					if ( $userdata !== null ) {
+						$userid = $userdata->{'auth_data'};
+						$i = gfDBQuery ( "SELECT `id`, `username`, `realname`
+							FROM `users`
+							WHERE `id` = '$userid'" );
+						if ( gfDBGetNumRows($i) > 0 ) {
+							$result = gfDBGetResult($i);
+							foreach ( $this->database->getUsers() as $user ) {
+								if ( is_object($user)
+									&& $user->{'identity'} == $result['id'] ) {
+									$this->userinfo = $user;
+									$this->loginChecked = true;
+									$this->login = true;
+									if ( ($result['realname'] != null || !is_null($result['username']))
+										&& ($result['realname'] != $user->name
+										|| $result['username'] != @$user->nickname) ) {
+										$this->database->updateUser ( $userid,
+											array ( 'realname' => $result['realname'],
+												'nickname' => $result['username']) );
+									}
+									return true;
+								}
 							}
-							return true;
 						}
 					}
-					$this->drupalRegister($result['uid'], $result['value'], $result['name']);
+					$this->mojoliciousRegister($result['id'], $result['realname'], $result['username']);
 					$this->userinfo = $user;
 					$this->loginChecked = true;
 					$this->login = true;
@@ -87,7 +89,7 @@ class Authentication {
 	public function loggedIn ( ) {
 		if ( $this->loginChecked ) 
 			return $this->login;
-		return $this->drupalCookie();
+		return $this->mojoliciousCookie();
 	}
 	
 	public function isAdmin ( ) {
@@ -106,7 +108,7 @@ class Authentication {
 	
 	public function logInFunction ( ) {
 		$form = gfRawMsg('<form><h5>$1</h5></form>',
-			gfMsg('joinform-needslogin', 'http://dikurevy.dk/', 'Drupal system')
+			gfMsg('joinform-needslogin', 'http://dikurevy.dk/', 'Mojolicious system')
 		);
 		return $form;
 	}
