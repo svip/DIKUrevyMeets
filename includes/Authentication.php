@@ -43,9 +43,12 @@ class Authentication {
 	}
 	
 	private function mojoliciousCookie ( ) {
+		global $CookieSecret;
 		foreach ( $_COOKIE as $name => $cookie ) {
 			if ( preg_match("@mojolicious@is", $name ) ) {
-				list($data, $check) = explode('--', $cookie);
+				$check = substr($cookie, -40);
+				$data = substr($cookie, 0, -42);
+				$against = hash_hmac('sha1', $data, $CookieSecret);
 				if ( hash_hmac('sha1', $data, $CookieSecret) === $check ) {
 					$userdata = json_decode(base64_decode($data));
 					if ( $userdata !== null ) {

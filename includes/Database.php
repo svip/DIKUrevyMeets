@@ -452,7 +452,7 @@ class SQLDatabase {
 			'filename' => '',
 	);
 	
-	private $con_id       = '';
+	private $con_id       = false;
 	private $query_array  = array();
 	private $id_array     = array();
 	private $query_amount = 0;
@@ -460,12 +460,13 @@ class SQLDatabase {
 	function SQLDatabase($filename) {
 		$this->sql['filename'] = $filename;
 		
-		$this->connect();
+		if ( !$this->connect() )
+			return false;
 	}
 	
 	function __destruct() {
 		if ($this->con_id !== false) {
-			sqlite_close($this->con_id);
+			$this->con_id->close();
 		}
 	}
 
@@ -475,7 +476,9 @@ class SQLDatabase {
 	 * @return TRUE upon succes, FALSE upon failure
 	 */
 	function connect() {
-		$this->con_id = @sqlite_open($this->sql['filename']);
+		if ( $this->sql['filename'] === '' )
+			return false;
+		$this->con_id = new SQLite3($this->sql['filename']);
 		if ( $this->con_id === false ) {
 			return false;
 		}
@@ -498,8 +501,8 @@ class SQLDatabase {
 		//echo $sql."<br /><br /><br />\n";
 		if((is_numeric($store)) && ($store>0)) {
 				$this->query_array[$store] = "\0";
-				if($this->query_array[$store] = sqlite_query($this->con_id, $sql)) {
-					$this->id_array[$store] = sqlite_last_insert_rowid($this->con_id);
+				if($this->query_array[$store] = $this->con_id->query($sql)) {
+					$this->id_array[$store] = $this->con_id->lastInsertRowId();
 					$this->query_amount++;
 					return $this->query_array[$store];
 				}
@@ -507,8 +510,8 @@ class SQLDatabase {
 				return false;
 		}
 		$this->query_array[0] = "\0";
-		if($this->query_array[0] = sqlite_query($this->con_id, $sql)) {
-			$this->id_array[0] = sqlite_last_insert_rowid($this->con_id);
+		if($this->query_array[0] = $this->con_id->query($sql)) {
+			$this->id_array[0] = $this->con_id->lastInsertRowId();
 			$this->query_amount++;
 			return $this->query_array[0];
 		}
@@ -527,12 +530,12 @@ class SQLDatabase {
 	function get_result($store = 0) {
 		if((is_numeric($store)) && ($store>0)) {
 				if($this->query_array[$store]) {
-					return sqlite_fetch_array($this->query_array[$store]);
+					return $this->query_array[$store]->fetchArray();
 				}
 				return false;
 		}
 		if($this->query_array[0]) {
-			return sqlite_fetch_array($this->query_array[0]);
+			return $this->query_array[0]->fetchArray();
 		}
 		return false;
 	}
@@ -544,10 +547,17 @@ class SQLDatabase {
 	 * @return int, 0 upon no resource or 0 rows
 	 */
 	function get_num_rows($store = 0) {
+		$nrows = 0;
 		if((is_numeric($store)) && ($store>0)) {
-			return sqlite_num_rows($this->query_array[$store]);
+			$result = $this->query_array[$store];
+		} else {
+			$result = $this->query_array[0];
 		}
-		return @sqlite_num_rows($this->query_array[0]);
+		$result->reset();
+		while ( $result->fetchArray() )
+			$nrows++;
+		$result->reset();
+		return $nrows;
 	}
 	
 	/**
