@@ -241,11 +241,11 @@ class Database {
 		if ( isset($this->users->{$uid}) )
 			return false;
 		$this->users->{$uid} = array (
-			'name'		=> $name,
-			'nickname'      => $nickname,
-			'register'	=> time(),
-			'admin'		=> false,
-			'identity'	=> $uid,
+			'name'     => $name,
+			'nickname' => $nickname,
+			'register' => time(),
+			'admin'    => false,
+			'identity' => $uid,
 		);
 		$this->writeData ( 'users' );
 		return true;
@@ -449,24 +449,25 @@ $database = new Database();
 
 class SQLDatabase {
 	private $sql = array(
-			'host' => 'localhost',
-			'name' => '',
-			'user' => 'root',
-			'pass' => '',
+			'filename' => '',
 	);
 	
-	private $con_id 	= '';
-	private $query_array = array();
-	private $id_array = array();
+	private $con_id       = false;
+	private $query_array  = array();
+	private $id_array     = array();
 	private $query_amount = 0;
 	
-	function SQLDatabase($dbhost, $dbname, $dbuser, $dbpass) {
-		$this->sql['host'] = $dbhost;
-		$this->sql['name'] = $dbname;
-		$this->sql['user'] = $dbuser;
-		$this->sql['pass'] = $dbpass;
+	function SQLDatabase($filename) {
+		$this->sql['filename'] = $filename;
 		
-		$this->connect();
+		if ( !$this->connect() )
+			return false;
+	}
+	
+	function __destruct() {
+		if ($this->con_id !== false) {
+			$this->con_id->close();
+		}
 	}
 
 	/**
@@ -475,12 +476,10 @@ class SQLDatabase {
 	 * @return TRUE upon succes, FALSE upon failure
 	 */
 	function connect() {
-		$this->con_id = @mysql_connect($this->sql['host'], $this->sql['user'], $this->sql['pass']);
-		if ( $this->con_id === false ) {
+		if ( $this->sql['filename'] === '' )
 			return false;
-		}
-		if ( !mysql_select_db($this->sql['name'], $this->con_id) )
-		{
+		$this->con_id = new SQLite3($this->sql['filename']);
+		if ( $this->con_id === false ) {
 			return false;
 		}
 		return true;
@@ -502,8 +501,8 @@ class SQLDatabase {
 		//echo $sql."<br /><br /><br />\n";
 		if((is_numeric($store)) && ($store>0)) {
 				$this->query_array[$store] = "\0";
-				if($this->query_array[$store] = mysql_query($sql, $this->con_id)) {
-					$this->id_array[$store] = mysql_insert_id($this->con_id);
+				if($this->query_array[$store] = $this->con_id->query($sql)) {
+					$this->id_array[$store] = $this->con_id->lastInsertRowId();
 					$this->query_amount++;
 					return $this->query_array[$store];
 				}
@@ -511,8 +510,8 @@ class SQLDatabase {
 				return false;
 		}
 		$this->query_array[0] = "\0";
-		if($this->query_array[0] = mysql_query($sql, $this->con_id)) {
-			$this->id_array[0] = mysql_insert_id($this->con_id);
+		if($this->query_array[0] = $this->con_id->query($sql)) {
+			$this->id_array[0] = $this->con_id->lastInsertRowId();
 			$this->query_amount++;
 			return $this->query_array[0];
 		}
@@ -531,12 +530,12 @@ class SQLDatabase {
 	function get_result($store = 0) {
 		if((is_numeric($store)) && ($store>0)) {
 				if($this->query_array[$store]) {
-					return mysql_fetch_assoc($this->query_array[$store]);
+					return $this->query_array[$store]->fetchArray();
 				}
 				return false;
 		}
 		if($this->query_array[0]) {
-			return mysql_fetch_assoc($this->query_array[0]);
+			return $this->query_array[0]->fetchArray();
 		}
 		return false;
 	}
@@ -548,10 +547,17 @@ class SQLDatabase {
 	 * @return int, 0 upon no resource or 0 rows
 	 */
 	function get_num_rows($store = 0) {
+		$nrows = 0;
 		if((is_numeric($store)) && ($store>0)) {
-			return mysql_num_rows($this->query_array[$store]);
+			$result = $this->query_array[$store];
+		} else {
+			$result = $this->query_array[0];
 		}
-		return @mysql_num_rows($this->query_array[0]);
+		$result->reset();
+		while ( $result->fetchArray() )
+			$nrows++;
+		$result->reset();
+		return $nrows;
 	}
 	
 	/**
@@ -569,6 +575,4 @@ class SQLDatabase {
 	}
 }
 
-$DB = new SQLDatabase ( $dbhost, $dbname, $dbuser, $dbpass );
-
-$DB->query("SET NAMES UTF8");
+$DB = new SQLDatabase ( $Filename );
