@@ -12688,6 +12688,9 @@
 "usertype":"normal","comment":"git clone humor.git","modified":1473364089,"name":"Niels G. W. Serup"},
 "22":{"schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"usertype":"normal","comment":"","modified":1473364826}},
+"usertype":"normal","comment":"","modified":1473364826,"name":"Sebastian Paaske T\u00f8rholm"},
+"2778-0916":{"name":"oleks","usertype":"extra","schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"comment":"goo.gl\/taWiHQ","modified":1473433033}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
