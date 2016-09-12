@@ -12696,6 +12696,9 @@
 "comment":"goo.gl\/taWiHQ","modified":1473433033},
 "2779-b2a5":{"name":"Simon B. Outzen","usertype":"extra","schedule":{"0":{"attending":true},
 "1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
-"comment":"","modified":1473614856}},
+"comment":"","modified":1473614856},
+"2346":{"schedule":{"0":{"attending":true},
+"1":{"eating":true,"cooking":false,"foodhelp":false,"paid":0}},
+"usertype":"normal","comment":"Har jeg vundet nu?","modified":1473687316}},
 "hidden":false,"locked":false,"tags":{"0":""},
 "days":false}}
