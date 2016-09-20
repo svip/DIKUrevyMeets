@@ -346,14 +346,6 @@ class Meeting extends Page {
 					}
 				}
 			}
-			if ( preg_match('/.*postrevy.*/i', $meeting->title) ) {
-				if ( !$this->verifyPun($user->comment)
-					|| $user->comment == gfMsg('punrequired') ) {
-					$user->comment = gfMsg('punrequired');
-				} else {
-					$user->comment = preg_replace('/(patter|patte|pat)/i', '<span style="color: green; font-weight: bold;">\1</span>', $user->comment);
-				}
-			}
 			$table .= gfRawMsg('<td class="comment">$1</td></tr>',
 				$user->comment
 			);
@@ -437,15 +429,6 @@ class Meeting extends Page {
 			header ( 'Location: ./?meeting='.$date.'&subid='.$itemid );
 	}
 	
-	private function verifyPun($comment) {
-		if ( !preg_match('/.*pat.*/i', $comment) )
-			return false;
-		if ( preg_match('/.*patter.*/i', $comment) )
-			return strlen($comment) > 10;
-		else
-			return strlen($comment) > 6;
-	}
-	
 	private function handleMeetingSubmit ( $date, $meeting, $itemid ) {
 		$userSchedule = array();
 		
@@ -466,11 +449,6 @@ class Meeting extends Page {
 		}
 		
 		$comment = $this->database->stripHtml($_POST['meeting-comment']);
-		
-		if ( preg_match('/.*postrevy.*/i', $meeting->title)
-			&& !$this->verifyPun($comment) ) {
-			$comment = gfMsg('punrequired');
-		}
 		
 		if ( $_POST['meeting-usertype'] == 'extra' ) {
 			$name = $_POST['meeting-name'];
@@ -773,7 +751,7 @@ class Meeting extends Page {
 	
 	private function someoneCookingForThis ( $currentInfo, $item ) {
 		foreach ( $currentInfo as $info ) {
-			if ( $info->schedule->{$item->id}->cooking )
+			if ( @$info->schedule->{$item->id}->cooking )
 				return true;
 		}
 		return false;
