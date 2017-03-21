@@ -52,35 +52,37 @@ class Authentication {
 				if ( hash_hmac('sha1', $data, $CookieSecret) === $check ) {
 					$userdata = json_decode(base64_decode($data));
 					if ( $userdata !== null ) {
-						$userid = $userdata->{'auth_data'};
-						$i = gfDBQuery ( "SELECT `id`, `username`, `realname`
-							FROM `users`
-							WHERE `id` = '$userid'" );
-						if ( gfDBGetNumRows($i) > 0 ) {
-							$result = gfDBGetResult($i);
-							foreach ( $this->database->getUsers() as $user ) {
-								if ( is_object($user)
-									&& $user->{'identity'} == $result['id'] ) {
-									$this->userinfo = $user;
-									$this->loginChecked = true;
-									$this->login = true;
-									if ( ($result['realname'] != null || !is_null($result['username']))
-										&& ($result['realname'] != $user->name
-										|| $result['username'] != @$user->nickname) ) {
-										$this->database->updateUser ( $userid,
-											array ( 'realname' => $result['realname'],
-												'nickname' => $result['username']) );
+						$userid = @$userdata->{'auth_data'};
+						if ( $userid > 0 ) {
+							$i = gfDBQuery ( "SELECT `id`, `username`, `realname`
+								FROM `users`
+								WHERE `id` = '$userid'" );
+							if ( gfDBGetNumRows($i) > 0 ) {
+								$result = gfDBGetResult($i);
+								foreach ( $this->database->getUsers() as $user ) {
+									if ( is_object($user)
+										&& $user->{'identity'} == $result['id'] ) {
+										$this->userinfo = $user;
+										$this->loginChecked = true;
+										$this->login = true;
+										if ( ($result['realname'] != null || !is_null($result['username']))
+											&& ($result['realname'] != $user->name
+											|| $result['username'] != @$user->nickname) ) {
+											$this->database->updateUser ( $userid,
+												array ( 'realname' => $result['realname'],
+													'nickname' => $result['username']) );
+										}
+										return true;
 									}
-									return true;
 								}
 							}
+							$this->mojoliciousRegister($result['id'], $result['realname'], $result['username']);
+							$this->userinfo = $user;
+							$this->loginChecked = true;
+							$this->login = true;
+							return true;
 						}
 					}
-					$this->mojoliciousRegister($result['id'], $result['realname'], $result['username']);
-					$this->userinfo = $user;
-					$this->loginChecked = true;
-					$this->login = true;
-					return true;
 				}
 			}
 		}
